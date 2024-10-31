@@ -1,0 +1,134 @@
+.configuration-container {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    height: 90vh; /* Full viewport height: 90vh */
+}
+
+.configuration-bar {
+    flex: 1;
+    padding: 0;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    background-color: var(--third-bg-light);
+}
+
+.configuration-bar.open {
+    width: 40vw;
+}
+
+.configuration-bar.closed {
+    width: 60px;
+}
+
+body.dark .configuration-bar {
+    background-color: var(--second-bg-dark);
+}
+
+/* Add a class for when a config item is expanded */
+.configuration-bar.has-expanded-item {
+    transition: all 0.3s ease-in-out 0.3s; /* Delay the sidebar transition when an item is expanded */
+}
+
+.configuration-bar.closed .config-name,
+.configuration-bar.closed .config-collapsible-container {
+    transition: all 0.3s ease-in-out;
+}
+
+.configuration-bar.open .config-name,
+.configuration-bar.open .config-collapsible-container {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Delay child transitions when opening and an item is expanded */
+.configuration-bar.open.has-expanded-item .config-name,
+.configuration-bar.open.has-expanded-item .config-collapsible-container {
+    transition: all 0.3s ease-in-out 0.3s;
+}
+
+.config-container {
+    transition: all 0.3s ease-in-out;
+}
+
+.config-info {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    width: 100%;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+    color: var(--main-bg-light);
+}
+
+.config-svg {
+    cursor: pointer;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+.config-name {
+    margin-left: 10px;
+    padding-left: 20%;
+    transition: all 0.3s ease-in-out;
+    white-space: nowrap;
+    align-items: center;
+}
+
+.config-collapsible-container {
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+    max-height: 0;
+    color: var(--main-bg-light);
+    padding: 0 1rem;
+    opacity: 0;
+}
+
+.config-collapsible-container.open {
+    max-height: 500px; /* Adjust this value based on your content */
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--main-bg-light);
+    overflow-y: auto;
+    opacity: 1;
+}
+
+.config-collapsible-container > * {
+    transition: all 0.1s ease-in-out;
+}
+
+.config-collapsible-container.open::-webkit-scrollbar {
+    width: 8px;
+}
+
+.config-collapsible-container.open::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.config-collapsible-container.open::-webkit-scrollbar-thumb {
+    background-color: var(--main-bg-light);
+    border-radius: 10px;
+}
+
+.config-info:hover,
+.config-container.open .config-info {
+    background-color: var(--second-bg-light);
+    cursor: pointer;
+}
+
+.configuration-bar.closed .config-name {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+.configuration-bar.closed .config-collapsible-container {
+    width: 0;
+    overflow: hidden;
+}

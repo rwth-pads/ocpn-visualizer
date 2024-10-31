@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    /* Light Mode (PADS) */
+    --heading-light: #f5a800;
+    --heading-light-rgb: 245, 168, 0;
+    --main-bg-light: #002e57;
+    --second-bg-light: #d2eaff;
+    --third-bg-light: #f3f3f3;
+    --text-light: #ffffff;
+
+    /* Dark Mode (Celonis) */
+    --heading-dark: #5cfe50;
+    --heading-dark-rgb: 92, 254, 80;
+    --main-bg-dark: #000000;
+    --second-bg-dark: #515151;
+    --third-bg-dark: #505050;
+    --text-dark: #ffffff;
+}
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--main-bg-light);
+    background-color: var(--main-bg-light);
+    height: 100vh;
+}
+
+body.dark {
+    background-color: var(--second-bg-dark);
+}
