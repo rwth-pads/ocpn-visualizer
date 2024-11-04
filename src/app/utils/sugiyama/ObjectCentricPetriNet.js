@@ -94,7 +94,7 @@ class ObjectCentricPetriNet {
             this.removePlace(place);
         }
     }
-    
+
     /**
      * Removes a transition from the Petri net.
      * 
@@ -179,9 +179,26 @@ class ObjectCentricPetriNet {
             transitions, // The set of transitions in the Petri net.
             new Set(), // Dummy nodes will be added within the Sugiyama layout algorithm.
             arcs, // The set of arcs in the Petri net.
-            json.properties !== undefined ? json.properties : {}, // Additional properties of the Petri net.
-            objectTypes // TODO: instead of passing the object types, we return a list of simple Petri Nets based on their object type.
+            objectTypes, // TODO: instead of passing the object types, we return a list of simple Petri Nets based on their object type.
+            json.properties !== undefined ? json.properties : {} // Additional properties of the Petri net.
         );
+    }
+
+    /**
+     * Converts the OCPN to a string representation.
+     * 
+     * @returns {string} The string representation of the OCPN.
+     */
+    toString() {
+        const placesStr = Array.from(this.places).map(place => place.toString()).join('');
+        const transitionsStr = Array.from(this.transitions).map(transition => transition.toString()).join('');
+        const dummyNodesStr = Array.from(this.dummyNodes).map(dummyNode => dummyNode.toString()).join('');
+        const arcsStr = Array.from(this.arcs).map(arc => arc.toString()).join('');
+        const propertiesStr = Object.entries(this.properties)
+            .map(([key, value]) => `\t${key}: ${value}`)
+            .join('\n');
+
+        return `${this.name}\nPlaces:\n${placesStr}\nTransitions:\n${transitionsStr}\nDummy Nodes:\n${dummyNodesStr ? dummyNodesStr : "\tNo dummy Nodes yet!"}\nArcs:\n${arcsStr}\nProperties:\n${propertiesStr}`;
     }
 
     /**
@@ -232,6 +249,15 @@ ObjectCentricPetriNet.Place = class {
     get postset() {
         return new Set(Array.from(this.outArcs).map(outArc => outArc.target));
     }
+
+    /**
+     * Converts the place to a string representation.
+     * 
+     * @returns {string} The string representation of the place.
+     */
+    toString() {
+        return `\tName: ${this.name}, ObjectType: ${this.objectType}${this.initial ? " (source)" : ""}${this.final ? " (sink)" : ""}\n`;
+    }
 };
 
 ObjectCentricPetriNet.Transition = class {
@@ -271,6 +297,15 @@ ObjectCentricPetriNet.Transition = class {
     get postset() {
         return new Set(Array.from(this.outArcs).map(outArc => outArc.target));
     }
+
+    /**
+     * Converts the transition to a string representation.
+     * 
+     * @returns {string} The string representation of the transition.
+     */
+    toString() {
+        return `\tName: ${this.name}, Label: ${this.label}${this.silent ? " (silent)" : ""}\n`;
+    }
 };
 
 ObjectCentricPetriNet.Arc = class {
@@ -308,6 +343,15 @@ ObjectCentricPetriNet.Arc = class {
         this.source.outArcs.add(newArc);
         this.target.inArcs.add(newArc);
     }
+
+    /**
+     * Converts the arc to a string representation.
+     * 
+     * @returns {string} The string representation of the arc.
+     */
+    toString() {
+        return `\t${this.source.name} -> ${this.target.name}${this.reversed ? " (Reversed)" : ""}\n`;
+    }
 };
 
 ObjectCentricPetriNet.Dummy = class {
@@ -336,6 +380,16 @@ ObjectCentricPetriNet.Dummy = class {
         // |inArcs| = 1 and |outArcs| = 1 for all dummy nodes.
         return !(this.inArcs[0] instanceof ObjectCentricPetriNet.Dummy) || !(this.outArcs[0] instanceof ObjectCentricPetriNet.Dummy);
     }
+
+    /**
+     * Converts the dummy node to a string representation.
+     * 
+     * @returns {string} The string representation of the dummy node.
+     */
+    toString() {
+        return `\tDummy: ${this.inArcs[0].source.name} -> ${this.outArcs[0].target.name}\n`;
+    }
 }
 
-export { ObjectCentricPetriNet };
+// export { ObjectCentricPetriNet }; // For production
+module.exports = ObjectCentricPetriNet; // For debugging purposes only. Comment out for production.
