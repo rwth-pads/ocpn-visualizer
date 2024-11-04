@@ -39,7 +39,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 The OCPN (Object-Centric Petri Net) input format is a JSON structure that defines the places, transitions, and arcs of the Petri net.
 We adapted the format from the OCPA (Object-Centric Process Analysis) format to represent the OCPN.
-    URL: [OCPA](https://github.com/ocpm/ocpa)
+
+See [OCPA](https://github.com/ocpm/ocpa)
+
 Below is the format for each component:
 
 ### OCPN
