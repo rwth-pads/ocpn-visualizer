@@ -1,0 +1,365 @@
+{
+    "name": "OCPA P2P Normal OCPN Example",
+    "properties": {
+        "description": "This example is taken from the OCPA Github Repository.",
+        "url": "https://github.com/ocpm/ocpa/blob/main/docs/source/_static/petri_net.png"
+    },
+    "places": [
+        {
+            "name": "order1",
+            "objectType": "order",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "order2",
+            "objectType": "order",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "order3",
+            "objectType": "order",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "order4",
+            "objectType": "order",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "order5",
+            "objectType": "order",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "item1",
+            "objectType": "item",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "item2",
+            "objectType": "item",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "item3",
+            "objectType": "item",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "item4",
+            "objectType": "item",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "item5",
+            "objectType": "item",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "item6",
+            "objectType": "item",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "item7",
+            "objectType": "item",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "delivery1",
+            "objectType": "delivery",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "delivery2",
+            "objectType": "delivery",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "delivery3",
+            "objectType": "delivery",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "delivery4",
+            "objectType": "delivery",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "delivery5",
+            "objectType": "delivery",
+            "initial": false,
+            "final": true
+        }
+    ],
+    "transitions": [
+        {
+            "name": "t1",
+            "label": "Place Order",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "t2",
+            "label": "Confirm Order",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "t3",
+            "label": "Pick Item",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "t4",
+            "label": "Load Cargo",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "t5",
+            "label": "Fuel Car",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "t6",
+            "label": "Start Route",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "t7",
+            "label": "End Route",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "t8",
+            "label": "Payment Reminder",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "t9",
+            "label": "Pay Order",
+            "properties": {},
+            "silent": false
+        }
+    ],
+    "arcs": [
+        {
+            "source": "order1",
+            "target": "t1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "item1",
+            "target": "t1",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "t1",
+            "target": "order2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t1",
+            "target": "item2",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "order2",
+            "target": "t2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "item2",
+            "target": "t2",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "t2",
+            "target": "order3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t2",
+            "target": "item3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "order3",
+            "target": "t8",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t8",
+            "target": "order4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "order4",
+            "target": "t9",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t9",
+            "target": "order5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "item3",
+            "target": "t3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t3",
+            "target": "item4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "item4",
+            "target": "t4",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "delivery1",
+            "target": "t5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t5",
+            "target": "delivery2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "delivery2",
+            "target": "t4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t4",
+            "target": "delivery3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t4",
+            "target": "item5",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "delivery3",
+            "target": "t6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "item5",
+            "target": "t6",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "t6",
+            "target": "delivery4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t6",
+            "target": "item6",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "delivery4",
+            "target": "t7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "item6",
+            "target": "t7",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "t7",
+            "target": "delivery5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t7",
+            "target": "item7",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        }
+    ]
+}
