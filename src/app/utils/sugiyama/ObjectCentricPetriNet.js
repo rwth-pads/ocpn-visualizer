@@ -11,17 +11,17 @@ class ObjectCentricPetriNet {
      * @param {Set} transitions The set of transitions in the Petri net.
      * @param {Set} dummyNodes The set of dummy nodes in the Petri net.
      * @param {Set} arcs The set of arcs in the Petri net.
+     * @param {Object} objectTypes The Petri nets of projected object types within the Petri net.
      * @param {Object} properties Additional properties of the Petri net.
-     * @param {Object} nets The Petri nets of projected object types within the Petri net.
      */
-    constructor(name = "", places = new Set(), transitions = new Set(), dummyNodes = new Set(), arcs = new Set(), properties = {}, nets = {}) {
+    constructor(name = "", places = new Set(), transitions = new Set(), dummyNodes = new Set(), arcs = new Set(), objectTypes = {}, properties = {}) {
         this.name = name;
         this.places = places;
         this.transitions = transitions;
         this.dummyNodes = dummyNodes;
         this.arcs = arcs;
+        this.objectTypes = objectTypes;
         this.properties = properties;
-        this.nets = nets;
     }
 
     /**
@@ -121,6 +121,76 @@ class ObjectCentricPetriNet {
             this.removeTransition(transition);
         }
     }
+
+    /**
+     * Parses a JSON object and returns an ObjectCentricPetriNet instance.
+     * 
+     * @param {Object} json The JSON object to parse.
+     * @returns {ObjectCentricPetriNet} The ObjectCentricPetriNet instance.
+     */
+    static fromJSON(json) {
+        const places = new Set(json.places.map(place => new ObjectCentricPetriNet.Place(
+            place.name,
+            place.objectType,
+            new Set(),
+            new Set(),
+            place.initial !== undefined ? place.initial : false,
+            place.final !== undefined ? place.final : false
+        )));
+
+        const transitions = new Set(json.transitions.map(transition => new ObjectCentricPetriNet.Transition(
+            transition.name,
+            transition.label,
+            new Set(),
+            new Set(),
+            transition.properties !== undefined ? transition.properties : {},
+            transition.silent !== undefined ? transition.silent : false
+        )));
+
+        const arcs = new Set(json.arcs.map(arc => {
+            const source = Array.from(places).find(place => place.name === arc.source) ||
+                Array.from(transitions).find(transition => transition.name === arc.source);
+            const target = Array.from(places).find(place => place.name === arc.target) ||
+                Array.from(transitions).find(transition => transition.name === arc.target);
+
+            return new ObjectCentricPetriNet.Arc(
+                source,
+                target,
+                this.DEFAULT_ARC_REVERSED,
+                arc.variable !== undefined ? arc.variable : this.DEFAULT_ARC_VARIABLE,
+                arc.weight !== undefined ? arc.weight : this.DEFAULT_ARC_WEIGHT,
+                arc.properties !== undefined ? arc.properties : {}
+            );
+        }));
+
+        // Add arcs to places and transitions.
+        for (const arc of arcs) {
+            arc.source.outArcs.add(arc);
+            arc.target.inArcs.add(arc);
+        }
+
+        // Get the object types of the places.
+        const objectTypes = new Set(Array.from(places).map(place => place.objectType));
+
+        // Return the ObjectCentricPetriNet instance.
+        return new ObjectCentricPetriNet(
+            json.name !== undefined ? json.name : self.DEFAULT_OCPN_NAME, // The name of the Petri net.
+            places,  // The set of places in the Petri net.
+            transitions, // The set of transitions in the Petri net.
+            new Set(), // Dummy nodes will be added within the Sugiyama layout algorithm.
+            arcs, // The set of arcs in the Petri net.
+            json.properties !== undefined ? json.properties : {}, // Additional properties of the Petri net.
+            objectTypes // TODO: instead of passing the object types, we return a list of simple Petri Nets based on their object type.
+        );
+    }
+
+    /**
+     * Class constants.
+     */
+    static DEFAULT_OCPN_NAME = "Object-Centric Petri Net"; // Default name of the Petri net.
+    static DEFAULT_ARC_WEIGHT = 1; // Default weight of an arc.
+    static DEFAULT_ARC_VARIABLE = false; // Default variable property of an arc.
+    static DEFAULT_ARC_REVERSED = false; // Default reversed property of an arc.
 }
 
 ObjectCentricPetriNet.Place = class {
