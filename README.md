@@ -121,3 +121,6 @@ Where:
 - **properties**: Additional properties of the arc.
 
 By following this format, you can create a JSON file that represents an Object-Centric Petri Net and is used as the input for the **OCPN Visualizer**.
+
+### Example
+An exemplary OCPN input file is provided in the `public/sample_ocpns/json` directory of this project. You can use this file as a template to create your own OCPN input files.
