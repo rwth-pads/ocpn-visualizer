@@ -1,5 +1,6 @@
 /**
  * The ObjectCentricPetriNet class represents an object-centric Petri net.
+ * Adapted from https://github.com/ocpm/ocpa/blob/main/ocpa/objects/oc_petri_net/obj.py
  */
 class ObjectCentricPetriNet {
     /**
@@ -11,12 +12,9 @@ class ObjectCentricPetriNet {
      * @param {Set} dummyNodes The set of dummy nodes in the Petri net.
      * @param {Set} arcs The set of arcs in the Petri net.
      * @param {Object} properties Additional properties of the Petri net.
-     * @param {Object} nets Nested nets within the Petri net.
-     * @param {Object} placeMapping Mapping of places to object types.
-     * @param {Object} transitionMapping Mapping of transitions to object types.
-     * @param {Object} arcMapping Mapping of arcs to object types.
+     * @param {Object} nets The Petri nets of projected object types within the Petri net.
      */
-    constructor(name = "", places = new Set(), transitions = new Set(), dummyNodes = new Set(), arcs = new Set(), properties = {}, nets = {}, placeMapping = {}, transitionMapping = {}, arcMapping = {}) {
+    constructor(name = "", places = new Set(), transitions = new Set(), dummyNodes = new Set(), arcs = new Set(), properties = {}, nets = {}) {
         this.name = name;
         this.places = places;
         this.transitions = transitions;
@@ -24,9 +22,6 @@ class ObjectCentricPetriNet {
         this.arcs = arcs;
         this.properties = properties;
         this.nets = nets;
-        this.placeMapping = placeMapping;
-        this.transitionMapping = transitionMapping;
-        this.arcMapping = arcMapping;
     }
 
     /**
