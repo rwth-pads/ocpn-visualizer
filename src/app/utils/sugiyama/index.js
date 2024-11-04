@@ -93,7 +93,7 @@
 // - output: paths for edges using ports.
 
 // --- For the actual React implementation -------------
-import { Graph } from './graph';
+import { Graph } from './ObjectCentricPetriNet';
 import { preprocess } from './preprocess';
 import { breakCycles } from './cycleBreaking';
 import { assignLayers } from './layerAssignment';
