@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pnml>
+  <net id="ocpn_example">
+    <name>
+      <text>OCPA P2P Normal OCPN Example</text>
+    </name>
+    <page id="page1">
+      <place id="order1">
+        <name>
+          <text>order1</text>
+        </name>
+
+        <toolspecific tool="OCPN" version="1.0">
+          <objectType>order</objectType>
+          <initial>true</initial>
+          <final>false</final>
+        </toolspecific>
+      </place>
+      <place id="order2">
+        <name>
+          <text>order2</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <objectType>order</objectType>
+          <initial>false</initial>
+          <final>false</final>
+        </toolspecific>
+      </place>
+      <place id="order3">
+        <name>
+          <text>order3</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <objectType>order</objectType>
+          <initial>false</initial>
+          <final>false</final>
+        </toolspecific>
+      </place>
+      <place id="order4">
+        <name>
+          <text>order4</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <objectType>order</objectType>
+          <initial>false</initial>
+          <final>false</final>
+        </toolspecific>
+      </place>
+      <place id="order5">
+        <name>
+          <text>order5</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <objectType>order</objectType>
+          <initial>false</initial>
+          <final>true</final>
+        </toolspecific>
+      </place>
+      <place id="item1">
+        <name>
+          <text>item1</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <objectType>item</objectType>
+          <initial>true</initial>
+          <final>false</final>
+        </toolspecific>
+      </place>
+      <place id="item2">
+        <name>
+          <text>item2</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <objectType>item</objectType>
+          <initial>false</initial>
+          <final>false</final>
+        </toolspecific>
+      </place>
+      <place id="item3">
+        <name>
+          <text>item3</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <objectType>item</objectType>
+          <initial>false</initial>
+          <final>false</final>
+        </toolspecific>
+      </place>
+      <place id="item4">
+        <name>
+          <text>item4</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <objectType>item</objectType>
+          <initial>false</initial>
+          <final>false</final>
+        </toolspecific>
+      </place>
+      <place id="item5">
+        <name>
+          <text>item5</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <objectType>item</objectType>
+          <initial>false</initial>
+          <final>false</final>
+        </toolspecific>
+      </place>
+      <place id="item6">
+        <name>
+          <text>item6</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <objectType>item</objectType>
+          <initial>false</initial>
+          <final>false</final>
+        </toolspecific>
+      </place>
+      <place id="item7">
+        <name>
+          <text>item7</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <objectType>item</objectType>
+          <initial>false</initial>
+          <final>true</final>
+        </toolspecific>
+      </place>
+      <place id="delivery1">
+        <name>
+          <text>delivery1</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <objectType>delivery</objectType>
+          <initial>true</initial>
+          <final>false</final>
+        </toolspecific>
+      </place>
+      <place id="delivery2">
+        <name>
+          <text>delivery2</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <objectType>delivery</objectType>
+          <initial>false</initial>
+          <final>false</final>
+        </toolspecific>
+      </place>
+      <place id="delivery3">
+        <name>
+          <text>delivery3</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <objectType>delivery</objectType>
+          <initial>false</initial>
+          <final>false</final>
+        </toolspecific>
+      </place>
+      <place id="delivery4">
+        <name>
+          <text>delivery4</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <objectType>delivery</objectType>
+          <initial>false</initial>
+          <final>false</final>
+        </toolspecific>
+      </place>
+      <place id="delivery5">
+        <name>
+          <text>delivery5</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <objectType>delivery</objectType>
+          <initial>false</initial>
+          <final>true</final>
+        </toolspecific>
+      </place>
+
+
+      <transition id="t1">
+        <name>
+          <text>Place Order</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <silent>false</silent>
+          <properties>
+            <exampleProperty>2024:11:01</exampleProperty>
+            <age>23</age>
+          </properties>
+        </toolspecific>
+      </transition>
+      <transition id="t2">
+        <name>
+          <text>Confirm Order</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <silent>false</silent>
+        </toolspecific>
+      </transition>
+      <transition id="t3">
+        <name>
+          <text>Pick Item</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <silent>false</silent>
+        </toolspecific>
+      </transition>
+      <transition id="t4">
+        <name>
+          <text>Load Cargo</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <silent>false</silent>
+        </toolspecific>
+      </transition>
+      <transition id="t5">
+        <name>
+          <text>Fuel Car</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <silent>false</silent>
+        </toolspecific>
+      </transition>
+      <transition id="t6">
+        <name>
+          <text>Start Route</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <silent>false</silent>
+        </toolspecific>
+      </transition>
+      <transition id="t7">
+        <name>
+          <text>End Route</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <silent>false</silent>
+        </toolspecific>
+      </transition>
+      <transition id="t8">
+        <name>
+          <text>Payment Reminder</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <silent>false</silent>
+        </toolspecific>
+      </transition>
+      <transition id="t9">
+        <name>
+          <text>Pay Order</text>
+        </name>
+        <toolspecific tool="OCPN" version="1.0">
+          <silent>false</silent>
+        </toolspecific>
+      </transition>
+
+      <arc id="arc1" source="order1" target="t1">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+            <properties>
+              <property>
+                <exampleProperty>2024:11:01</exampleProperty>
+              </property>
+            </properties>
+        </toolspecific>
+      </arc>
+      <arc id="arc2" source="item1" target="t1">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>true</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc3" source="t1" target="order2">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc4" source="t1" target="item2">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>true</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc5" source="order2" target="t2">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc6" source="item2" target="t2">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>true</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc7" source="t2" target="order3">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc8" source="t2" target="item3">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc9" source="order3" target="t8">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc10" source="t8" target="order4">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc11" source="order4" target="t9">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc12" source="t9" target="order5">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc13" source="item3" target="t3">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc14" source="t3" target="item4">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc15" source="item4" target="t4">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>true</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc16" source="delivery1" target="t5">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc17" source="t5" target="delivery2">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc18" source="delivery2" target="t4">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc19" source="t4" target="delivery3">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc20" source="t4" target="item5">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>true</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc21" source="delivery3" target="t6">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc22" source="item5" target="t6">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>true</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc23" source="t6" target="delivery4">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc24" source="t6" target="item6">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>true</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc25" source="delivery4" target="t7">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc26" source="item6" target="t7">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>true</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc27" source="t7" target="delivery5">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>false</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+      <arc id="arc28" source="t7" target="item7">
+        <inscription>
+          <text>1</text>
+        </inscription>
+        <toolspecific tool="OCPN" version="1.0">
+            <variableArc>true</variableArc>
+            <weight>1</weight>
+        </toolspecific>
+      </arc>
+    </page>
+  </net>
+</pnml>

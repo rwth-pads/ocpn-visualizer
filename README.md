@@ -51,21 +51,20 @@ The root object of the JSON file representing the OCPN should have the following
 ```json
 {
     "name": "OCPA P2P Normal OCPN Example",
-    "properties": {
-        "description": "This example is taken from the OCPA Github Repository.",
-        "url": "https://github.com/ocpm/ocpa/blob/main/docs/source/_static/petri_net.png"
-    },
     "places": [...],
     "transitions": [...],
-    "arcs": [...]
+    "arcs": [...],
+    "properties": {
+        "description": "This example is taken from the OCPA Github Repository."
+    }
 }
 ```
 Where:
 - **name**: The name of the Petri net.
-- **properties**: Additional properties of the Petri net, such as description and URL.
 - **places**: An array of place objects.
 - **transitions**: An array of transition objects.
 - **arcs**: An array of arc objects.
+- **properties**: Additional properties of the Petri net, such as description.
 
 ### Place
 Each place object should have the following structure:
@@ -89,18 +88,18 @@ Each transition object should have the following structure:
 {
     "name": "t1",
     "label": "Place Order",
+    "silent": false,
     "properties": {
         "description": "This transition represents the action of placing an order.",
         "placeholder": "Properties accept any key-value pair."
-    },
-    "silent": false
+    }
 }
 ```
 Where:
 - **name**: A unique identifier for the transition.
 - **label**: The label displayed on the transition.
-- **properties**: Additional properties of the transition, e.g., description
 - **silent**: A boolean value indicating whether the transition is silent.
+- **properties**: Additional properties of the transition, e.g., description.
 
 ### Arc
 Each arc object should have the following structure:
@@ -123,4 +122,6 @@ Where:
 By following this format, you can create a JSON file that represents an Object-Centric Petri Net and is used as the input for the **OCPN Visualizer**.
 
 ### Example
-An exemplary OCPN input file is provided in the `public/sample_ocpns/json` directory of this project. You can use this file as a template to create your own OCPN input files.
+An exemplary OCPN input file is provided in the [`public/sample_ocpns/json`](https://github.com/CodenameTobi/ocpn-visualizer/blob/master/public/sample_ocpns/json/ocpa_p2p-normal.json) directory of this project. You can use this file as a template to create your own OCPN input files.
+
+<!-- TODO: Add an image of the visualized example here. -->

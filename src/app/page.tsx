@@ -5,7 +5,7 @@ import Header from './components/ui/Header';
 import ConfigurationBar from './components/ui/ConfigurationSidebar';
 import VisualizationArea from './components/ui/VisualizationArea';
 import { ThemeProvider } from './context/ThemeContext';
-import { Graph, preprocess, breakCycles, assignLayers, orderVertices, positionVertices, routeEdges } from './utils/sugiyama';
+// import { preprocess, breakCycles, assignLayers, orderVertices, positionVertices, routeEdges } from './utils/sugiyama';
 
 const Home = () => {
   return (

@@ -1,3 +1,6 @@
+const fs = require('fs');
+const xml2js = require('xml2js');
+
 /**
  * The ObjectCentricPetriNet class represents an object-centric Petri net.
  * Adapted from https://github.com/ocpm/ocpa/blob/main/ocpa/objects/oc_petri_net/obj.py
@@ -23,6 +26,14 @@ class ObjectCentricPetriNet {
         this.objectTypes = objectTypes;
         this.properties = properties;
     }
+
+    /**
+     * Class constants.
+     */
+    static DEFAULT_OCPN_NAME = "Object-Centric Petri Net"; // Default name of the Petri net.
+    static DEFAULT_ARC_WEIGHT = 1; // Default weight of an arc.
+    static DEFAULT_ARC_VARIABLE = false; // Default variable property of an arc.
+    static DEFAULT_ARC_REVERSED = false; // Default reversed property of an arc.
 
     /**
      * Adds an arc to the Petri net.
@@ -123,7 +134,7 @@ class ObjectCentricPetriNet {
     }
 
     /**
-     * Parses a JSON object and returns an ObjectCentricPetriNet instance.
+     * Gets JSON object and returns an ObjectCentricPetriNet instance.
      * 
      * @param {Object} json The JSON object to parse.
      * @returns {ObjectCentricPetriNet} The ObjectCentricPetriNet instance.
@@ -185,6 +196,109 @@ class ObjectCentricPetriNet {
     }
 
     /**
+     * Parses a PNML file and returns an ObjectCentricPetriNet instance.
+     * 
+     * @param {string} pnmlFilePath The path to the PNML file.
+     * @returns {Promise<ObjectCentricPetriNet>} A promise that resolves to the ObjectCentricPetriNet instance.
+     */
+    static async fromPNML(pnmlFilePath) {
+        const parser = new xml2js.Parser();
+        const data = fs.readFileSync(pnmlFilePath, 'utf8');
+        const result = await parser.parseStringPromise(data);
+
+        const net = result.pnml.net[0];
+        const name = net.name[0].text[0];
+        const properties = {}; // Add any additional properties if needed
+
+        const places = new Set(net.page[0].place.map(place => {
+            const id = place.$.id;
+            const objectType = place.toolspecific[0].objectType[0];
+            const initial = place.toolspecific[0].initial[0] == 'true';
+            const final = place.toolspecific[0].final[0] == 'true';
+            return new ObjectCentricPetriNet.Place(id, objectType, new Set(), new Set(), initial, final);
+        }));
+
+        const transitions = new Set(net.page[0].transition.map(transition => {
+            const id = transition.$.id;
+            const label = transition.name[0].text[0];
+            const silent = transition.toolspecific[0].silent[0] === 'true';
+            const properties = {}; // TODO
+            return new ObjectCentricPetriNet.Transition(id, label, new Set(), new Set(), properties, silent);
+        }));
+
+        const arcs = new Set(net.page[0].arc.map(arc => {
+            const source = Array.from(places).find(place => place.name === arc.$.source) ||
+                Array.from(transitions).find(transition => transition.name === arc.$.source);
+            const target = Array.from(places).find(place => place.name === arc.$.target) ||
+                Array.from(transitions).find(transition => transition.name === arc.$.target);
+            const weight = arc.inscription ? parseInt(arc.inscription[0].text[0], 10) : 1;
+            const variable = arc.toolspecific[0].variableArc[0] === 'true';
+            const properties = {}; // TODO
+            return new ObjectCentricPetriNet.Arc(source, target, false, variable, weight, properties);
+        }));
+
+        // Add arcs to places and transitions.
+        for (const arc of arcs) {
+            arc.source.outArcs.add(arc);
+            arc.target.inArcs.add(arc);
+        }
+
+        // Return the ObjectCentricPetriNet instance.
+        return new ObjectCentricPetriNet(
+            name,
+            places,
+            transitions,
+            new Set(), // Dummy nodes will be added within the Sugiyama layout algorithm.
+            arcs,
+            properties
+        );
+    }
+
+    /**
+     * Check for equality of two OCPNs, except the name and properties.
+     * 
+     * @param {ObjectCentricPetriNet} other The other OCPN to compare with.
+     * @returns {boolean} True if the OCPNs are equal, false otherwise.
+     */
+    equals(other) {
+        if (this.places.size !== other.places.size) return false;
+        if (this.transitions.size !== other.transitions.size) return false;
+        if (this.arcs.size !== other.arcs.size) return false;
+
+        const compareSets = (set1, set2, compareFunc) => {
+            if (set1.size !== set2.size) return false;
+            for (const item1 of set1) {
+                if (![...set2].some(item2 => compareFunc(item1, item2))) return false;
+            }
+            return true;
+        }
+
+        const comparePlaces = (p1, p2) =>
+            p1.name === p2.name &&
+            p1.objectType === p2.objectType &&
+            p1.initial === p2.initial &&
+            p1.final === p2.final;
+        const compareTransitions = (t1, t2) =>
+            t1.name === t2.name &&
+            t1.label === t2.label &&
+            t1.silent === t2.silent;
+        const compareArcs = (a1, a2) =>
+            a1.source.name === a2.source.name &&
+            a1.target.name === a2.target.name &&
+            a1.reversed === a2.reversed &&
+            a1.variable === a2.variable &&
+            a1.weight === a2.weight;
+
+        if (!compareSets(this.places, other.places, comparePlaces)) return false;
+        console.log("Places are equal");
+        if (!compareSets(this.transitions, other.transitions, compareTransitions)) return false;
+        console.log("Transitions are equal");
+        if (!compareSets(this.arcs, other.arcs, compareArcs)) return false;
+        console.log("Arcs are equal");
+        return true;
+    }
+
+    /**
      * Converts the OCPN to a string representation.
      * 
      * @returns {string} The string representation of the OCPN.
@@ -200,14 +314,6 @@ class ObjectCentricPetriNet {
 
         return `${this.name}\nPlaces:\n${placesStr}\nTransitions:\n${transitionsStr}\nDummy Nodes:\n${dummyNodesStr ? dummyNodesStr : "\tNo dummy Nodes yet!"}\nArcs:\n${arcsStr}\nProperties:\n${propertiesStr}`;
     }
-
-    /**
-     * Class constants.
-     */
-    static DEFAULT_OCPN_NAME = "Object-Centric Petri Net"; // Default name of the Petri net.
-    static DEFAULT_ARC_WEIGHT = 1; // Default weight of an arc.
-    static DEFAULT_ARC_VARIABLE = false; // Default variable property of an arc.
-    static DEFAULT_ARC_REVERSED = false; // Default reversed property of an arc.
 }
 
 ObjectCentricPetriNet.Place = class {
@@ -256,7 +362,7 @@ ObjectCentricPetriNet.Place = class {
      * @returns {string} The string representation of the place.
      */
     toString() {
-        return `\tName: ${this.name}, ObjectType: ${this.objectType}${this.initial ? " (source)" : ""}${this.final ? " (sink)" : ""}\n`;
+        return `\tName: ${this.name}, ObjectType: ${this.objectType}${this.initial ? "\t(source)" : ""}${this.final ? "\t(sink)" : ""}\n`;
     }
 };
 
@@ -304,7 +410,7 @@ ObjectCentricPetriNet.Transition = class {
      * @returns {string} The string representation of the transition.
      */
     toString() {
-        return `\tName: ${this.name}, Label: ${this.label}${this.silent ? " (silent)" : ""}\n`;
+        return `\tName: ${this.name}, Label: ${this.label}${this.silent ? "\t(silent)" : ""}\n`;
     }
 };
 
@@ -350,7 +456,7 @@ ObjectCentricPetriNet.Arc = class {
      * @returns {string} The string representation of the arc.
      */
     toString() {
-        return `\t${this.source.name} -> ${this.target.name}${this.reversed ? " (Reversed)" : ""}\n`;
+        return `\t${this.source.name} -> ${this.target.name}${this.reversed ? "\t(Reversed)" : ""}${this.variable ? "\t(Variable Arc)" : ""}\n`;
     }
 };
 
@@ -391,5 +497,5 @@ ObjectCentricPetriNet.Dummy = class {
     }
 }
 
-// export { ObjectCentricPetriNet }; // For production
-module.exports = ObjectCentricPetriNet; // For debugging purposes only. Comment out for production.
+// Export the ObjectCentricPetriNet class and its subclasses
+module.exports = ObjectCentricPetriNet;
