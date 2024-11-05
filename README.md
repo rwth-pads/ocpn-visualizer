@@ -35,7 +35,7 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details. -->
 
-## OCPN Input Format
+## OCPN Input Format (JSON)
 
 The OCPN (Object-Centric Petri Net) input format is a JSON structure that defines the places, transitions, and arcs of the Petri net.
 We adapted the format from the OCPA (Object-Centric Process Analysis) format to represent the OCPN.
@@ -120,6 +120,9 @@ Where:
 - **properties**: Additional properties of the arc.
 
 By following this format, you can create a JSON file that represents an Object-Centric Petri Net and is used as the input for the **OCPN Visualizer**.
+
+## OCPN Input Format (PNML)
+<!-- TODO: Add PNML format description. -->
 
 ### Example
 An exemplary OCPN input file is provided in the [`public/sample_ocpns/json`](https://github.com/CodenameTobi/ocpn-visualizer/blob/master/public/sample_ocpns/json/ocpa_p2p-normal.json) directory of this project. You can use this file as a template to create your own OCPN input files.

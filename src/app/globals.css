@@ -7,7 +7,7 @@
     --heading-light: #f5a800;
     --heading-light-rgb: 245, 168, 0;
     --main-bg-light: #002e57;
-    --second-bg-light: #d2eaff;
+    --second-bg-light: #99cefd;
     --third-bg-light: #f3f3f3;
     --text-light: #ffffff;
 
@@ -17,7 +17,7 @@
     --main-bg-dark: #000000;
     --second-bg-dark: #515151;
     --third-bg-dark: #505050;
-    --text-dark: #ffffff;
+    --text-dark: #90caf9;
 }
 
 @layer utilities {
@@ -28,11 +28,5 @@
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    color: var(--main-bg-light);
-    background-color: var(--main-bg-light);
     height: 100vh;
-}
-
-body.dark {
-    background-color: var(--second-bg-dark);
 }
