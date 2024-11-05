@@ -1,5 +1,4 @@
-const fs = require('fs');
-const xml2js = require('xml2js');
+import { Parser } from 'xml2js';
 
 /**
  * The ObjectCentricPetriNet class represents an object-centric Petri net.
@@ -198,23 +197,21 @@ class ObjectCentricPetriNet {
     /**
      * Parses a PNML file and returns an ObjectCentricPetriNet instance.
      * 
-     * @param {string} pnmlFilePath The path to the PNML file.
+     * @param {string} pnml The PNML string to parse.
      * @returns {Promise<ObjectCentricPetriNet>} A promise that resolves to the ObjectCentricPetriNet instance.
      */
-    static async fromPNML(pnmlFilePath) {
-        const parser = new xml2js.Parser();
-        const data = fs.readFileSync(pnmlFilePath, 'utf8');
-        const result = await parser.parseStringPromise(data);
-
+    static async fromPNML(pnml) {
+        const parser = new Parser();
+        const result = await parser.parseStringPromise(pnml);
         const net = result.pnml.net[0];
-        const name = net.name[0].text[0];
+        const name = net.name[0].text[0] ? net.name[0].text[0] : self.DEFAULT_OCPN_NAME;
         const properties = {}; // Add any additional properties if needed
 
         const places = new Set(net.page[0].place.map(place => {
             const id = place.$.id;
             const objectType = place.toolspecific[0].objectType[0];
-            const initial = place.toolspecific[0].initial[0] == 'true';
-            const final = place.toolspecific[0].final[0] == 'true';
+            const initial = place.toolspecific[0].initial[0] === 'true';
+            const final = place.toolspecific[0].final[0] === 'true';
             return new ObjectCentricPetriNet.Place(id, objectType, new Set(), new Set(), initial, final);
         }));
 
@@ -498,4 +495,4 @@ ObjectCentricPetriNet.Dummy = class {
 }
 
 // Export the ObjectCentricPetriNet class and its subclasses
-module.exports = ObjectCentricPetriNet;
+export default ObjectCentricPetriNet;
