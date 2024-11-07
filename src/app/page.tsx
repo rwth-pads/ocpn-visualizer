@@ -105,7 +105,7 @@ const Home = () => {
     const handleListItemClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => {
         setSelectedOCPN(index);
     }
-
+    // TODO: Instead of having a seperate tab for the management of imported OCPNs, add a select to the header to switch between imported OCPNs.
     return (
         <CustomThemeProvider darkMode={darkMode}>
             <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
@@ -141,7 +141,7 @@ const Home = () => {
                             }
                         </Box>
                     )}
-                    {(tabValue === 0 || !isSmallScreen) && <VisualizationArea />}
+                    {(tabValue === 0 || !isSmallScreen) && <VisualizationArea selectedOCPN={selectedOCPN ? importedObjects[selectedOCPN] : null}/>}
                 </Box>
             </Box>
             <ImportDialog
