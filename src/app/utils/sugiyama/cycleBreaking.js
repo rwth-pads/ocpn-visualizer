@@ -11,7 +11,7 @@ const OCPNGraph = require('../classes/OCPNGraph');
  * @param {String[]} sinks The ids of the places that are marked as sinks.
  * @returns {ObjectCentricPetriNet} Acyclic OCPN with reversed edges.
  */
-function reverse_cycles(ocpn, sources, sinks) {
+function reverseCycles(ocpn, sources, sinks) {
     // Construct the graph from the OCPN.
     var net = new OCPNGraph(ocpn);
     // Get the solution to the modified FAS problem.
@@ -74,5 +74,5 @@ function modifiedGreedyFAS(net, sources, sinks) {
     return s1.concat(s2);
 }
 
-// export default reverse_cycles;
-module.exports = reverse_cycles;
+// export default reverseCycles;
+module.exports = reverseCycles;
