@@ -9,25 +9,29 @@ const OCPNGraph = require('../classes/OCPNGraph');
  * @param {ObjectCentricPetriNet} ocpn The Object Centric Petri Net to reverse cycles in.
  * @param {String[]} sources The ids of the places that are marked as sources.
  * @param {String[]} sinks The ids of the places that are marked as sinks.
- * @returns {ObjectCentricPetriNet} Acyclic OCPN with reversed edges.
+ * @returns {Number} The number of arcs that were reversed.
  */
 function reverseCycles(ocpn, sources, sinks) {
+    let reversedArcs = 0;
     // Construct the graph from the OCPN.
     var net = new OCPNGraph(ocpn);
-    // Get the solution to the modified FAS problem.
+    // Compute solution to the modified FAS problem.
     var fas = modifiedGreedyFAS(net, sources, sinks);
     console.log("FAS: ", fas);
     ocpn.arcs.forEach(arc => {
         let sourceIndex = fas.indexOf(arc.source.name);
         let targetIndex = fas.indexOf(arc.target.name);
-        console.log(`${arc.source.name}(${sourceIndex}) -> ${arc.target.name}(${targetIndex})${sourceIndex > targetIndex ? ' REVERSED' : ''}`);
-        // Edges where the target is in front of the source are reversed.
+        // Reverse the arc if the source's index is greater than the target's index.
         arc.setReverse(sourceIndex > targetIndex);
+        reversedArcs += sourceIndex > targetIndex ? 1 : 0;
     });
+    return reversedArcs;
 }
 
 /**
- * 
+ * Computes a solution to the Feedback Arc Set problem using a modified greedy algorithm
+ * that takes user defined sources and sinks into account. 
+ *
  * @param {OCPNGraph} net The graph constructed from an OCPN. 
  * @param {String[]} sources The ids of user selected sources.
  * @param {String[]} sinks The ids of user selected sinks.
@@ -47,8 +51,8 @@ function modifiedGreedyFAS(net, sources, sinks) {
         s2.sort((a, b) => net.getOutDegree(b) - net.getInDegree(b) - net.getOutDegree(a) + net.getInDegree(a));
         net.removeNodes(sinks);
     }
-    console.log("s1: ", s1);
-    console.log("s2: ", s2);
+    console.log("User defined SOURCES: ", s1);
+    console.log("User defined SINKS: ", s2);
     // While there are nodes remaining in the graph.
     while (net.nodes.length > 0) {
         // While the net contains sinks, add the sink to the front of s2 and remove it and its edges from the net.

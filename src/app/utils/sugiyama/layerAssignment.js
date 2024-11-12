@@ -1,4 +1,6 @@
-// import glpk from 'glpk.js';
+// import glpkModule from 'glpk.js';
+// import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
+// import OCPNGraph from '../classes/OCPNGraph';
 const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
 const OCPNGraph = require('../classes/OCPNGraph');
 const glpkModule = require('glpk.js');
@@ -126,7 +128,6 @@ async function assignLayers(ocpn) {
         }
         layering[layer].push(node);
     }
-
     return layering;
 }
 
