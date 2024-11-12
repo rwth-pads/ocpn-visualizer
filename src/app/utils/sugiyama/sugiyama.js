@@ -40,9 +40,20 @@ fs.readFile(jsonFilePath, 'utf8', async (err, data) => {
     // Assign layers to the nodes of the graph such that no edge points towards a node in a lower layer.
     var layering = await assignLayers(ocpn);
     console.log("Layering: ", layering);
+    // Insert dummy vertices to make the layering "proper".
     var dummyCount = insertDummyVertices(ocpn, layering);
     console.log("Dummy vertices inserted: ", dummyCount);
     console.log("Layering (With dummies): ", layering);
-    // console.log(ocpn.toString());
+
+    // TODO: Order the vertices in each layer.
+    // const config = { oa: 0}; // TODO: Add the actual configurations.
+    // var crossingCount = orderVertices(ocpn, layering, config);
+    // console.log("Crossing count: ", crossingCount);
+
+    // TODO: Compute the actual x and y coordinates for each node and the path points for each arc.
+    // const config = { ranksep: 1 }; // TODO: Add the actual configurations.
+    // positionVertices(ocpn, layering, config);
+    // console.log("Resulting OCPN: ", ocpn.toString());
+
     console.log(ocpn.name);
 });

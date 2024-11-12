@@ -84,18 +84,22 @@ function createPositiveLayerConstraints(ocpnGraph, glpk) {
 }
 
 /**
- * 
+ * Solves the layer assignment problem for the given OCPN.
+ * The returned solution is not necessarily a "proper" layering.
+ * Thus, we add dummy vertices in a subsequent step to ensure that.
+ *
  * @param {ObjectCentricPetriNet} ocpn 
- * @returns 
+ * @returns A layering of the nodes of the OCPN.
  */
 async function assignLayers(ocpn) {
     const glpk = await glpkModule();
 
+    // Initialize the OCPN graph, the ILP objective and constraints.
     const ocpnGraph = new OCPNGraph(ocpn);
     const objectiveVars = createILPObjective(ocpn.arcs);
     const arcConstraint = createArcSpanConstraints(ocpn.arcs, glpk);
     const positiveConstraint = createPositiveLayerConstraints(ocpnGraph, glpk);
-
+    // Define the linear program.
     const lp = {
         name: ocpn.name,
         objective: {
@@ -109,7 +113,7 @@ async function assignLayers(ocpn) {
         ],
         integers: ocpnGraph.nodes
     };
-
+    // Solve the linear program.
     const result = glpk.solve(lp);
 
     // Check for both optimal and feasible solutions.
@@ -118,23 +122,20 @@ async function assignLayers(ocpn) {
     }
 
     // Get the layers of the nodes.
-    //      result.result.vars is of the format: { 'p1': 0, 't1': 1, ... }.
     const layers = result.result.vars;
     const layering = {};
+    // Iterate over the pairs of node and the node's layer.
     for (const [node, layer] of Object.entries(layers)) {
         if (layering[layer] === undefined) {
             layering[layer] = [];
         }
+        // Add the node to the layer.
         layering[layer].push(node);
+        // Find the corresponding node in the OCPN.
         let nodeObj = ocpn.findElementByName(node);
         // Assign the layer to the node in the OCPN.
         nodeObj.layer = layer;
     }
-    // layering (Example):
-    // { "0" : ["p1", "p2", "p3", ...],
-    //   "1" : ["t1", "t2", "t3", ...],
-    //   ...
-    //   "n" : ["p4", "p5", "p6", ...] };
     return layering;
 }
 
