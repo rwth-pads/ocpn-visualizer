@@ -1,10 +1,19 @@
-import { Parser } from 'xml2js';
+// import { Parser } from 'xml2js';
+const { Parser } = require('xml2js');
 
 /**
  * The ObjectCentricPetriNet class represents an object-centric Petri net.
  * Adapted from https://github.com/ocpm/ocpa/blob/main/ocpa/objects/oc_petri_net/obj.py
  */
 class ObjectCentricPetriNet {
+    /**
+     * Class constants.
+     */
+    static DEFAULT_OCPN_NAME = "Object-Centric Petri Net"; // Default name of the Petri net.
+    static DEFAULT_ARC_WEIGHT = 1; // Default weight of an arc.
+    static DEFAULT_ARC_VARIABLE = false; // Default variable property of an arc.
+    static DEFAULT_ARC_REVERSED = false; // Default reversed property of an arc.
+
     /**
      * Constructor for the ObjectCentricPetriNet class.
      * 
@@ -27,109 +36,32 @@ class ObjectCentricPetriNet {
     }
 
     /**
-     * Class constants.
+     * Gets the nodes of the OCPN.
+     *
+     * @returns The set of node names in the OCPN.
      */
-    static DEFAULT_OCPN_NAME = "Object-Centric Petri Net"; // Default name of the Petri net.
-    static DEFAULT_ARC_WEIGHT = 1; // Default weight of an arc.
-    static DEFAULT_ARC_VARIABLE = false; // Default variable property of an arc.
-    static DEFAULT_ARC_REVERSED = false; // Default reversed property of an arc.
-
-    /**
-     * Adds an arc to the Petri net.
-     * 
-     * @param {ObjectCentricPetriNet.Arc} arc The arc to add to the Petri net.
-     */
-    addArc(arc) {
-        this.arcs.add(arc);
-        arc.source.outArcs.add(arc);
-        arc.target.inArcs.add(arc);
-    }
-
-    /**
-     * Adds multiple arcs to the Petri net.
-     * 
-     * @param {ObjectCentricPetriNet.Arc[]} arcs The list of arcs to add to the Petri net.
-     */
-    addArcs(arcs) {
-        for (const arc of arcs) {
-            this.addArc(arc);
+    getNodeIds() {
+        var nodes = [];
+        for (var p of this.places) {
+            nodes.push(p.name);
         }
-    }
-
-    /**
-     * Removes an arc from the Petri net.
-     * 
-     * @param {ObjectCentricPetriNet.Arc} arc The arc to remove from the Petri net.
-     */
-    removeArc(arc) {
-        this.arcs.delete(arc);
-        arc.source.outArcs.delete(arc);
-        arc.target.inArcs.delete(arc);
-    }
-
-    /**
-     * Removes multiple arcs from the Petri net.
-     * 
-     * @param {ObjectCentricPetriNet.Arc[]} arcs The list of arcs to remove from the Petri net.
-     */
-    removeArcs(arcs) {
-        for (const arc of arcs) {
-            this.removeArc(arc);
+        for (var t of this.transitions) {
+            nodes.push(t.name);
         }
+        return nodes;
     }
 
     /**
-     * Removes a place from the Petri net.
+     * Gets the arcs of the OCPN.
      * 
-     * @param {ObjectCentricPetriNet.Place} place The place to remove from the Petri net.
+     * @returns The arcs of the OCPN.
      */
-    removePlace(place) {
-        this.places.delete(place);
-        const removeArcs = new Set();
-        for (const arc of this.arcs) {
-            if (arc.source === place || arc.target === place) {
-                removeArcs.add(arc);
-            }
+    getArcs() {
+        var as = [];
+        for (var arc of this.arcs) {
+            as.push({ source: arc.source.name, target: arc.target.name });
         }
-        this.removeArcs(removeArcs);
-    }
-
-    /**
-     * Removes multiple places from the Petri net.
-     * 
-     * @param {ObjectCentricPetriNet.Place[]} places The list of places to remove from the Petri net.
-     */
-    removePlaces(places) {
-        for (const place of places) {
-            this.removePlace(place);
-        }
-    }
-
-    /**
-     * Removes a transition from the Petri net.
-     * 
-     * @param {ObjectCentricPetriNet.Transition} transition The transition to remove from the Petri net.
-     */
-    removeTransition(transition) {
-        this.transitions.delete(transition);
-        const removeArcs = new Set();
-        for (const arc of this.arcs) {
-            if (arc.source === transition || arc.target === transition) {
-                removeArcs.add(arc);
-            }
-        }
-        this.removeArcs(removeArcs);
-    }
-
-    /**
-     * Removes multiple transitions from the Petri net.
-     * 
-     * @param {ObjectCentricPetriNet.Transition[]} transitions The list of transitions to remove from the Petri net.
-     */
-    removeTransitions(transitions) {
-        for (const transition of transitions) {
-            this.removeTransition(transition);
-        }
+        return as;
     }
 
     /**
@@ -139,60 +71,60 @@ class ObjectCentricPetriNet {
      * @returns {ObjectCentricPetriNet} The ObjectCentricPetriNet instance.
      */
     static fromJSON(json) {
-        const places = new Set(json.places.map(place => new ObjectCentricPetriNet.Place(
-            place.name,
-            place.objectType,
-            new Set(),
-            new Set(),
-            place.initial !== undefined ? place.initial : false,
-            place.final !== undefined ? place.final : false
-        )));
+    const places = new Set(json.places.map(place => new ObjectCentricPetriNet.Place(
+        place.name,
+        place.objectType,
+        new Set(),
+        new Set(),
+        place.initial !== undefined ? place.initial : false,
+        place.final !== undefined ? place.final : false
+    )));
 
-        const transitions = new Set(json.transitions.map(transition => new ObjectCentricPetriNet.Transition(
-            transition.name,
-            transition.label,
-            new Set(),
-            new Set(),
-            transition.properties !== undefined ? transition.properties : {},
-            transition.silent !== undefined ? transition.silent : false
-        )));
+    const transitions = new Set(json.transitions.map(transition => new ObjectCentricPetriNet.Transition(
+        transition.name,
+        transition.label,
+        new Set(),
+        new Set(),
+        transition.properties !== undefined ? transition.properties : {},
+        transition.silent !== undefined ? transition.silent : false
+    )));
 
-        const arcs = new Set(json.arcs.map(arc => {
-            const source = Array.from(places).find(place => place.name === arc.source) ||
-                Array.from(transitions).find(transition => transition.name === arc.source);
-            const target = Array.from(places).find(place => place.name === arc.target) ||
-                Array.from(transitions).find(transition => transition.name === arc.target);
+    const arcs = new Set(json.arcs.map(arc => {
+        const source = Array.from(places).find(place => place.name === arc.source) ||
+            Array.from(transitions).find(transition => transition.name === arc.source);
+        const target = Array.from(places).find(place => place.name === arc.target) ||
+            Array.from(transitions).find(transition => transition.name === arc.target);
 
-            return new ObjectCentricPetriNet.Arc(
-                source,
-                target,
-                this.DEFAULT_ARC_REVERSED,
-                arc.variable !== undefined ? arc.variable : this.DEFAULT_ARC_VARIABLE,
-                arc.weight !== undefined ? arc.weight : this.DEFAULT_ARC_WEIGHT,
-                arc.properties !== undefined ? arc.properties : {}
-            );
-        }));
-
-        // Add arcs to places and transitions.
-        for (const arc of arcs) {
-            arc.source.outArcs.add(arc);
-            arc.target.inArcs.add(arc);
-        }
-
-        // Get the object types of the places.
-        const objectTypes = new Set(Array.from(places).map(place => place.objectType));
-
-        // Return the ObjectCentricPetriNet instance.
-        return new ObjectCentricPetriNet(
-            json.name !== undefined ? json.name : self.DEFAULT_OCPN_NAME, // The name of the Petri net.
-            places,  // The set of places in the Petri net.
-            transitions, // The set of transitions in the Petri net.
-            new Set(), // Dummy nodes will be added within the Sugiyama layout algorithm.
-            arcs, // The set of arcs in the Petri net.
-            objectTypes, // TODO: instead of passing the object types, we return a list of simple Petri Nets based on their object type.
-            json.properties !== undefined ? json.properties : {} // Additional properties of the Petri net.
+        return new ObjectCentricPetriNet.Arc(
+            source,
+            target,
+            this.DEFAULT_ARC_REVERSED,
+            arc.variable !== undefined ? arc.variable : this.DEFAULT_ARC_VARIABLE,
+            arc.weight !== undefined ? arc.weight : this.DEFAULT_ARC_WEIGHT,
+            arc.properties !== undefined ? arc.properties : {}
         );
+    }));
+
+    // Add arcs to places and transitions.
+    for (const arc of arcs) {
+        arc.source.outArcs.add(arc);
+        arc.target.inArcs.add(arc);
     }
+
+    // Get the object types of the places.
+    const objectTypes = new Set(Array.from(places).map(place => place.objectType));
+
+    // Return the ObjectCentricPetriNet instance.
+    return new ObjectCentricPetriNet(
+        json.name !== undefined ? json.name : self.DEFAULT_OCPN_NAME, // The name of the Petri net.
+        places,  // The set of places in the Petri net.
+        transitions, // The set of transitions in the Petri net.
+        new Set(), // Dummy nodes will be added within the Sugiyama layout algorithm.
+        arcs, // The set of arcs in the Petri net.
+        objectTypes, // TODO: instead of passing the object types, we return a list of simple Petri Nets based on their object type.
+        json.properties !== undefined ? json.properties : {} // Additional properties of the Petri net.
+    );
+}
 
     /**
      * Parses a PNML file and returns an ObjectCentricPetriNet instance.
@@ -201,116 +133,116 @@ class ObjectCentricPetriNet {
      * @returns {Promise<ObjectCentricPetriNet>} A promise that resolves to the ObjectCentricPetriNet instance.
      */
     static async fromPNML(pnml) {
-        const parser = new Parser();
-        const result = await parser.parseStringPromise(pnml);
-        const net = result.pnml.net[0];
-        const name = net.name[0].text[0] ? net.name[0].text[0] : self.DEFAULT_OCPN_NAME;
-        const properties = {}; // Add any additional properties if needed
+    const parser = new Parser();
+    const result = await parser.parseStringPromise(pnml);
+    const net = result.pnml.net[0];
+    const name = net.name[0].text[0] ? net.name[0].text[0] : self.DEFAULT_OCPN_NAME;
+    const properties = {}; // Add any additional properties if needed
 
-        const places = new Set(net.page[0].place.map(place => {
-            const id = place.$.id;
-            const objectType = place.toolspecific[0].objectType[0];
-            const initial = place.toolspecific[0].initial[0] === 'true';
-            const final = place.toolspecific[0].final[0] === 'true';
-            return new ObjectCentricPetriNet.Place(id, objectType, new Set(), new Set(), initial, final);
-        }));
+    const places = new Set(net.page[0].place.map(place => {
+        const id = place.$.id;
+        const objectType = place.toolspecific[0].objectType[0];
+        const initial = place.toolspecific[0].initial[0] === 'true';
+        const final = place.toolspecific[0].final[0] === 'true';
+        return new ObjectCentricPetriNet.Place(id, objectType, new Set(), new Set(), initial, final);
+    }));
 
-        const transitions = new Set(net.page[0].transition.map(transition => {
-            const id = transition.$.id;
-            const label = transition.name[0].text[0];
-            const silent = transition.toolspecific[0].silent[0] === 'true';
-            const properties = {}; // TODO
-            return new ObjectCentricPetriNet.Transition(id, label, new Set(), new Set(), properties, silent);
-        }));
+    const transitions = new Set(net.page[0].transition.map(transition => {
+        const id = transition.$.id;
+        const label = transition.name[0].text[0];
+        const silent = transition.toolspecific[0].silent[0] === 'true';
+        const properties = {}; // TODO
+        return new ObjectCentricPetriNet.Transition(id, label, new Set(), new Set(), properties, silent);
+    }));
 
-        const arcs = new Set(net.page[0].arc.map(arc => {
-            const source = Array.from(places).find(place => place.name === arc.$.source) ||
-                Array.from(transitions).find(transition => transition.name === arc.$.source);
-            const target = Array.from(places).find(place => place.name === arc.$.target) ||
-                Array.from(transitions).find(transition => transition.name === arc.$.target);
-            const weight = arc.inscription ? parseInt(arc.inscription[0].text[0], 10) : 1;
-            const variable = arc.toolspecific[0].variableArc[0] === 'true';
-            const properties = {}; // TODO
-            return new ObjectCentricPetriNet.Arc(source, target, false, variable, weight, properties);
-        }));
+    const arcs = new Set(net.page[0].arc.map(arc => {
+        const source = Array.from(places).find(place => place.name === arc.$.source) ||
+            Array.from(transitions).find(transition => transition.name === arc.$.source);
+        const target = Array.from(places).find(place => place.name === arc.$.target) ||
+            Array.from(transitions).find(transition => transition.name === arc.$.target);
+        const weight = arc.inscription ? parseInt(arc.inscription[0].text[0], 10) : 1;
+        const variable = arc.toolspecific[0].variableArc[0] === 'true';
+        const properties = {}; // TODO
+        return new ObjectCentricPetriNet.Arc(source, target, false, variable, weight, properties);
+    }));
 
-        // Add arcs to places and transitions.
-        for (const arc of arcs) {
-            arc.source.outArcs.add(arc);
-            arc.target.inArcs.add(arc);
-        }
-
-        // Return the ObjectCentricPetriNet instance.
-        return new ObjectCentricPetriNet(
-            name,
-            places,
-            transitions,
-            new Set(), // Dummy nodes will be added within the Sugiyama layout algorithm.
-            arcs,
-            properties
-        );
+    // Add arcs to places and transitions.
+    for (const arc of arcs) {
+        arc.source.outArcs.add(arc);
+        arc.target.inArcs.add(arc);
     }
 
-    /**
-     * Check for equality of two OCPNs, except the name and properties.
-     * 
-     * @param {ObjectCentricPetriNet} other The other OCPN to compare with.
-     * @returns {boolean} True if the OCPNs are equal, false otherwise.
-     */
-    equals(other) {
-        if (this.places.size !== other.places.size) return false;
-        if (this.transitions.size !== other.transitions.size) return false;
-        if (this.arcs.size !== other.arcs.size) return false;
+    // Return the ObjectCentricPetriNet instance.
+    return new ObjectCentricPetriNet(
+        name,
+        places,
+        transitions,
+        new Set(), // Dummy nodes will be added within the Sugiyama layout algorithm.
+        arcs,
+        properties
+    );
+}
 
-        const compareSets = (set1, set2, compareFunc) => {
-            if (set1.size !== set2.size) return false;
-            for (const item1 of set1) {
-                if (![...set2].some(item2 => compareFunc(item1, item2))) return false;
-            }
-            return true;
+/**
+ * Check for equality of two OCPNs, except the name and properties.
+ * 
+ * @param {ObjectCentricPetriNet} other The other OCPN to compare with.
+ * @returns {boolean} True if the OCPNs are equal, false otherwise.
+ */
+equals(other) {
+    if (this.places.size !== other.places.size) return false;
+    if (this.transitions.size !== other.transitions.size) return false;
+    if (this.arcs.size !== other.arcs.size) return false;
+
+    const compareSets = (set1, set2, compareFunc) => {
+        if (set1.size !== set2.size) return false;
+        for (const item1 of set1) {
+            if (![...set2].some(item2 => compareFunc(item1, item2))) return false;
         }
-
-        const comparePlaces = (p1, p2) =>
-            p1.name === p2.name &&
-            p1.objectType === p2.objectType &&
-            p1.initial === p2.initial &&
-            p1.final === p2.final;
-        const compareTransitions = (t1, t2) =>
-            t1.name === t2.name &&
-            t1.label === t2.label &&
-            t1.silent === t2.silent;
-        const compareArcs = (a1, a2) =>
-            a1.source.name === a2.source.name &&
-            a1.target.name === a2.target.name &&
-            a1.reversed === a2.reversed &&
-            a1.variable === a2.variable &&
-            a1.weight === a2.weight;
-
-        if (!compareSets(this.places, other.places, comparePlaces)) return false;
-        console.log("Places are equal");
-        if (!compareSets(this.transitions, other.transitions, compareTransitions)) return false;
-        console.log("Transitions are equal");
-        if (!compareSets(this.arcs, other.arcs, compareArcs)) return false;
-        console.log("Arcs are equal");
         return true;
     }
 
-    /**
-     * Converts the OCPN to a string representation.
-     * 
-     * @returns {string} The string representation of the OCPN.
-     */
-    toString() {
-        const placesStr = Array.from(this.places).map(place => place.toString()).join('');
-        const transitionsStr = Array.from(this.transitions).map(transition => transition.toString()).join('');
-        const dummyNodesStr = Array.from(this.dummyNodes).map(dummyNode => dummyNode.toString()).join('');
-        const arcsStr = Array.from(this.arcs).map(arc => arc.toString()).join('');
-        const propertiesStr = Object.entries(this.properties)
-            .map(([key, value]) => `\t${key}: ${value}`)
-            .join('\n');
+    const comparePlaces = (p1, p2) =>
+        p1.name === p2.name &&
+        p1.objectType === p2.objectType &&
+        p1.initial === p2.initial &&
+        p1.final === p2.final;
+    const compareTransitions = (t1, t2) =>
+        t1.name === t2.name &&
+        t1.label === t2.label &&
+        t1.silent === t2.silent;
+    const compareArcs = (a1, a2) =>
+        a1.source.name === a2.source.name &&
+        a1.target.name === a2.target.name &&
+        a1.reversed === a2.reversed &&
+        a1.variable === a2.variable &&
+        a1.weight === a2.weight;
 
-        return `${this.name}\nPlaces:\n${placesStr}\nTransitions:\n${transitionsStr}\nDummy Nodes:\n${dummyNodesStr ? dummyNodesStr : "\tNo dummy Nodes yet!"}\nArcs:\n${arcsStr}\nProperties:\n${propertiesStr}`;
-    }
+    if (!compareSets(this.places, other.places, comparePlaces)) return false;
+    console.log("Places are equal");
+    if (!compareSets(this.transitions, other.transitions, compareTransitions)) return false;
+    console.log("Transitions are equal");
+    if (!compareSets(this.arcs, other.arcs, compareArcs)) return false;
+    console.log("Arcs are equal");
+    return true;
+}
+
+/**
+ * Converts the OCPN to a string representation.
+ * 
+ * @returns {string} The string representation of the OCPN.
+ */
+toString() {
+    const placesStr = Array.from(this.places).map(place => place.toString()).join('');
+    const transitionsStr = Array.from(this.transitions).map(transition => transition.toString()).join('');
+    const dummyNodesStr = Array.from(this.dummyNodes).map(dummyNode => dummyNode.toString()).join('');
+    const arcsStr = Array.from(this.arcs).map(arc => arc.toString()).join('');
+    const propertiesStr = Object.entries(this.properties)
+        .map(([key, value]) => `\t${key}: ${value}`)
+        .join('\n');
+
+    return `${this.name}\nPlaces:\n${placesStr}\nTransitions:\n${transitionsStr}\nDummy Nodes:\n${dummyNodesStr ? dummyNodesStr : "\tNo dummy Nodes yet!"}\nArcs:\n${arcsStr}\nProperties:\n${propertiesStr}`;
+}
 }
 
 ObjectCentricPetriNet.Place = class {
@@ -435,16 +367,12 @@ ObjectCentricPetriNet.Arc = class {
     }
 
     /**
-     * Reverses the arc.
+     * Sets the reversed property of the arc.
+     * 
+     * @param {boolean} reversed The new value of the reversed property.
      */
-    reverseArc() {
-        const newArc = new ObjectCentricPetriNet.Arc(this.target, this.source, !this.reversed, this.variable, this.weight, this.properties);
-        this.source.outArcs.delete(this);
-        this.target.inArcs.delete(this);
-        this.source = newArc.source;
-        this.target = newArc.target;
-        this.source.outArcs.add(newArc);
-        this.target.inArcs.add(newArc);
+    setReverse(reversed) {
+        this.reversed = reversed;
     }
 
     /**
@@ -495,4 +423,5 @@ ObjectCentricPetriNet.Dummy = class {
 }
 
 // Export the ObjectCentricPetriNet class and its subclasses
-export default ObjectCentricPetriNet;
+// export default ObjectCentricPetriNet;
+module.exports = ObjectCentricPetriNet;

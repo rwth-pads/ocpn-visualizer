@@ -1,21 +1,27 @@
 {
-    "name": "Example Petri Net",
+    "name": "Simple Cyclic OCPN",
     "places": [
         {
-            "name": "p1",
-            "objectType": "type1",
+            "name": "o1",
+            "objectType": "order",
             "initial": true,
             "final": false
         },
         {
-            "name": "p2",
-            "objectType": "type1",
+            "name": "o2",
+            "objectType": "order",
             "initial": false,
             "final": false
         },
         {
-            "name": "p3",
-            "objectType": "type1",
+            "name": "i1",
+            "objectType": "item",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "i2",
+            "objectType": "item",
             "initial": false,
             "final": false
         }
@@ -23,7 +29,7 @@
     "transitions": [
         {
             "name": "t1",
-            "label": "Start",
+            "label": "Middle",
             "properties": {
                 "cost": 5
             },
@@ -31,24 +37,18 @@
         },
         {
             "name": "t2",
-            "label": "Process",
-            "properties": {
-                "cost": 10
-            },
+            "label": "Item Back",
             "silent": false
         },
         {
             "name": "t3",
-            "label": "End",
-            "properties": {
-                "cost": 5
-            },
+            "label": "Order Back",
             "silent": false
         }
     ],
     "arcs": [
         {
-            "source": "p1",
+            "source": "o1",
             "target": "t1",
             "weight": 1,
             "variable": false,
@@ -56,13 +56,41 @@
         },
         {
             "source": "t1",
-            "target": "p2",
+            "target": "o2",
             "weight": 1,
             "variable": false,
             "properties": {}
         },
         {
-            "source": "p2",
+            "source": "o2",
+            "target": "t3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t3",
+            "target": "o1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "i1",
+            "target": "t1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t1",
+            "target": "i2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "i2",
             "target": "t2",
             "weight": 1,
             "variable": false,
@@ -70,21 +98,14 @@
         },
         {
             "source": "t2",
-            "target": "p3",
-            "weight": 1,
-            "variable": false,
-            "properties": {}
-        },
-        {
-            "source": "p3",
-            "target": "t3",
+            "target": "i1",
             "weight": 1,
             "variable": false,
             "properties": {}
         }
     ],
     "properties": {
-        "creator": "Example Creator",
+        "creator": "Tobias Brachmann",
         "version": "1.0"
     }
 }
