@@ -83,6 +83,11 @@ function createPositiveLayerConstraints(ocpnGraph, glpk) {
     return positiveConstraints;
 }
 
+/**
+ * 
+ * @param {ObjectCentricPetriNet} ocpn 
+ * @returns 
+ */
 async function assignLayers(ocpn) {
     const glpk = await glpkModule();
 
@@ -115,19 +120,21 @@ async function assignLayers(ocpn) {
     // Get the layers of the nodes.
     //      result.result.vars is of the format: { 'p1': 0, 't1': 1, ... }.
     const layers = result.result.vars;
-
-    // layering (Example):
-    // { "0" : ["p1", "p2", "p3", ...],
-    //   "1" : ["t1", "t2", "t3", ...],
-    //   ...
-    //   "n" : ["p4", "p5", "p6", ...] };
     const layering = {};
     for (const [node, layer] of Object.entries(layers)) {
         if (layering[layer] === undefined) {
             layering[layer] = [];
         }
         layering[layer].push(node);
+        let nodeObj = ocpn.findElementByName(node);
+        // Assign the layer to the node in the OCPN.
+        nodeObj.layer = layer;
     }
+    // layering (Example):
+    // { "0" : ["p1", "p2", "p3", ...],
+    //   "1" : ["t1", "t2", "t3", ...],
+    //   ...
+    //   "n" : ["p4", "p5", "p6", ...] };
     return layering;
 }
 

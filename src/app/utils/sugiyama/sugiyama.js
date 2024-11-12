@@ -3,6 +3,8 @@ const fs = require('fs');
 const reverseCycles = require('./cycleBreaking');
 // import assignLayers from './layerAssignment';
 const assignLayers = require('./layerAssignment');
+// import insertDummyVertices from './dummyVertexInsertion';
+const insertDummyVertices = require('./dummyVertexInsertion');
 // import orderVertices from './vertexOrdering';
 const orderVertices = require('./vertexOrdering');
 // import positionVertices from './vertexPositioning';
@@ -12,8 +14,8 @@ const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
 
 // Define the path to the JSON file.
 // const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\ocpa_p2p-normal.json';
-// const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\cyclic-ocpn.json'; 
-const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\simple_ocpn.json'; 
+const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\cyclic-ocpn.json'; 
+// const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\simple_ocpn.json'; 
 
 // Read the JSON file.
 fs.readFile(jsonFilePath, 'utf8', async (err, data) => {
@@ -38,6 +40,9 @@ fs.readFile(jsonFilePath, 'utf8', async (err, data) => {
     // Assign layers to the nodes of the graph such that no edge points towards a node in a lower layer.
     var layering = await assignLayers(ocpn);
     console.log("Layering: ", layering);
+    var dummyCount = insertDummyVertices(ocpn, layering);
+    console.log("Dummy vertices inserted: ", dummyCount);
+    console.log("Layering (With dummies): ", layering);
     // console.log(ocpn.toString());
     console.log(ocpn.name);
 });

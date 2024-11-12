@@ -18,14 +18,14 @@ class ObjectCentricPetriNet {
      * Constructor for the ObjectCentricPetriNet class.
      * 
      * @param {string} name The name of the Petri net.
-     * @param {Set} places The set of places in the Petri net.
-     * @param {Set} transitions The set of transitions in the Petri net.
-     * @param {Set} dummyNodes The set of dummy nodes in the Petri net.
-     * @param {Set} arcs The set of arcs in the Petri net.
+     * @param {*} places The set of places in the Petri net.
+     * @param {*} transitions The set of transitions in the Petri net.
+     * @param {*} dummyNodes The set of dummy nodes in the Petri net.
+     * @param {*} arcs The set of arcs in the Petri net.
      * @param {Object} objectTypes The Petri nets of projected object types within the Petri net.
      * @param {Object} properties Additional properties of the Petri net.
      */
-    constructor(name = "", places = new Set(), transitions = new Set(), dummyNodes = new Set(), arcs = new Set(), objectTypes = {}, properties = {}) {
+    constructor(name = "", places = [], transitions = [], dummyNodes = [], arcs = [], objectTypes = {}, properties = {}) {
         this.name = name;
         this.places = places;
         this.transitions = transitions;
@@ -33,6 +33,31 @@ class ObjectCentricPetriNet {
         this.arcs = arcs;
         this.objectTypes = objectTypes;
         this.properties = properties;
+    }
+
+    /**
+     * Finds and returns a place, transition, or dummy node by its unique name.
+     *
+     * @param {string} name The unique name of the place, transition, or dummy node.
+     * @returns {Object|null} The element with the given name, or null if it does not exist.
+     */
+    findElementByName(name) {
+        for (let place of this.places) {
+            if (place.name === name) {
+                return place;
+            }
+        }
+        for (let transition of this.transitions) {
+            if (transition.name === name) {
+                return transition;
+            }
+        }
+        for (let dummy of this.dummyNodes) {
+            if (dummy.name === name) {
+                return dummy;
+            }
+        }
+        return null;
     }
 
     /**
@@ -71,25 +96,25 @@ class ObjectCentricPetriNet {
      * @returns {ObjectCentricPetriNet} The ObjectCentricPetriNet instance.
      */
     static fromJSON(json) {
-        const places = new Set(json.places.map(place => new ObjectCentricPetriNet.Place(
+        const places = json.places.map(place => new ObjectCentricPetriNet.Place(
             place.name,
             place.objectType,
-            new Set(),
-            new Set(),
+            [],
+            [],
             place.initial !== undefined ? place.initial : false,
             place.final !== undefined ? place.final : false
-        )));
+        ));
 
-        const transitions = new Set(json.transitions.map(transition => new ObjectCentricPetriNet.Transition(
+        const transitions = json.transitions.map(transition => new ObjectCentricPetriNet.Transition(
             transition.name,
             transition.label,
-            new Set(),
-            new Set(),
+            [],
+            [],
             transition.properties !== undefined ? transition.properties : {},
             transition.silent !== undefined ? transition.silent : false
-        )));
+        ));
 
-        const arcs = new Set(json.arcs.map(arc => {
+        const arcs = json.arcs.map(arc => {
             const source = Array.from(places).find(place => place.name === arc.source) ||
                 Array.from(transitions).find(transition => transition.name === arc.source);
             const target = Array.from(places).find(place => place.name === arc.target) ||
@@ -103,23 +128,23 @@ class ObjectCentricPetriNet {
                 arc.weight !== undefined ? arc.weight : this.DEFAULT_ARC_WEIGHT,
                 arc.properties !== undefined ? arc.properties : {}
             );
-        }));
+        });
 
         // Add arcs to places and transitions.
         for (const arc of arcs) {
-            arc.source.outArcs.add(arc);
-            arc.target.inArcs.add(arc);
+            arc.source.outArcs.push(arc);
+            arc.target.inArcs.push(arc);
         }
 
         // Get the object types of the places.
-        const objectTypes = new Set(Array.from(places).map(place => place.objectType));
+        const objectTypes = Array.from(places).map(place => place.objectType);
 
         // Return the ObjectCentricPetriNet instance.
         return new ObjectCentricPetriNet(
             json.name !== undefined ? json.name : self.DEFAULT_OCPN_NAME, // The name of the Petri net.
             places,  // The set of places in the Petri net.
             transitions, // The set of transitions in the Petri net.
-            new Set(), // Dummy nodes will be added within the Sugiyama layout algorithm.
+            [], // Dummy nodes will be added within the Sugiyama layout algorithm.
             arcs, // The set of arcs in the Petri net.
             objectTypes, // TODO: instead of passing the object types, we return a list of simple Petri Nets based on their object type.
             json.properties !== undefined ? json.properties : {} // Additional properties of the Petri net.
@@ -139,23 +164,23 @@ class ObjectCentricPetriNet {
         const name = net.name[0].text[0] ? net.name[0].text[0] : self.DEFAULT_OCPN_NAME;
         const properties = {}; // Add any additional properties if needed
 
-        const places = new Set(net.page[0].place.map(place => {
+        const places = net.page[0].place.map(place => {
             const id = place.$.id;
             const objectType = place.toolspecific[0].objectType[0];
             const initial = place.toolspecific[0].initial[0] === 'true';
             const final = place.toolspecific[0].final[0] === 'true';
-            return new ObjectCentricPetriNet.Place(id, objectType, new Set(), new Set(), initial, final);
-        }));
+            return new ObjectCentricPetriNet.Place(id, objectType, [], [], initial, final);
+        });
 
-        const transitions = new Set(net.page[0].transition.map(transition => {
+        const transitions = net.page[0].transition.map(transition => {
             const id = transition.$.id;
             const label = transition.name[0].text[0];
             const silent = transition.toolspecific[0].silent[0] === 'true';
             const properties = {}; // TODO
-            return new ObjectCentricPetriNet.Transition(id, label, new Set(), new Set(), properties, silent);
-        }));
+            return new ObjectCentricPetriNet.Transition(id, label, [], [], properties, silent);
+        });
 
-        const arcs = new Set(net.page[0].arc.map(arc => {
+        const arcs = net.page[0].arc.map(arc => {
             const source = Array.from(places).find(place => place.name === arc.$.source) ||
                 Array.from(transitions).find(transition => transition.name === arc.$.source);
             const target = Array.from(places).find(place => place.name === arc.$.target) ||
@@ -164,12 +189,12 @@ class ObjectCentricPetriNet {
             const variable = arc.toolspecific[0].variableArc[0] === 'true';
             const properties = {}; // TODO
             return new ObjectCentricPetriNet.Arc(source, target, false, variable, weight, properties);
-        }));
+        });
 
         // Add arcs to places and transitions.
         for (const arc of arcs) {
-            arc.source.outArcs.add(arc);
-            arc.target.inArcs.add(arc);
+            arc.source.outArcs.push(arc);
+            arc.target.inArcs.push(arc);
         }
 
         // Return the ObjectCentricPetriNet instance.
@@ -177,7 +202,7 @@ class ObjectCentricPetriNet {
             name,
             places,
             transitions,
-            new Set(), // Dummy nodes will be added within the Sugiyama layout algorithm.
+            [], // Dummy nodes will be added within the Sugiyama layout algorithm.
             arcs,
             properties
         );
@@ -256,33 +281,13 @@ ObjectCentricPetriNet.Place = class {
      * @param {*} initial Boolean that determines whether the place is a source place
      * @param {*} final Boolean that determines whether the place is a sink place
      */
-    constructor(name, objectType, outArcs = new Set(), inArcs = new Set(), initial = false, final = false) {
+    constructor(name, objectType, outArcs = [], inArcs = [], initial = false, final = false) {
         this.name = name;
         this.objectType = objectType;
         this.initial = initial;
         this.final = final;
         this.inArcs = inArcs;
         this.outArcs = outArcs;
-    }
-
-    /**
-     * Returns the preset of this place.
-     * The preset of a place is the set of places that have arcs to this place.
-     * 
-     * @returns {Set} The preset of the place.
-     */
-    get preset() {
-        return new Set(Array.from(this.inArcs).map(inArc => inArc.source));
-    }
-
-    /**
-     * Returns the postset of this place.
-     * The postset of a place is the set of places that have arcs from this place.
-     * 
-     * @returns {Set} The postset of the place.
-     */
-    get postset() {
-        return new Set(Array.from(this.outArcs).map(outArc => outArc.target));
     }
 
     /**
@@ -306,31 +311,13 @@ ObjectCentricPetriNet.Transition = class {
      * @param {*} properties Additional properties of the transition.
      * @param {*} silent Boolean that determines whether the transition is silent.
      */
-    constructor(name, label = null, inArcs = new Set(), outArcs = new Set(), properties = {}, silent = false) {
+    constructor(name, label = null, inArcs = [], outArcs = [], properties = {}, silent = false) {
         this.name = name;
         this.label = label;
         this.inArcs = inArcs;
         this.outArcs = outArcs;
         this.silent = silent;
         this.properties = properties;
-    }
-
-    /**
-     * Gets the set of source nodes for the incoming arcs.
-     * 
-     * @returns {Set} A set containing the source nodes of all incoming arcs.
-     */
-    get preset() {
-        return new Set(Array.from(this.inArcs).map(inArc => inArc.source));
-    }
-
-    /**
-     * Gets the set of target nodes for the outgoing arcs.
-     * 
-     * @returns {Set} A set containing the target nodes of the outgoing arcs.
-     */
-    get postset() {
-        return new Set(Array.from(this.outArcs).map(outArc => outArc.target));
     }
 
     /**
@@ -390,35 +377,15 @@ ObjectCentricPetriNet.Dummy = class {
      * Constructor for the Dummy Node class.
      * 
      * @param {*} name The name of the dummy node.
-     * @param {*} objectType The object type of the dummy node, depending on the object tpye of the connected place.
-     * @param {*} inArcs The node from which the dummy node receives an arc. |inArcs| = 1 for all dummy nodes.
-     * @param {*} outArcs The node to which the dummy node sends an arc. |outArcs| = 1 for all dummy nodes.
+     * @param {*} from The node from which the dummy node receives an arc.
+     * @param {*} to The node to which the dummy node sends an arc.
+     * @param {*} layer The layer in which the dummy node is placed.
      */
-    constructor(name, objectType, inArcs, outArcs) {
+    constructor(name, from, to, layer) {
         this.name = name;
-        this.objectType = objectType;
-        this.inArcs = inArcs;
-        this.outArcs = outArcs;
-    }
-
-    /**
-     * Returns whether the dummy node is an outer dummy node.
-     * A dummy node is an outer dummy node if either the 'from' or the 'to' node are not a dummy nodes, hence a place or a transition.
-     * 
-     * @returns {boolean} True if the dummy node is an outer dummy node, false otherwise.
-     */
-    isOuterDummy() {
-        // |inArcs| = 1 and |outArcs| = 1 for all dummy nodes.
-        return !(this.inArcs[0] instanceof ObjectCentricPetriNet.Dummy) || !(this.outArcs[0] instanceof ObjectCentricPetriNet.Dummy);
-    }
-
-    /**
-     * Converts the dummy node to a string representation.
-     * 
-     * @returns {string} The string representation of the dummy node.
-     */
-    toString() {
-        return `\tDummy: ${this.inArcs[0].source.name} -> ${this.outArcs[0].target.name}\n`;
+        this.from = from;
+        this.to = to;
+        this.layer = layer;
     }
 }
 
