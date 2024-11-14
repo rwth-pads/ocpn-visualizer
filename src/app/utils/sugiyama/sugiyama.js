@@ -41,19 +41,20 @@ fs.readFile(jsonFilePath, 'utf8', async (err, data) => {
     var layering = await assignLayers(ocpn);
     console.log("Layering: ", layering);
     // Insert dummy vertices to make the layering "proper".
-    var dummyCount = insertDummyVertices(ocpn, layering);
+    var [dummyCount, layeringArray] = insertDummyVertices(ocpn, layering);
     console.log("Dummy vertices inserted: ", dummyCount);
-    console.log("Layering (With dummies): ", layering);
+    console.log("Layering (with dummies): ", layeringArray);
 
     // TODO: Order the vertices in each layer.
-    // const config = { oa: 0}; // TODO: Add the actual configurations.
-    // var crossingCount = orderVertices(ocpn, layering, config);
-    // console.log("Crossing count: ", crossingCount);
+    const config = { oa: 0}; // TODO: Add the actual configurations.
+    var [layeringScore, layeringArray] = orderVertices(ocpn, layeringArray, config);
+    console.log("Layering score: ", layeringScore);
+    console.log("Barycenter sweep applied: ", layeringArray);
 
     // TODO: Compute the actual x and y coordinates for each node and the path points for each arc.
     // const config = { ranksep: 1 }; // TODO: Add the actual configurations.
     // positionVertices(ocpn, layering, config);
     // console.log("Resulting OCPN: ", ocpn.toString());
 
-    console.log(ocpn.name);
+    console.log(`OCPN Name: \t${ocpn.name}`);
 });

@@ -8,7 +8,7 @@ const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
  *
  * @param {ObjectCentricPetriNet} ocpn - The Object-Centric Petri Net.
  * @param {*} layering Layering of the OCPN.
- * @returns The number of inserted dummy vertices.
+ * @returns The number of inserted dummy vertices and the layering as array of arrays.
  */
 function insertDummyVertices(ocpn, layering) {
     var dummyCount = 0;
@@ -37,7 +37,13 @@ function insertDummyVertices(ocpn, layering) {
         }
         // console.log(`${arc.source.name} (${arc.source.layer}) -> ${arc.target.name} (${arc.target.layer})`);
     }
-    return dummyCount;
+    // Transform the layering object to an array of arrays.
+    // Each inner array represents a layer and contains the names of the nodes in that layer.
+    var layeringArray = [];
+    for (const layer of Object.keys(layering)) {
+        layeringArray.push(layering[layer]);
+    }
+    return [dummyCount, layeringArray];
 }
 
 module.exports = insertDummyVertices;

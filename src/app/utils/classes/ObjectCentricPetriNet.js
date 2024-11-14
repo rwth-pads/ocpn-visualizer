@@ -296,7 +296,7 @@ ObjectCentricPetriNet.Place = class {
      * @returns {string} The string representation of the place.
      */
     toString() {
-        return `\tName: ${this.name}, ObjectType: ${this.objectType}${this.initial ? "\t(source)" : ""}${this.final ? "\t(sink)" : ""}\n`;
+        return `\tName: ${this.name}, ObjectType: ${this.objectType}${this.layer ? ` Layer: ${this.layer}`: ''}\n`;
     }
 };
 
