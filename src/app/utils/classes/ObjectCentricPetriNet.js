@@ -147,7 +147,7 @@ class ObjectCentricPetriNet {
         }
 
         // Get the object types of the places.
-        const objectTypes = Array.from(places).map(place => place.objectType);
+        const objectTypes = new Set(places.map(place => place.objectType));
 
         // Return the ObjectCentricPetriNet instance.
         return new ObjectCentricPetriNet(
@@ -207,6 +207,9 @@ class ObjectCentricPetriNet {
             arc.target.inArcs.push(arc);
         }
 
+        // Get the object types of the OCPN.
+        const objectTypes = new Set(places.map(place => place.objectType));
+
         // Return the ObjectCentricPetriNet instance.
         return new ObjectCentricPetriNet(
             name,
@@ -214,6 +217,7 @@ class ObjectCentricPetriNet {
             transitions,
             [], // Dummy nodes will be added within the Sugiyama layout algorithm.
             arcs,
+            objectTypes,
             properties
         );
     }
