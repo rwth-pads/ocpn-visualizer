@@ -17,7 +17,7 @@ function reverseCycles(ocpn, sources, sinks) {
     var net = new OCPNGraph(ocpn);
     // Compute solution to the modified FAS problem.
     var fas = modifiedGreedyFAS(net, sources, sinks);
-    console.log("FAS: ", fas);
+    // console.log("FAS: ", fas);
     ocpn.arcs.forEach(arc => {
         let sourceIndex = fas.indexOf(arc.source.name);
         let targetIndex = fas.indexOf(arc.target.name);
@@ -51,8 +51,8 @@ function modifiedGreedyFAS(net, sources, sinks) {
         s2.sort((a, b) => net.getOutDegree(b) - net.getInDegree(b) - net.getOutDegree(a) + net.getInDegree(a));
         net.removeNodes(sinks);
     }
-    console.log("User defined SOURCES: ", s1);
-    console.log("User defined SINKS: ", s2);
+    // console.log("User defined SOURCES: ", s1);
+    // console.log("User defined SINKS: ", s2);
     // While there are nodes remaining in the graph.
     while (net.nodes.length > 0) {
         // While the net contains sinks, add the sink to the front of s2 and remove it and its edges from the net.

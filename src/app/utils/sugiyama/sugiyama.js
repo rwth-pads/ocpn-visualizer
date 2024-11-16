@@ -36,25 +36,27 @@ fs.readFile(jsonFilePath, 'utf8', async (err, data) => {
 
     // Reverse the minimal set of arcs whose reversal makes the ocpn graph acyclic.
     var reversedArcsCount = reverseCycles(ocpn, sources, sinks);
-    console.log("Arcs reversed: ", reversedArcsCount);
-    // Assign layers to the nodes of the graph such that no edge points towards a node in a lower layer.
+    // console.log("Arcs reversed: ", reversedArcsCount);
+
+    // Layer Assignment.
     var layering = await assignLayers(ocpn);
-    console.log("Layering: ", layering);
-    // Insert dummy vertices to make the layering "proper".
+    // console.log("Layering: ", layering);
+
+    // Dummy Vertex Insertion.
     var [dummyCount, layeringArray] = insertDummyVertices(ocpn, layering);
-    console.log("Dummy vertices inserted: ", dummyCount);
+    // console.log("Dummy vertices inserted: ", dummyCount);
     console.log("Layering (with dummies): ", layeringArray);
 
-    // TODO: Order the vertices in each layer.
+    // Vertex Ordering.
     const config = { oa: 0}; // TODO: Add the actual configurations.
     var [layeringScore, layeringArray] = orderVertices(ocpn, layeringArray, config);
-    console.log("Layering score: ", layeringScore);
+    // console.log("Layering score: ", layeringScore);
     console.log("Barycenter sweep applied: ", layeringArray);
 
-    // TODO: Compute the actual x and y coordinates for each node and the path points for each arc.
+    // Vertex Positioning.
     // const config = { ranksep: 1 }; // TODO: Add the actual configurations.
     // positionVertices(ocpn, layering, config);
     // console.log("Resulting OCPN: ", ocpn.toString());
 
-    console.log(`OCPN Name: \t${ocpn.name}`);
+    // console.log(`OCPN Name: \t${ocpn.name}`);
 });

@@ -89,9 +89,6 @@ class ObjectCentricPetriNet {
         return as;
     }
 
-    addArc(arc) {
-        this.arcs.push(arc);
-    }
     /**
      * Deletes the given arc from the OCPN.
      * @param {ObjectCentricPetriNet.Arc} arc 
@@ -382,7 +379,7 @@ ObjectCentricPetriNet.Arc = class {
      * @returns {string} The string representation of the arc.
      */
     toString() {
-        return `\t${this.source.name} -> ${this.target.name}${this.reversed ? "\t(Reversed)" : ""}${this.variable ? "\t(Variable Arc)" : ""}\n`;
+        return `\t${this.source.name} -> ${this.target.name}`;
     }
 };
 

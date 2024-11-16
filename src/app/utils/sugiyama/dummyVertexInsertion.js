@@ -38,14 +38,18 @@ function insertDummyVertices(ocpn, layering) {
             }
 
             // Insert arcs between the dummies and delete the original arc.
-            ocpn.arcs.push(new ObjectCentricPetriNet.Arc(arc.source, dummies[0], arc.reversed));
+            let = newArc = new ObjectCentricPetriNet.Arc(arc.source, dummies[0], arc.reversed);
+            ocpn.arcs.push(newArc);
+            arc.source.outArcs.push(newArc);
             for (let i = 0; i < dummies.length; i++) {
                 let curDummy = dummies[i];
                 curDummy.source = i == 0 ? arc.source : dummies[i - 1];
                 curDummy.target = i == dummies.length - 1 ? arc.target : dummies[i + 1];
                 // Create a new arc.
-                ocpn.arcs.push(new ObjectCentricPetriNet.Arc(curDummy, curDummy.target, arc.reversed));
+                newArc = new ObjectCentricPetriNet.Arc(curDummy, curDummy.target, arc.reversed);
+                ocpn.arcs.push(newArc);
             }
+            arc.target.inArcs.push(newArc);
             // Delete the original arc.
             ocpn.deleteArc(arc);
         }
