@@ -18,6 +18,7 @@ function insertDummyVertices(ocpn, layering) {
         let dir = arc.reversed ? -1 : 1; // If the arc is reversed, the direction is negative.
         const slack = (targetLayer - sourceLayer) * dir;
         if (slack > 1) {
+            let dummies = [];
             // Insert dummy vertices on the intermediate layers.
             for (let i = 1; i < slack; i++) {
                 let curLayer = sourceLayer + (i * dir);
@@ -30,12 +31,24 @@ function insertDummyVertices(ocpn, layering) {
                 );
                 // Add the dummy node to the OCPN.
                 ocpn.dummyNodes.push(dummy);
+                dummies.push(dummy);
                 // Add the dummy to the layering.
                 layering[dummy.layer].push(dummy.name);
                 dummyCount++;
             }
+
+            // Insert arcs between the dummies and delete the original arc.
+            ocpn.arcs.push(new ObjectCentricPetriNet.Arc(arc.source, dummies[0], arc.reversed));
+            for (let i = 0; i < dummies.length; i++) {
+                let curDummy = dummies[i];
+                curDummy.source = i == 0 ? arc.source : dummies[i - 1];
+                curDummy.target = i == dummies.length - 1 ? arc.target : dummies[i + 1];
+                // Create a new arc.
+                ocpn.arcs.push(new ObjectCentricPetriNet.Arc(curDummy, curDummy.target, arc.reversed));
+            }
+            // Delete the original arc.
+            ocpn.deleteArc(arc);
         }
-        // console.log(`${arc.source.name} (${arc.source.layer}) -> ${arc.target.name} (${arc.target.layer})`);
     }
     // Transform the layering object to an array of arrays.
     // Each inner array represents a layer and contains the names of the nodes in that layer.

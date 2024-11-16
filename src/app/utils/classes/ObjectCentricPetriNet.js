@@ -89,6 +89,19 @@ class ObjectCentricPetriNet {
         return as;
     }
 
+    addArc(arc) {
+        this.arcs.push(arc);
+    }
+    /**
+     * Deletes the given arc from the OCPN.
+     * @param {ObjectCentricPetriNet.Arc} arc 
+     */
+    deleteArc(arc) {
+        this.arcs = this.arcs.filter(a => a !== arc);
+        arc.source.outArcs = arc.source.outArcs.filter(a => a !== arc);
+        arc.target.inArcs = arc.target.inArcs.filter(a => a !== arc);
+    }
+
     /**
      * Gets JSON object and returns an ObjectCentricPetriNet instance.
      * 
@@ -296,7 +309,7 @@ ObjectCentricPetriNet.Place = class {
      * @returns {string} The string representation of the place.
      */
     toString() {
-        return `\tName: ${this.name}, ObjectType: ${this.objectType}${this.layer ? ` Layer: ${this.layer}`: ''}\n`;
+        return `\tName: ${this.name}, ObjectType: ${this.objectType}\n`;
     }
 };
 
@@ -326,7 +339,7 @@ ObjectCentricPetriNet.Transition = class {
      * @returns {string} The string representation of the transition.
      */
     toString() {
-        return `\tName: ${this.name}, Label: ${this.label}${this.silent ? "\t(silent)" : ""}\n`;
+        return `\tName: ${this.name}, Label: ${this.label}\n`;
     }
 };
 
@@ -342,7 +355,8 @@ ObjectCentricPetriNet.Arc = class {
      * @param {*} properties Additional properties of the arc.
      */
     constructor(source, target, reversed = false, variable = false, weight = 1, properties = {}) {
-        if (source.constructor === target.constructor) {
+        if ((source instanceof ObjectCentricPetriNet.Place && target instanceof ObjectCentricPetriNet.Place) ||
+            (source instanceof ObjectCentricPetriNet.Transition && target instanceof ObjectCentricPetriNet.Transition)) {
             throw new Error('Petri nets are bipartite graphs!');
         }
         this.source = source;
@@ -386,6 +400,10 @@ ObjectCentricPetriNet.Dummy = class {
         this.from = from;
         this.to = to;
         this.layer = layer;
+    }
+
+    toString() {
+        return `\tName: ${this.name}\n`;
     }
 }
 
