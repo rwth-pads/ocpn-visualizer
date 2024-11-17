@@ -1,0 +1,41 @@
+{
+    "name": "OCPN with Double Edge",
+    "places": [
+        {
+            "name": "p1",
+            "objectType": "type1",
+            "initial": true,
+            "final": false
+        }
+    ],
+    "transitions": [
+        {
+            "name": "t1",
+            "label": "Start",
+            "properties": {
+                "cost": 5
+            },
+            "silent": false
+        }
+    ],
+    "arcs": [
+        {
+            "source": "p1",
+            "target": "t1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t1",
+            "target": "p1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        }
+    ],
+    "properties": {
+        "creator": "Tobias Br.",
+        "version": "1.0"
+    }
+}
