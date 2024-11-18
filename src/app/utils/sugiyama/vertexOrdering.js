@@ -30,7 +30,7 @@ function arraysEqual(arr1, arr2) {
 }
 
 /**
- * 
+ * Orders the vertices within the layers of the OCPN according to the barycenter method.
  * @param {ObjectCentricPetriNet} ocpn 
  * @param {*} layering 
  * @param {*} config 
@@ -42,8 +42,16 @@ function orderVertices(ocpn, layering, config) {
     // adjustLayeringOrderByObjectCentrality(ocpn, layering, config);
     // }
     // Implementation of the barycenter method for vertex ordering.
-    var baryOrder = upDownBarycenterBilayerSweep(ocpn, layering, config);
-    return baryOrder;
+    var [baryScore, baryOrder] = upDownBarycenterBilayerSweep(ocpn, layering, config);
+    // Set the positions of the vertices in the layering according to the computed order.
+    for (let i = 0; i < layering.length; i++) {
+        for (let j = 0; j < layering[i].length; j++) {
+            let v = ocpn.findElementByName(layering[i][j]);
+            v.pos = baryOrder[i].indexOf(v.name);
+            // console.log(`Vertex ${v.name} placed at position ${v.pos} in layer ${i}.`);
+        }
+    }
+    return [baryScore, baryOrder];
 }
 
 /**
@@ -67,7 +75,7 @@ function adjustLayeringOrderByObjectCentrality(ocpn, layering, config) {
  */
 function upDownBarycenterBilayerSweep(ocpn, layering, config) {
     const MAXITERATIONS = 4;
-    const OBJECT_ATTRACTION = 0.2;
+    const OBJECT_ATTRACTION = 0;
     const OBJECT_ATTRACTION_RANGE_MIN = 1; // The layers taken into account when computing the place barycenters.
     const OBJECT_ATTRACTION_RANGE_MAX = 2; // The layers taken into account when computing the place barycenters.
     const testConfig = {
