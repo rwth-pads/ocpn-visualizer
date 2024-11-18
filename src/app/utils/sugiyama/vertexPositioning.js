@@ -38,45 +38,31 @@ function positionVertices(ocpn, layering, config) {
 }
 
 /**
- * Marks the type 1 conflicts in the OCPN given the layering.
+ * Marks the type 1 conflicts for non-inner segments in the OCPN given the layering.
  * A type 1 conflict occurs when a non-inner segment crosses an inner segment.
  *
  * @param {*} ocpn 
- * @param {*} layering
- * for i ← 2,...,h − 2 do
- *      k0 ← 0; l ← 1;
- *      for l1 ← 1,..., |Li+1| do
- *          if l1 = |Li+1| or v(i+1)_l1 incident to inner segment between Li+1 and Li
- *          then
- *              k1 ← |Li|;
- *              if v(i+1)_l1 incident to inner segment between Li+1 and Li then
- *                  k1 ← pos[upper neighbor of v(i+1)_l1 ];
- *              while l ≤ l1 do
- *                  foreach upper neighbor v(i)_k of v(i+1)_l do
- *                      if k<k0 or k>k1 then mark segment (v(i)_k , v(i+1)_l );
- *                  l ← l + 1;
- *              k0 ← k1;
- * 
- *  h = layeringHeight
- *  
+ * @param {*} layering  
  */
 // TODO: fix the algorithm since it marks the inner segments involved in type 1 conflicts,
 // but it should mark the non inner segments involved in the type 1 conflict instead.
 function markType1Conflicts(ocpn, layering) {
     console.log("Marking type 1 conflicts...");
     var conflictCount = 0;
+
     // Between layer first and second (last - 1 and last) there cannot be any type 1 conflicts.
     for (let i = 1; i < layering.length - 2; i++) {
         const layer = layering[i];
         const nextLayer = layering[i + 1];
         let k0 = 0;
-        let l = 1;
+        let l = 0;
 
-        for (let l1 = 1; l1 < nextLayer.length; l1++) {
+        // Check for type 1 conflicts between layer and next layer.
+        for (let l1 = 0; l1 < nextLayer.length; l1++) {
             if (l1 == nextLayer.length - 1 || isIncidentToInnerSegment(ocpn, nextLayer[l1])) {
                 let k1 = layer.length - 1;
                 if (isIncidentToInnerSegment(ocpn, nextLayer[l1])) {
-                    k1 = layer.indexOf(ocpn, getUpperNeighbors(ocpn, nextLayer[l1])[0]);
+                    k1 = layer.indexOf(getUpperNeighbors(ocpn, nextLayer[l1])[0]);
                 }
                 while (l <= l1) {
                     getUpperNeighbors(ocpn, nextLayer[l]).forEach(upperNeighbor => {
@@ -87,10 +73,12 @@ function markType1Conflicts(ocpn, layering) {
                                 arc.source.name == upperNeighbor && arc.target.name == nextLayer[l] ||
                                 arc.source.name == nextLayer[l] && arc.target.name == upperNeighbor
                             ); // If arcs (u,v) and (v,u) exist, both are marked which is fine.
-                            console.log(`Marking arc (${upperNeighbor}, ${nextLayer[l]}) as type 1...`);
+                            console.log(`Marking arc (${upperNeighbor} -> ${nextLayer[l]}) as type 1...`);
                             arc.forEach(a => {
-                                a.type1 = true;
-                                conflictCount++;
+                                if (!isIncidentToInnerSegment(ocpn, upperNeighbor) || !isIncidentToInnerSegment(ocpn, nextLayer[l])) {
+                                    a.type1 = true;
+                                    conflictCount++;
+                                }
                             });
                         }
                     });
@@ -155,7 +143,7 @@ function setCoordinates(ocpn, layering) {
     console.log("Setting coordinates...");
 }
 
-module.exports = { positionVertices, markType1Conflicts, getUpperNeighbors, isIncidentToInnerSegment};
+module.exports = { positionVertices, markType1Conflicts, getUpperNeighbors, isIncidentToInnerSegment };
 
 /**
  * Heuristic approach description:

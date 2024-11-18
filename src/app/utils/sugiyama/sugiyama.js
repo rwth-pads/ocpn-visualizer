@@ -35,7 +35,7 @@ fs.readFile(jsonFilePath, 'utf8', async (err, data) => {
     // Define sources and sinks (for demonstration purposes, later integrated into the application and algorithm).
     const sources = Array.from(ocpn.places).filter(place => place.initial).map(place => place.name);
     const sinks = Array.from(ocpn.places).filter(place => place.final).map(place => place.name);
-
+    console.time("Sugiyama");
     // Reverse the minimal set of arcs whose reversal makes the ocpn graph acyclic.
     var reversedArcsCount = reverseCycles(ocpn, sources, sinks);
     console.log("Arcs reversed: ", reversedArcsCount);
@@ -59,6 +59,6 @@ fs.readFile(jsonFilePath, 'utf8', async (err, data) => {
     // const config = { ranksep: 1 }; // TODO: Add the actual configurations.
     var type1counter = positionVertices.markType1Conflicts(ocpn, layeringArray);
     // console.log("Resulting OCPN: ", ocpn.toString());
-
+    console.timeEnd("Sugiyama");
     // console.log(`OCPN Name: \t${ocpn.name}`);
 });
