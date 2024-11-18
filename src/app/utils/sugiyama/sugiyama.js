@@ -57,7 +57,7 @@ fs.readFile(jsonFilePath, 'utf8', async (err, data) => {
 
     // Vertex Positioning.
     // const config = { ranksep: 1 }; // TODO: Add the actual configurations.
-    // positionVertices.positionVertices(ocpn, layeringArray, config);
+    var type1counter = positionVertices.markType1Conflicts(ocpn, layeringArray);
     // console.log("Resulting OCPN: ", ocpn.toString());
 
     // console.log(`OCPN Name: \t${ocpn.name}`);

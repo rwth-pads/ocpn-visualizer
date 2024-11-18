@@ -60,6 +60,8 @@ function positionVertices(ocpn, layering, config) {
  *  h = layeringHeight
  *  
  */
+// TODO: fix the algorithm since it marks the inner segments involved in type 1 conflicts,
+// but it should mark the non inner segments involved in the type 1 conflict instead.
 function markType1Conflicts(ocpn, layering) {
     console.log("Marking type 1 conflicts...");
     var conflictCount = 0;
