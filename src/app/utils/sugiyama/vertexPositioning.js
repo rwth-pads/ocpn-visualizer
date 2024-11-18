@@ -73,13 +73,21 @@ function markType1Conflicts(ocpn, layering) {
             if (l1 == nextLayer.length - 1 || isIncidentToInnerSegment(ocpn, nextLayer[l1])) {
                 let k1 = layer.length - 1;
                 if (isIncidentToInnerSegment(ocpn, nextLayer[l1])) {
-                    k1 = layer.indexOf(ocpn, getUpperNeighbors(nextLayer[l1])[0]);
+                    k1 = layer.indexOf(ocpn, getUpperNeighbors(ocpn, nextLayer[l1])[0]);
                 }
                 while (l <= l1) {
                     getUpperNeighbors(ocpn, nextLayer[l]).forEach(upperNeighbor => {
                         let k = layer.indexOf(upperNeighbor);
                         if (k < k0 || k > k1) {
-                            markSegment(ocpn, upperNeighbor, nextLayer[l]);
+                            // Mark the arc from upperNeighbor to nextLayer[l] as type 1.
+                            let arc = ocpn.arcs.filter(arc =>
+                                arc.source.name == upperNeighbor && arc.target.name == nextLayer[l] ||
+                                arc.source.name == nextLayer[l] && arc.target.name == upperNeighbor
+                            ); // If arcs (u,v) and (v,u) exist, both are marked which is fine.
+                            console.log(`Marking arc (${upperNeighbor}, ${nextLayer[l]}) as type 1...`);
+                            arc.forEach(a => {
+                                a.type1 = true;
+                            });
                         }
                     });
                     l++;
@@ -98,7 +106,6 @@ function markType1Conflicts(ocpn, layering) {
  */
 function isIncidentToInnerSegment(ocpn, vertex) {
     let v = ocpn.findElementByName(vertex);
-    console.log("Incident Checker: ", v.name);
     if (v instanceof ObjectCentricPetriNet.Dummy) {
         let upper = v.arcReversed ? v.to : v.from;
         if (upper instanceof ObjectCentricPetriNet.Dummy) {
@@ -110,7 +117,7 @@ function isIncidentToInnerSegment(ocpn, vertex) {
 
 /**
  * Gets the upper neighbors of the vertex in the OCPN layering.
- * @param {*} ocpn 
+ * @param {ObjectCentricPetriNet} ocpn 
  * @param {*} vertex 
  * @returns An array of the names of the upper neighbors of the vertex.
  */
