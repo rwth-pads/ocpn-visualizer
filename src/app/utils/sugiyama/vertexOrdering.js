@@ -38,10 +38,24 @@ function arraysEqual(arr1, arr2) {
  */
 function orderVertices(ocpn, layering, config) {
     // TODO: Adjust the initial order within the layering according to the users object centrality.
+    // if (config.objectCentralitySet) {
     // adjustLayeringOrderByObjectCentrality(ocpn, layering, config);
+    // }
     // Implementation of the barycenter method for vertex ordering.
     var baryOrder = upDownBarycenterBilayerSweep(ocpn, layering, config);
     return baryOrder;
+}
+
+/**
+ * Adjusts the initial order of the vertices within the layering according to the user defined object centrality.
+ * 
+ * @param {*} ocpn 
+ * @param {*} layering 
+ * @param {*} config 
+ */
+function adjustLayeringOrderByObjectCentrality(ocpn, layering, config) {
+    console.log("Adjusting layering order by object centrality...");
+    // TODO
 }
 
 /**
@@ -264,7 +278,7 @@ function transitionBarycenter(ocpn, transition, layering, layer, down, config) {
 function dummyBarycenter(dummy, layering, layer, down) {
     // For dummies we return the same value as the source or target's index.
     var fixedLayer = down ? layer - 1 : layer + 1;
-    var neighbor = down ? dummy.target : dummy.source;
+    var neighbor = down ? dummy.to : dummy.from;
     var index = layering[fixedLayer].indexOf(neighbor.name) + 1;
     return index;
 }

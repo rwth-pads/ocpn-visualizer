@@ -13,8 +13,8 @@ const positionVertices = require('./vertexPositioning');
 const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
 
 // Define the path to the JSON file.
-const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\ocpa_p2p-normal.json';
-// const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\cyclic-ocpn.json';
+// const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\ocpa_p2p-normal.json';
+const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\cyclic-ocpn.json';
 // const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\simple_ocpn.json';
 // const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\double_edge_ocpn.json';
 
@@ -56,8 +56,20 @@ fs.readFile(jsonFilePath, 'utf8', async (err, data) => {
 
     // Vertex Positioning.
     // const config = { ranksep: 1 }; // TODO: Add the actual configurations.
-    positionVertices(ocpn, layeringArray, config);
+    // positionVertices(ocpn, layeringArray, config);
     // console.log("Resulting OCPN: ", ocpn.toString());
-
+    // ocpn.places.forEach(place => {
+    //     console.log(place.name);
+    //     console.log(`\t${positionVertices.getUpperNeighbors(ocpn, place.name)}`);
+    // });
+    // ocpn.transitions.forEach(transition => {
+    //     console.log(transition.name);
+    //     console.log(`\t${positionVertices.getUpperNeighbors(ocpn, transition.name)}`);
+    // });
+    ocpn.dummyNodes.forEach(dummy => {
+        console.log(dummy.name);
+        console.log(`\t${positionVertices.getUpperNeighbors(ocpn, dummy.name)}`);
+        console.log(`\t${positionVertices.isIncidentToInnerSegment(ocpn, dummy.name)}`)
+    });
     // console.log(`OCPN Name: \t${ocpn.name}`);
 });

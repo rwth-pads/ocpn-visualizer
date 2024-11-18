@@ -42,18 +42,97 @@ function positionVertices(ocpn, layering, config) {
  * A type 1 conflict occurs when a non-inner segment crosses an inner segment.
  *
  * @param {*} ocpn 
- * @param {*} layering 
+ * @param {*} layering
+ * for i ← 2,...,h − 2 do
+ *      k0 ← 0; l ← 1;
+ *      for l1 ← 1,..., |Li+1| do
+ *          if l1 = |Li+1| or v(i+1)_l1 incident to inner segment between Li+1 and Li
+ *          then
+ *              k1 ← |Li|;
+ *              if v(i+1)_l1 incident to inner segment between Li+1 and Li then
+ *                  k1 ← pos[upper neighbor of v(i+1)_l1 ];
+ *              while l ≤ l1 do
+ *                  foreach upper neighbor v(i)_k of v(i+1)_l do
+ *                      if k<k0 or k>k1 then mark segment (v(i)_k , v(i+1)_l );
+ *                  l ← l + 1;
+ *              k0 ← k1;
+ * 
+ *  h = layeringHeight
+ *  
  */
 function markType1Conflicts(ocpn, layering) {
     console.log("Marking type 1 conflicts...");
+    // Between layer first and second (last - 1 and last) there cannot be any type 1 conflicts.
+    for (let i = 1; i < layering.length - 2; i++) {
+        const layer = layering[i];
+        const nextLayer = layering[i + 1];
+        let k0 = 0;
+        let l = 1;
+
+        for (let l1 = 1; l1 < nextLayer.length; l1++) {
+            if (l1 == nextLayer.length - 1 || isIncidentToInnerSegment(ocpn, nextLayer[l1])) {
+                let k1 = layer.length - 1;
+                if (isIncidentToInnerSegment(ocpn, nextLayer[l1])) {
+                    k1 = layer.indexOf(ocpn, getUpperNeighbors(nextLayer[l1])[0]);
+                }
+                while (l <= l1) {
+                    getUpperNeighbors(ocpn, nextLayer[l]).forEach(upperNeighbor => {
+                        let k = layer.indexOf(upperNeighbor);
+                        if (k < k0 || k > k1) {
+                            markSegment(ocpn, upperNeighbor, nextLayer[l]);
+                        }
+                    });
+                    l++;
+                }
+                k0 = k1;
+            }
+        }
+    }
+}
+
+/**
+ * Checks whether the vertex is incident to an inner segment.
+ * @param {ObjectCentricPetriNet} ocpn 
+ * @param {*} vertex 
+ * @returns Boolean value indicating whether the vertex is incident to an inner segment.
+ */
+function isIncidentToInnerSegment(ocpn, vertex) {
+    let v = ocpn.findElementByName(vertex);
+    console.log("Incident Checker: ", v.name);
+    if (v instanceof ObjectCentricPetriNet.Dummy) {
+        let upper = v.arcReversed ? v.to : v.from;
+        if (upper instanceof ObjectCentricPetriNet.Dummy) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Gets the upper neighbors of the vertex in the OCPN layering.
+ * @param {*} ocpn 
+ * @param {*} vertex 
+ * @returns An array of the names of the upper neighbors of the vertex.
+ */
+function getUpperNeighbors(ocpn, vertex) {
+    let v = ocpn.findElementByName(vertex);
+    if (v instanceof ObjectCentricPetriNet.Dummy) {
+        let upper = v.arcReversed ? v.to : v.from;
+        return [upper.name];
+    } else {
+        // V is place or transition.
+        const upperInArcs = v.inArcs.filter(arc => !arc.reversed).map(arc => arc.source.name);
+        const upperOutArcs = v.outArcs.filter(arc => arc.reversed).map(arc => arc.target.name);
+        return [...upperInArcs, ...upperOutArcs];
+    }
 }
 
 function verticalAlignment(ocpn, layering, verticalDir, horizontalDir) {
-    console.log(`Vertical alignment ${verticalDir ? 'down' : 'up'} in ${horizontalDir ? 'left' : 'right'}mostfashion...`);
+    console.log(`Vertical alignment ${verticalDir == 0 ? 'down' : 'up'} in ${horizontalDir == 0 ? 'left' : 'right'}mostfashion...`);
 }
 
 function horizontalCompaction(ocpn, layering, verticalDir, horizontalDir) {
-    console.log(`Horizontal compaction ${verticalDir ? 'down' : 'up'} in ${horizontalDir ? 'left' : 'right'}mostfashion...`);
+    console.log(`Horizontal compaction ${verticalDir == 0 ? 'down' : 'up'} in ${horizontalDir == 0 ? 'left' : 'right'}mostfashion...`);
 }
 
 function alignAssignments(ocpn, layering) {
@@ -64,7 +143,7 @@ function setCoordinates(ocpn, layering) {
     console.log("Setting coordinates...");
 }
 
-module.exports = positionVertices;
+module.exports = { positionVertices, markType1Conflicts, getUpperNeighbors, isIncidentToInnerSegment};
 
 /**
  * Heuristic approach description:

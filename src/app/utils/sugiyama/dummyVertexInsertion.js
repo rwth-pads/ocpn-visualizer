@@ -27,7 +27,8 @@ function insertDummyVertices(ocpn, layering) {
                     `dummy_${arc.source.name}_${arc.target.name}_${curLayer}`,
                     arc.source,
                     arc.target,
-                    curLayer
+                    curLayer,
+                    arc.reversed
                 );
                 // Add the dummy node to the OCPN.
                 ocpn.dummyNodes.push(dummy);
@@ -43,10 +44,10 @@ function insertDummyVertices(ocpn, layering) {
             arc.source.outArcs.push(newArc);
             for (let i = 0; i < dummies.length; i++) {
                 let curDummy = dummies[i];
-                curDummy.source = i == 0 ? arc.source : dummies[i - 1];
-                curDummy.target = i == dummies.length - 1 ? arc.target : dummies[i + 1];
+                curDummy.from = i == 0 ? arc.source : dummies[i - 1];
+                curDummy.to = i == dummies.length - 1 ? arc.target : dummies[i + 1];
                 // Create a new arc.
-                newArc = new ObjectCentricPetriNet.Arc(curDummy, curDummy.target, arc.reversed);
+                newArc = new ObjectCentricPetriNet.Arc(curDummy, curDummy.to, arc.reversed);
                 ocpn.arcs.push(newArc);
             }
             arc.target.inArcs.push(newArc);

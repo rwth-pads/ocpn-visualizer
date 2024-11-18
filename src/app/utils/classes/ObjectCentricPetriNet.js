@@ -395,12 +395,14 @@ ObjectCentricPetriNet.Dummy = class {
      * @param {*} from The node from which the dummy node receives an arc.
      * @param {*} to The node to which the dummy node sends an arc.
      * @param {*} layer The layer in which the dummy node is placed.
+     * @param {Boolean} arcReversed Boolean that determines whether the corresponding arc is reversed.
      */
-    constructor(name, from, to, layer) {
+    constructor(name, from, to, layer, arcReversed = false) {
         this.name = name;
         this.from = from;
         this.to = to;
         this.layer = layer;
+        this.arcReversed = arcReversed;
     }
 
     toString() {
