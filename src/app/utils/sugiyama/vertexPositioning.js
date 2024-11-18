@@ -23,7 +23,7 @@ function positionVertices(ocpn, layering, config) {
     // --------------------------------------------------------------------------------
 
     // Mark type 1 conflicts in the OCPN given the layering.
-    markType1Conflicts(ocpn, layering);
+    const conflictCount = markType1Conflicts(ocpn, layering);
 
     for (const verticalDir in ['down', 'up']) {
         for (const horizontalDir in ['left', 'right']) {
@@ -62,6 +62,7 @@ function positionVertices(ocpn, layering, config) {
  */
 function markType1Conflicts(ocpn, layering) {
     console.log("Marking type 1 conflicts...");
+    var conflictCount = 0;
     // Between layer first and second (last - 1 and last) there cannot be any type 1 conflicts.
     for (let i = 1; i < layering.length - 2; i++) {
         const layer = layering[i];
@@ -87,6 +88,7 @@ function markType1Conflicts(ocpn, layering) {
                             console.log(`Marking arc (${upperNeighbor}, ${nextLayer[l]}) as type 1...`);
                             arc.forEach(a => {
                                 a.type1 = true;
+                                conflictCount++;
                             });
                         }
                     });
@@ -96,6 +98,7 @@ function markType1Conflicts(ocpn, layering) {
             }
         }
     }
+    return conflictCount;
 }
 
 /**

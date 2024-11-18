@@ -1,0 +1,44 @@
+{
+    "name": "OCPN where layering results in type 1 conflicts",
+    "places": [
+        {"name": "l1", "objectType": "type", "initial": true, "final": false},
+        {"name": "l2", "objectType": "type", "initial": false, "final": false},
+        {"name": "l3", "objectType": "type", "initial": false, "final": false},
+        {"name": "m1", "objectType": "type", "initial": true, "final": false},
+        {"name": "m2", "objectType": "type", "initial": false, "final": false},
+        {"name": "r1", "objectType": "type", "initial": true, "final": false},
+        {"name": "r2", "objectType": "type", "initial": false, "final": false},
+        {"name": "r3", "objectType": "type", "initial": false, "final": false}
+    ],
+    "transitions": [
+        {"name": "upperleft", "label": "Upper Left", "properties": {}, "silent": false},
+        {"name": "middle", "label": "Middle", "properties": {}, "silent": false},
+        {"name": "upperright", "label": "Upper Right", "properties": {}, "silent": false},
+        {"name": "lowerleft", "label": "Lower Left", "properties": {}, "silent": false},
+        {"name": "lowerright", "label": "Lower Right", "properties": {}, "silent": false}
+    ],
+    "arcs": [
+        {"source": "l1", "target": "upperleft", "weight": 1, "variable": false, "properties": {}},
+        {"source": "l1", "target": "middle", "weight": 1, "variable": false, "properties": {}},
+        {"source": "m1", "target": "upperleft", "weight": 1, "variable": false, "properties": {}},
+        {"source": "m1", "target": "middle", "weight": 1, "variable": false, "properties": {}},
+        {"source": "m1", "target": "upperright", "weight": 1, "variable": false, "properties": {}},
+        {"source": "r1", "target": "middle", "weight": 1, "variable": false, "properties": {}},
+        {"source": "r1", "target": "upperright", "weight": 1, "variable": false, "properties": {}},
+        {"source": "upperleft", "target": "l2", "weight": 1, "variable": false, "properties": {}},
+        {"source": "middle", "target": "m2", "weight": 1, "variable": false, "properties": {}},
+        {"source": "upperright", "target": "r2", "weight": 1, "variable": false, "properties": {}},
+        {"source": "l2", "target": "lowerleft", "weight": 1, "variable": false, "properties": {}},
+        {"source": "l2", "target": "lowerright", "weight": 1, "variable": false, "properties": {}},
+        {"source": "r2", "target": "lowerright", "weight": 1, "variable": false, "properties": {}},
+        {"source": "r2", "target": "lowerleft", "weight": 1, "variable": false, "properties": {}},
+        {"source": "lowerleft", "target": "l3", "weight": 1, "variable": false, "properties": {}},
+        {"source": "lowerleft", "target": "m2", "weight": 1, "variable": false, "properties": {}},
+        {"source": "lowerright", "target": "r3", "weight": 1, "variable": false, "properties": {}},
+        {"source": "lowerright", "target": "m2", "weight": 1, "variable": false, "properties": {}}
+    ],
+    "properties": {
+        "creator": "Tobias Br.",
+        "version": "1.0"
+    }
+}

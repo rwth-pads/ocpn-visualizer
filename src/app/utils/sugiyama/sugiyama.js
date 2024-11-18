@@ -14,9 +14,10 @@ const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
 
 // Define the path to the JSON file.
 // const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\ocpa_p2p-normal.json';
-const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\cyclic-ocpn.json';
+// const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\cyclic-ocpn.json';
 // const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\simple_ocpn.json';
 // const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\double_edge_ocpn.json';
+const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\type1-conflict-ocpn.json';
 
 // Read the JSON file.
 fs.readFile(jsonFilePath, 'utf8', async (err, data) => {
@@ -41,7 +42,7 @@ fs.readFile(jsonFilePath, 'utf8', async (err, data) => {
 
     // Layer Assignment.
     var layering = await assignLayers(ocpn);
-    console.log("Layering: ", layering);
+    console.log("Assign Layers: ", layering);
 
     // Dummy Vertex Insertion.
     var [dummyCount, layeringArray] = insertDummyVertices(ocpn, layering);
@@ -56,7 +57,7 @@ fs.readFile(jsonFilePath, 'utf8', async (err, data) => {
 
     // Vertex Positioning.
     // const config = { ranksep: 1 }; // TODO: Add the actual configurations.
-    positionVertices.positionVertices(ocpn, layeringArray, config);
+    // positionVertices.positionVertices(ocpn, layeringArray, config);
     // console.log("Resulting OCPN: ", ocpn.toString());
 
     // console.log(`OCPN Name: \t${ocpn.name}`);

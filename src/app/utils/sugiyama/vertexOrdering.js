@@ -67,7 +67,7 @@ function adjustLayeringOrderByObjectCentrality(ocpn, layering, config) {
  */
 function upDownBarycenterBilayerSweep(ocpn, layering, config) {
     const MAXITERATIONS = 4;
-    const OBJECT_ATTRACTION = 0.1;
+    const OBJECT_ATTRACTION = 0.2;
     const OBJECT_ATTRACTION_RANGE_MIN = 1; // The layers taken into account when computing the place barycenters.
     const OBJECT_ATTRACTION_RANGE_MAX = 2; // The layers taken into account when computing the place barycenters.
     const testConfig = {
@@ -84,10 +84,13 @@ function upDownBarycenterBilayerSweep(ocpn, layering, config) {
     var computedLayerings = [];
     computedLayerings.push(clone2DArray(layering));
     // Perform the barycenter method going up and down the layers.
+    var sweepCounter = 1;
     while (true) {
         layering = singleUpDownSweep(ocpn, layering, testConfig); // Phase 1
         layering = adjustEqualBarycenters(ocpn, layering) // Phase 2
         var currentScore = computeLayeringScore(ocpn, layering, testConfig);
+        console.log(`Sweep ${sweepCounter} score: ${currentScore}\nLayering:`);
+        console.log(layering);
         // Check if the vertex order has improved.
         if (currentScore < bestScore) {
             bestScore = currentScore;
@@ -99,15 +102,16 @@ function upDownBarycenterBilayerSweep(ocpn, layering, config) {
         }
         // Check the termination conditions.
         if (noImprovementCounter >= MAXITERATIONS) {
-            console.log("Terminating barycenter sweep due to no improvement!");
+            console.log(`Terminating barycenter sweep due to reocurring layering! (Iteration: ${sweepCounter})`);
             break;
         } else if (reocurringLayering(layering, computedLayerings)) {
-            console.log("Terminating barycenter sweep due to reocurring layering!");
+            console.log(`Terminating barycenter sweep due to reocurring layering! (Iteration: ${sweepCounter})`);
             break;
         } else {
             // Add the current layering to the list of computed layerings.
             computedLayerings.push(clone2DArray(layering));
         }
+        sweepCounter++;
     }
     return [bestScore, best];
 }
@@ -278,7 +282,7 @@ function transitionBarycenter(ocpn, transition, layering, layer, down, config) {
 function dummyBarycenter(dummy, layering, layer, down) {
     // For dummies we return the same value as the source or target's index.
     var fixedLayer = down ? layer - 1 : layer + 1;
-    var neighbor = down ? dummy.to : dummy.from;
+    var neighbor = down ? (dummy.arcReversed ? dummy.to : dummy.from) : (dummy.arcReversed ? dummy.from : dummy.to);
     var index = layering[fixedLayer].indexOf(neighbor.name) + 1;
     return index;
 }
@@ -333,6 +337,7 @@ function countCrossings(ocpn, layering) {
                 // Check if the arcs cross.
                 if (upper1Index > upper2Index && lower1Index < lower2Index ||
                     upper1Index < upper2Index && lower1Index > lower2Index) {
+                    // console.log(`Crossing arcs (${arc1.source.name}, ${arc1.target.name}) and (${arc2.source.name}, ${arc2.target.name})...`);
                     crossings++;
                 }
             }
