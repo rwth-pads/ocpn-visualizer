@@ -302,6 +302,8 @@ ObjectCentricPetriNet.Place = class {
         this.final = final;
         this.inArcs = inArcs;
         this.outArcs = outArcs;
+        this.layer = -1;
+        this.pos = -1;
     }
 
     /**
@@ -331,6 +333,8 @@ ObjectCentricPetriNet.Transition = class {
         this.inArcs = inArcs;
         this.outArcs = outArcs;
         this.silent = silent;
+        this.layer = -1;
+        this.pos = -1;
         this.properties = properties;
     }
 
@@ -402,6 +406,7 @@ ObjectCentricPetriNet.Dummy = class {
         this.from = from;
         this.to = to;
         this.layer = layer;
+        this.pos = -1;
         this.arcReversed = arcReversed;
     }
 
