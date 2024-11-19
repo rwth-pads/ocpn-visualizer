@@ -53,29 +53,26 @@ function positionVertices(ocpn, layering, config) {
 
     // Mark type 1 conflicts in the OCPN given the layering.
     const conflictCount = markType1Conflicts(ocpn, layering);
-
+    const layouts = [];
     for (const verticalDir in [0, 1]) { // 0: down, 1: up
         for (const horizontalDir in [0, 1]) { // 0: left, 1: right
             console.log(`Vertical direction: ${verticalDir == 0 ? 'down' : 'up'}, Horizontal direction: ${horizontalDir == 0 ? 'left' : 'right'}`);
             // Reverse the outer and inner layers depending on the directions.
             let [currentLayering, pos] = transformLayering(clone2DArray(layering), verticalDir, horizontalDir);
             // Align each vertex vertically with its median neighbor where possible.
-            let [roots, aligns] = verticalAlignment(ocpn, currentLayering, pos);
+            let [roots, aligns] = verticalAlignment(ocpn, currentLayering, pos, verticalDir == 0);
+
             // Determine coordinates subject to the current alignment.
-            let x = horizontalCompaction(ocpn, currentLayering, roots, aligns, pos);
-            console.log("X: ", x);
-            // If direction from right to left, flip coordinates.
+            let [coords, maxCoord] = horizontalCompaction(ocpn, currentLayering, roots, aligns, pos);
+            // If direction from right to left, flip coordinates back to original order.
             if (horizontalDir == 1) {
-                // TODO
+                for (let v in coords) {
+                    coords[v] = maxCoord - coords[v];
+                }
             }
+            layouts.push(coords);
         }
     }
-    // let [currentLayering, pos] = transformLayering(clone2DArray(layering), 0, 0);
-    // let [roots, aligns] = verticalAlignment(ocpn, currentLayering, pos);
-    // console.log("Root: ", roots);
-    // console.log("Align: ", aligns);
-    // let x = horizontalCompaction(ocpn, currentLayering, roots, aligns, pos);
-    // console.log("X2: ", x);
     // Align to assignment of smallest width (height).
     alignAssignments(ocpn, layering);
     // Set the actual coordinates to average median of aligned candidates.
@@ -118,31 +115,26 @@ function transformLayering(layering, verticalDir, horizontalDir) {
  * @param {*} layering The ordered layering of the OCPN graph.
  */
 function markType1Conflicts(ocpn, layering) {
-    // console.log("Marking type 1 conflicts...");
+    console.log("Marking type 1 conflicts...");
+
     // Between layer first and second (last - 1 and last) there cannot be any type 1 conflicts.
     for (let i = 1; i < layering.length - 2; i++) {
         const layer = layering[i];
         const nextLayer = layering[i + 1];
         let k0 = 0;
         let l = 0;
-        // console.log(`Layer: ${layer}`);
-        // console.log(`Next layer: ${nextLayer}`);
+
         // Check for type 1 conflicts between layer and next layer.
         for (let l1 = 0; l1 < nextLayer.length; l1++) {
-            // console.log(`\tl1: ${l1} = ${nextLayer[l1]} or incident: ${isIncidentToInnerSegment(ocpn, nextLayer[l1]) || l1 == nextLayer.length - 1}`);
             if (l1 == nextLayer.length - 1 || isIncidentToInnerSegment(ocpn, nextLayer[l1])) {
                 let k1 = layer.length - 1;
                 if (isIncidentToInnerSegment(ocpn, nextLayer[l1])) {
                     k1 = layer.indexOf(getUpperNeighbors(ocpn, nextLayer[l1])[0]);
-                    // console.log(`\t\tk1: ${k1} = ${getUpperNeighbors(ocpn, nextLayer[l1])[0]}`);
                 }
                 while (l <= l1) {
-                    // console.log(`\t\t\tUpper neighbors of ${nextLayer[l]}: ${getUpperNeighbors(ocpn, nextLayer[l])}`);
                     getUpperNeighbors(ocpn, nextLayer[l]).forEach(upperNeighbor => {
                         let k = layer.indexOf(upperNeighbor);
-                        // console.log(`\t\t\t\tk: ${k} = ${upperNeighbor}`);
                         if (k < k0 || k > k1) {
-                            // console.log(`\t\t\t\tk: ${layer[k]} -> ${k} < ${k0} <- ${layer[k0]} or k: ${layer[k]} -> ${k} > ${k1} <- ${layer[k1]}`);
                             // Mark the arc from upperNeighbor to nextLayer[l] as type 1.
                             let arc = ocpn.arcs.filter(arc =>
                                 arc.source.name == upperNeighbor && arc.target.name == nextLayer[l] ||
@@ -172,11 +164,12 @@ function markType1Conflicts(ocpn, layering) {
  * @param {*} ocpn 
  * @param {*} layering 
  * @param {*} pos The current position of the vertices in their layer.
+ * @param {*} down Boolean value indicating whether the alignment is from top to bottom.
  * @returns An array of the root and align values for each vertex.
  */
-function verticalAlignment(ocpn, layering, pos) {
-    const root = {}; // Each vertex has a reference to the root of its block.
-    const align = {}; // Each vertex has a reference to its lower aligned neighbor.
+function verticalAlignment(ocpn, layering, pos, down) {
+    var root = {}; // Each vertex has a reference to the root of its block.
+    var align = {}; // Each vertex has a reference to its lower aligned neighbor.
 
     // Initialize root and align for each vertex.
     for (let i = 0; i < layering.length; i++) {
@@ -192,8 +185,8 @@ function verticalAlignment(ocpn, layering, pos) {
         let r = -1; // Initialize r to a value that is not a valid position.
         for (let k = 0; k < layer.length; k++) {
             const v = layer[k];
-            var neighbors = getUpperNeighbors(ocpn, v).sort((a, b) => pos[a] - pos[b]);
-            // console.log(`Neighbors of ${v}:\n\t${neighbors}`);
+            var neighbors = down ? getUpperNeighbors(ocpn, v) : getLowerNeighbors(ocpn, v);
+            neighbors.sort((a, b) => pos[a] - pos[b]);
             if (neighbors.length > 0) {
                 const lowerUpperMedians = [...new Set([Math.floor((neighbors.length - 1) / 2), Math.ceil((neighbors.length - 1) / 2)])];
                 for (let m of lowerUpperMedians) {
@@ -238,21 +231,22 @@ function horizontalCompaction(ocpn, layering, roots, aligns, pos) {
         for (let v of layering[i]) {
             sink[v] = v;
             shift[v] = Infinity;
+            x[v] = undefined;
         }
     }
 
     // Root coordinates relative to sink.
     for (let i = 0; i < layering.length; i++) {
-        let layer = layering[i];
         for (let j = 0; j < layering[i].length; j++) {
-            let v = layer[j];
+            let v = layering[i][j];
             if (roots[v] == v) {
-                placeBlock(layer, v, x, pos, roots, sink, shift, aligns, MIN_VERTEX_SEP);
+                placeBlock(layering, v, x, pos, roots, sink, shift, aligns, MIN_VERTEX_SEP);
             }
         }
     }
 
     // Absolute coordinates.
+    let xMax = 0;
     for (let i = 0; i < layering.length; i++) {
         for (let j = 0; j < layering[i].length; j++) {
             let v = layering[i][j];
@@ -260,28 +254,37 @@ function horizontalCompaction(ocpn, layering, roots, aligns, pos) {
             if (shift[sink[roots[v]]] < Infinity) {
                 x[v] = x[v] + shift[sink[roots[v]]];
             }
+            xMax = Math.max(xMax, x[v]);
         }
     }
-    return x;
+
+    return [x, xMax];
 }
 
 
-function placeBlock(layer, v, x, pos, roots, sink, shift, aligns, delta) {
+function placeBlock(layering, v, x, pos, roots, sink, shift, aligns, delta) {
     if (x[v] == undefined) {
         x[v] = 0;
-        let w = v;
+        var w = v;
         do {
+            // If pos of the vertex is 0, there is no predecessor.
             if (pos[w] > 0) {
-                // Get the predecessor of w. That is, the vertex that is to the "left" of w in the layer.
-                let predecessor = layer[pos[w] - 1];
-                let u = roots[predecessor];
-                placeBlock(layer, u, x, pos, roots, sink, shift, aligns, delta);
+                // Get the layerindex of w.
+                let layer = layering.findIndex(l => l.includes(w));
+                // Get the predecessor of w. (The vertex to the left of w -> always exists because pos[w] > 0.)
+                const predecessor = layering[layer][pos[w] - 1];
+                // Get the root of the predecessor.
+                const u = roots[predecessor];
+                // Determine the coordinates of the predecessor's root. (Terminates once the vertex most to the left is reached.)
+                placeBlock(layering, u, x, pos, roots, sink, shift, aligns, delta);
+                // The sink is the root vertex with the smallest x coordinate.
                 if (sink[v] == v) {
                     sink[v] = sink[u];
                 }
                 if (sink[v] != sink[u]) {
                     shift[sink[u]] = Math.min(shift[sink[u]], x[v] - x[u] - delta);
                 } else {
+                    // Maximum of own x and x of predecessor + minimum vertex separation.
                     x[v] = Math.max(x[v], x[u] + delta);
                 }
             }
@@ -332,6 +335,19 @@ function getUpperNeighbors(ocpn, vertex) {
         const upperInArcs = v.inArcs.filter(arc => !arc.reversed).map(arc => arc.source.name);
         const upperOutArcs = v.outArcs.filter(arc => arc.reversed).map(arc => arc.target.name);
         return [...upperInArcs, ...upperOutArcs];
+    }
+}
+
+function getLowerNeighbors(ocpn, vertex) {
+    let v = ocpn.findElementByName(vertex);
+    if (v instanceof ObjectCentricPetriNet.Dummy) {
+        let lower = v.arcReversed ? v.from : v.to;
+        return [lower.name];
+    } else {
+        // V is place or transition.
+        const lowerInArcs = v.inArcs.filter(arc => arc.reversed).map(arc => arc.source.name);
+        const lowerOutArcs = v.outArcs.filter(arc => !arc.reversed).map(arc => arc.target.name);
+        return [...lowerInArcs, ...lowerOutArcs];
     }
 }
 

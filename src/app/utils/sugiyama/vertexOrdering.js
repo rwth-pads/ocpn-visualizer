@@ -49,7 +49,7 @@ function adjustLayeringOrderByObjectCentrality(ocpn, layering, config) {
  */
 function upDownBarycenterBilayerSweep(ocpn, layering, config) {
     const MAXITERATIONS = 4;
-    const OBJECT_ATTRACTION = 0;
+    const OBJECT_ATTRACTION = 0.1;
     const OBJECT_ATTRACTION_RANGE_MIN = 1; // The layers taken into account when computing the place barycenters.
     const OBJECT_ATTRACTION_RANGE_MAX = 2; // The layers taken into account when computing the place barycenters.
     const testConfig = {
