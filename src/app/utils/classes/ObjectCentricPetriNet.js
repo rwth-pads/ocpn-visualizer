@@ -13,7 +13,8 @@ class ObjectCentricPetriNet {
     static DEFAULT_ARC_WEIGHT = 1; // Default weight of an arc.
     static DEFAULT_ARC_VARIABLE = false; // Default variable property of an arc.
     static DEFAULT_ARC_REVERSED = false; // Default reversed property of an arc.
-
+    // TODO implement a static counter that is used to generate unique names for all places, transitions, and dummy nodes.
+    static DEFAULT_VERTEX_NAME = "v"; // + nodeCounter = default name for vertices.
     /**
      * Constructor for the ObjectCentricPetriNet class.
      * 
@@ -304,6 +305,8 @@ ObjectCentricPetriNet.Place = class {
         this.outArcs = outArcs;
         this.layer = -1;
         this.pos = -1;
+        this.x = undefined;
+        this.y = undefined;
     }
 
     /**
@@ -335,6 +338,8 @@ ObjectCentricPetriNet.Transition = class {
         this.silent = silent;
         this.layer = -1;
         this.pos = -1;
+        this.x = undefined;
+        this.y = undefined;
         this.properties = properties;
     }
 
@@ -407,6 +412,8 @@ ObjectCentricPetriNet.Dummy = class {
         this.to = to;
         this.layer = layer;
         this.pos = -1;
+        this.x = undefined;
+        this.y = undefined;
         this.arcReversed = arcReversed;
     }
 

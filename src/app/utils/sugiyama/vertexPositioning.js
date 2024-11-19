@@ -1,5 +1,34 @@
 // import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
+const { clone2DArray, arraysEqual } = require('../lib/arrays');
+
+/**
+ * Heuristic approach description:
+ * 
+ * Source: "Fast and Simple Horizontal Coordinate Assignment"
+ * 
+ * Objective:
+ *      Align each vertex vertically (horizontally) with its median neighbor where possible.
+ *
+ * Overview:
+ *      1. Vertical alignment -> try to align each vertex with either its median upper or median lower neighbor.
+ *      2. Horizontal compaction -> aligned vertices are constrained to obtain the same x (y) coordinate.
+ *          - Steps 1 and 2 are repeated for {up, down} x {leftmost, rightmost}.
+ *      3. Combination of the four computed assignments -> balance their biases.
+ * 
+ *     - arcs are called segments
+ *     - arcs between two dummy vertices are called inner segments
+ * 
+ * Types of conflicts:
+ *      Type 0: a pair of non-inner segments that either cross or share a vertex.
+ *      Type 1: non-inner segment crosses an inner segment.
+ *      Type 2: two inner segments cross.
+ *          -> type 2 should be avoided by the vertex ordering step. TODO: check if this is the case.
+ *          -> alternatively, type 2 conflicts can be resolved by a preprocessing step:
+ *                 - swapping the two lower vertices involved until the crossing is no longer between two inner segments.
+ *          ->  If the ordering is more important than vertical inner segments, the original ordering can be restored in the final layout.
+ *              - TODO: add user checkbox for this. if type 2 can occur at all.
+ */
 
 /**
  * Heuristic algorithm for the coordinate assignment of the vertices of the OCPN.
@@ -25,12 +54,28 @@ function positionVertices(ocpn, layering, config) {
     // Mark type 1 conflicts in the OCPN given the layering.
     const conflictCount = markType1Conflicts(ocpn, layering);
 
-    for (const verticalDir in ['down', 'up']) {
-        for (const horizontalDir in ['left', 'right']) {
-            verticalAlignment(ocpn, layering, verticalDir, horizontalDir);
-            horizontalCompaction(ocpn, layering, verticalDir, horizontalDir);
+    for (const verticalDir in [0, 1]) { // 0: down, 1: up
+        for (const horizontalDir in [0, 1]) { // 0: left, 1: right
+            console.log(`Vertical direction: ${verticalDir == 0 ? 'down' : 'up'}, Horizontal direction: ${horizontalDir == 0 ? 'left' : 'right'}`);
+            // Reverse the outer and inner layers depending on the directions.
+            let [currentLayering, pos] = transformLayering(clone2DArray(layering), verticalDir, horizontalDir);
+            // Align each vertex vertically with its median neighbor where possible.
+            let [roots, aligns] = verticalAlignment(ocpn, currentLayering, pos);
+            // Determine coordinates subject to the current alignment.
+            let x = horizontalCompaction(ocpn, currentLayering, roots, aligns, pos);
+            console.log("X: ", x);
+            // If direction from right to left, flip coordinates.
+            if (horizontalDir == 1) {
+                // TODO
+            }
         }
     }
+    // let [currentLayering, pos] = transformLayering(clone2DArray(layering), 0, 0);
+    // let [roots, aligns] = verticalAlignment(ocpn, currentLayering, pos);
+    // console.log("Root: ", roots);
+    // console.log("Align: ", aligns);
+    // let x = horizontalCompaction(ocpn, currentLayering, roots, aligns, pos);
+    // console.log("X2: ", x);
     // Align to assignment of smallest width (height).
     alignAssignments(ocpn, layering);
     // Set the actual coordinates to average median of aligned candidates.
@@ -38,46 +83,75 @@ function positionVertices(ocpn, layering, config) {
 }
 
 /**
+ * Depending on the vertical and horizontal direction, the layering is transformed.
+ * That is, the order of the layers and the order of the vertices within the layers are reversed.
+ * 
+ * @param {*} layering The original layering of the OCPN.
+ * @param {*} verticalDir The vertical direction of the current alignment and compaction step.
+ * @param {*} horizontalDir The horizontal direction of the current alignment and compaction step.
+ * @returns The transformed layering.
+ */
+function transformLayering(layering, verticalDir, horizontalDir) {
+    if (verticalDir == 1) {
+        layering.reverse();
+    }
+    if (horizontalDir == 1) {
+        layering.forEach(layer => layer.reverse());
+    }
+
+    var pos = [];
+    for (let i = 0; i < layering.length; i++) {
+        for (let j = 0; j < layering[i].length; j++) {
+            pos[layering[i][j]] = j;
+        }
+    }
+    return [layering, pos];
+}
+
+/**
  * Marks the type 1 conflicts for non-inner segments in the OCPN given the layering.
  * A type 1 conflict occurs when a non-inner segment crosses an inner segment.
- *
- * @param {*} ocpn 
- * @param {*} layering  
+ * This step is necessary to keep long edges straight, leading to non-inner segments
+ * crossing inner segments not being aligned in the following steps. 
+ * 
+ * @param {*} ocpn The OCPN.
+ * @param {*} layering The ordered layering of the OCPN graph.
  */
-// TODO: fix the algorithm since it marks the inner segments involved in type 1 conflicts,
-// but it should mark the non inner segments involved in the type 1 conflict instead.
 function markType1Conflicts(ocpn, layering) {
-    console.log("Marking type 1 conflicts...");
-    var conflictCount = 0;
-
+    // console.log("Marking type 1 conflicts...");
     // Between layer first and second (last - 1 and last) there cannot be any type 1 conflicts.
     for (let i = 1; i < layering.length - 2; i++) {
         const layer = layering[i];
         const nextLayer = layering[i + 1];
         let k0 = 0;
         let l = 0;
-
+        // console.log(`Layer: ${layer}`);
+        // console.log(`Next layer: ${nextLayer}`);
         // Check for type 1 conflicts between layer and next layer.
         for (let l1 = 0; l1 < nextLayer.length; l1++) {
+            // console.log(`\tl1: ${l1} = ${nextLayer[l1]} or incident: ${isIncidentToInnerSegment(ocpn, nextLayer[l1]) || l1 == nextLayer.length - 1}`);
             if (l1 == nextLayer.length - 1 || isIncidentToInnerSegment(ocpn, nextLayer[l1])) {
                 let k1 = layer.length - 1;
                 if (isIncidentToInnerSegment(ocpn, nextLayer[l1])) {
                     k1 = layer.indexOf(getUpperNeighbors(ocpn, nextLayer[l1])[0]);
+                    // console.log(`\t\tk1: ${k1} = ${getUpperNeighbors(ocpn, nextLayer[l1])[0]}`);
                 }
                 while (l <= l1) {
+                    // console.log(`\t\t\tUpper neighbors of ${nextLayer[l]}: ${getUpperNeighbors(ocpn, nextLayer[l])}`);
                     getUpperNeighbors(ocpn, nextLayer[l]).forEach(upperNeighbor => {
                         let k = layer.indexOf(upperNeighbor);
+                        // console.log(`\t\t\t\tk: ${k} = ${upperNeighbor}`);
                         if (k < k0 || k > k1) {
+                            // console.log(`\t\t\t\tk: ${layer[k]} -> ${k} < ${k0} <- ${layer[k0]} or k: ${layer[k]} -> ${k} > ${k1} <- ${layer[k1]}`);
                             // Mark the arc from upperNeighbor to nextLayer[l] as type 1.
                             let arc = ocpn.arcs.filter(arc =>
                                 arc.source.name == upperNeighbor && arc.target.name == nextLayer[l] ||
                                 arc.source.name == nextLayer[l] && arc.target.name == upperNeighbor
                             ); // If arcs (u,v) and (v,u) exist, both are marked which is fine.
-                            console.log(`Marking arc (${upperNeighbor} -> ${nextLayer[l]}) as type 1...`);
+                            console.log(`\tMarking arc (${upperNeighbor} -> ${nextLayer[l]}) as type 1...`);
                             arc.forEach(a => {
                                 if (!isIncidentToInnerSegment(ocpn, upperNeighbor) || !isIncidentToInnerSegment(ocpn, nextLayer[l])) {
                                     a.type1 = true;
-                                    conflictCount++;
                                 }
                             });
                         }
@@ -88,11 +162,145 @@ function markType1Conflicts(ocpn, layering) {
             }
         }
     }
-    return conflictCount;
+}
+
+/** 
+ * Aligns each vertex vertically with its median upper/lower neighbor where possible.
+ * 
+ * Since we transformed the layering according to the vertical and horizontal direction,
+ * we can assume that the vertices are aligned from left to right and top to bottom.
+ * @param {*} ocpn 
+ * @param {*} layering 
+ * @param {*} pos The current position of the vertices in their layer.
+ * @returns An array of the root and align values for each vertex.
+ */
+function verticalAlignment(ocpn, layering, pos) {
+    const root = {}; // Each vertex has a reference to the root of its block.
+    const align = {}; // Each vertex has a reference to its lower aligned neighbor.
+
+    // Initialize root and align for each vertex.
+    for (let i = 0; i < layering.length; i++) {
+        for (let v of layering[i]) {
+            root[v] = v;
+            align[v] = v;
+        }
+    }
+
+    // Perform vertical alignment.
+    for (let i = 1; i < layering.length; i++) {
+        const layer = layering[i];
+        let r = -1; // Initialize r to a value that is not a valid position.
+        for (let k = 0; k < layer.length; k++) {
+            const v = layer[k];
+            var neighbors = getUpperNeighbors(ocpn, v).sort((a, b) => pos[a] - pos[b]);
+            // console.log(`Neighbors of ${v}:\n\t${neighbors}`);
+            if (neighbors.length > 0) {
+                const lowerUpperMedians = [...new Set([Math.floor((neighbors.length - 1) / 2), Math.ceil((neighbors.length - 1) / 2)])];
+                for (let m of lowerUpperMedians) {
+                    if (align[v] == v) {
+                        if (!isMarked(ocpn, neighbors[m], v) && r < pos[neighbors[m]]) {
+                            align[neighbors[m]] = v;
+                            root[v] = root[neighbors[m]];
+                            align[v] = root[v];
+                            r = pos[neighbors[m]];
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return [root, align];
+}
+
+function isMarked(ocpn, u, v) {
+    let arc = ocpn.arcs.filter(arc =>
+        arc.source.name == u && arc.target.name == v ||
+        arc.source.name == v && arc.target.name == u
+    );
+    return arc.length > 0 && arc[0].type1;
+}
+
+/**
+ * Coordinate assignment is determined subject to a vertical algignment. 
+ * 
+ * @param {*} ocpn 
+ * @param {*} layering 
+ */
+function horizontalCompaction(ocpn, layering, roots, aligns, pos) {
+    const MIN_VERTEX_SEP = 10; // TODO use user config.
+
+    const x = {};
+    const sink = {};
+    const shift = {};
+
+    // Initialize sink and shift for each vertex.
+    for (let i = 0; i < layering.length; i++) {
+        for (let v of layering[i]) {
+            sink[v] = v;
+            shift[v] = Infinity;
+        }
+    }
+
+    // Root coordinates relative to sink.
+    for (let i = 0; i < layering.length; i++) {
+        let layer = layering[i];
+        for (let j = 0; j < layering[i].length; j++) {
+            let v = layer[j];
+            if (roots[v] == v) {
+                placeBlock(layer, v, x, pos, roots, sink, shift, aligns, MIN_VERTEX_SEP);
+            }
+        }
+    }
+
+    // Absolute coordinates.
+    for (let i = 0; i < layering.length; i++) {
+        for (let j = 0; j < layering[i].length; j++) {
+            let v = layering[i][j];
+            x[v] = x[roots[v]];
+            if (shift[sink[roots[v]]] < Infinity) {
+                x[v] = x[v] + shift[sink[roots[v]]];
+            }
+        }
+    }
+    return x;
+}
+
+
+function placeBlock(layer, v, x, pos, roots, sink, shift, aligns, delta) {
+    if (x[v] == undefined) {
+        x[v] = 0;
+        let w = v;
+        do {
+            if (pos[w] > 0) {
+                // Get the predecessor of w. That is, the vertex that is to the "left" of w in the layer.
+                let predecessor = layer[pos[w] - 1];
+                let u = roots[predecessor];
+                placeBlock(layer, u, x, pos, roots, sink, shift, aligns, delta);
+                if (sink[v] == v) {
+                    sink[v] = sink[u];
+                }
+                if (sink[v] != sink[u]) {
+                    shift[sink[u]] = Math.min(shift[sink[u]], x[v] - x[u] - delta);
+                } else {
+                    x[v] = Math.max(x[v], x[u] + delta);
+                }
+            }
+            w = aligns[w];
+        } while (w != v);
+    }
+}
+
+function alignAssignments(ocpn, layering, root, align) {
+    console.log("Aligning assignments...");
+}
+
+function setCoordinates(ocpn, layering) {
+    console.log("Setting coordinates...");
 }
 
 /**
  * Checks whether the vertex is incident to an inner segment.
+ * A vertex is incident to an inner segment if it is a dummy and its upper neighbor is a dummy.
  * @param {ObjectCentricPetriNet} ocpn 
  * @param {*} vertex 
  * @returns Boolean value indicating whether the vertex is incident to an inner segment.
@@ -127,48 +335,5 @@ function getUpperNeighbors(ocpn, vertex) {
     }
 }
 
-function verticalAlignment(ocpn, layering, verticalDir, horizontalDir) {
-    console.log(`Vertical alignment ${verticalDir == 0 ? 'down' : 'up'} in ${horizontalDir == 0 ? 'left' : 'right'}mostfashion...`);
-}
-
-function horizontalCompaction(ocpn, layering, verticalDir, horizontalDir) {
-    console.log(`Horizontal compaction ${verticalDir == 0 ? 'down' : 'up'} in ${horizontalDir == 0 ? 'left' : 'right'}mostfashion...`);
-}
-
-function alignAssignments(ocpn, layering) {
-    console.log("Aligning assignments...");
-}
-
-function setCoordinates(ocpn, layering) {
-    console.log("Setting coordinates...");
-}
-
 module.exports = { positionVertices, markType1Conflicts, getUpperNeighbors, isIncidentToInnerSegment };
-
-/**
- * Heuristic approach description:
- * 
- * Source: "Fast and Simple Horizontal Coordinate Assignment"
- * 
- * Objective:
- *      Align each vertex vertically (horizontally) with its median neighbor where possible.
- *
- * Overview:
- *      1. Vertical alignment -> try to align each vertex with either its median upper or median lower neighbor.
- *      2. Horizontal compaction -> aligned vertices are constrained to obtain the same x (y) coordinate.
- *          - Steps 1 and 2 are repeated for {up, down} x {leftmost, rightmost}.
- *      3. Combination of the four computed assignments -> balance their biases.
- * 
- *     - arcs are called segments
- *     - arcs between two dummy vertices are called inner segments
- * 
- * Types of conflicts:
- *      Type 0: a pair of non-inner segments that either cross or share a vertex.
- *      Type 1: non-inner segment crosses an inner segment.
- *      Type 2: two inner segments cross.
- *          -> type 2 should be avoided by the vertex ordering step. TODO: check if this is the case.
- *          -> alternatively, type 2 conflicts can be resolved by a preprocessing step:
- *                 - swapping the two lower vertices involved until the crossing is no longer between two inner segments.
- *          ->  If the ordering is more important than vertical inner segments, the original ordering can be restored in the final layout.
- *              - TODO: add user checkbox for this. if type 2 can occur at all.
- */
+// export default positionVertices;
