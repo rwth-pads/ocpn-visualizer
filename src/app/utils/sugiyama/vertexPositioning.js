@@ -1,6 +1,6 @@
 // import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
-const { clone2DArray, arraysEqual } = require('../lib/arrays');
+const { clone2DArray } = require('../lib/arrays');
 
 /**
  * Heuristic approach description:
@@ -54,16 +54,19 @@ function positionVertices(ocpn, layering, config) {
     // Mark type 1 conflicts in the OCPN given the layering.
     const conflictCount = markType1Conflicts(ocpn, layering);
     const layouts = [];
+    console.log("Computing the four alignments...");
     for (const verticalDir in [0, 1]) { // 0: down, 1: up
         for (const horizontalDir in [0, 1]) { // 0: left, 1: right
-            console.log(`Vertical direction: ${verticalDir == 0 ? 'down' : 'up'}, Horizontal direction: ${horizontalDir == 0 ? 'left' : 'right'}`);
+
             // Reverse the outer and inner layers depending on the directions.
             let [currentLayering, pos] = transformLayering(clone2DArray(layering), verticalDir, horizontalDir);
+
             // Align each vertex vertically with its median neighbor where possible.
             let [roots, aligns] = verticalAlignment(ocpn, currentLayering, pos, verticalDir == 0);
 
             // Determine coordinates subject to the current alignment.
             let [coords, maxCoord] = horizontalCompaction(ocpn, currentLayering, roots, aligns, pos);
+
             // If direction from right to left, flip coordinates back to original order.
             if (horizontalDir == 1) {
                 for (let v in coords) {
@@ -74,9 +77,9 @@ function positionVertices(ocpn, layering, config) {
         }
     }
     // Align to assignment of smallest width (height).
-    alignAssignments(ocpn, layering);
+    alignAssignments(layouts);
     // Set the actual coordinates to average median of aligned candidates.
-    setCoordinates(ocpn, layering);
+    setCoordinates(ocpn, layering, layouts, config);
 }
 
 /**
@@ -263,6 +266,8 @@ function horizontalCompaction(ocpn, layering, roots, aligns, pos) {
 
 
 function placeBlock(layering, v, x, pos, roots, sink, shift, aligns, delta) {
+    // TODO: The minimum separation can be chosen independently for each pair of
+    // neighboring vertices differentiate between places, transitions, and dummies.
     if (x[v] == undefined) {
         x[v] = 0;
         var w = v;
@@ -293,12 +298,55 @@ function placeBlock(layering, v, x, pos, roots, sink, shift, aligns, delta) {
     }
 }
 
-function alignAssignments(ocpn, layering, root, align) {
-    console.log("Aligning assignments...");
+function alignAssignments(layouts) {
+    console.log("Aligning the four layouts to the one with the smallest width (height)...");
+
+    // Determine minimum and maximum coordinates for each layout.
+    const minMax = layouts.map(coords => {
+        const values = Object.values(coords);
+        const min = Math.min(...values);
+        const max = Math.max(...values);
+        return { min, max, width: max - min };
+    });
+
+    // Determine the layout with the minimum width.
+    const minWidthIndex = minMax.reduce((minIndex, current, index, arr) => {
+        return current.width < arr[minIndex].width ? index : minIndex;
+    }, 0);
+
+    // console.log(minMax[minWidthIndex]);
+
+    // Align all other layouts to the lowest coordinate of the layout with the minimum width.
+    layouts.forEach((layout, i) => {
+        const shift = i % 2 === 0
+            ? minMax[i].min - minMax[minWidthIndex].min : // leftmost
+            minMax[i].max - minMax[minWidthIndex].max; // rightmost
+
+        for (let v in layout) {
+            layout[v] += shift;
+        }
+    });
 }
 
-function setCoordinates(ocpn, layering) {
+function setCoordinates(ocpn, layering, layouts, config) {
     console.log("Setting coordinates...");
+
+    const LAYER_SEP = 20; // TODO: use user config.
+    const BORDER_PADDING = 10;
+
+    for (let i = 0; i < layering.length; i++) {
+        for (let j = 0; j < layering[i].length; j++) {
+            const v = ocpn.findElementByName(layering[i][j]);
+            // Get the four candidate coordinates for the vertex in ascending order.
+            const candidateCoords = layouts.map(layout => layout[v.name]).sort((a, b) => a - b);
+            // Compute the average median of the four candidate coordinates.
+            const medianCoord = Math.floor((candidateCoords[1] + candidateCoords[2]) / 2);
+            // Set the vertex coordinates.
+            v.x = medianCoord + BORDER_PADDING;
+            v.y = i * LAYER_SEP + BORDER_PADDING;
+            console.log(`\t${v.name}:\t(x: ${v.x}, y: ${v.y})`);
+        }
+    }
 }
 
 /**
@@ -351,5 +399,5 @@ function getLowerNeighbors(ocpn, vertex) {
     }
 }
 
-module.exports = { positionVertices, markType1Conflicts, getUpperNeighbors, isIncidentToInnerSegment };
+module.exports = positionVertices;
 // export default positionVertices;
