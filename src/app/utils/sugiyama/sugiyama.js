@@ -40,10 +40,9 @@ async function sugiyama(ocpn) {
     // Dummy Vertex Insertion.
     insertDummyVertices(ocpn);
     console.log(ocpn.layout.arcs);
-    console.log(ocpn.layout.layering);
     // // Vertex Ordering.
     // TODO: switch to OCPNLayout instead of basic OCPN.
-    // orderVertices(ocpn, { oa: 0 });
+    orderVertices(ocpn, { oa: 0 });
     // console.log(ocpn.layout);
     // console.log("Order ", layeringArray);
     // // Vertex Positioning.

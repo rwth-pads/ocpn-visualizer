@@ -39,7 +39,9 @@ class OCPNLayout {
                 source: arc.source.id, // It holds source.layer < target.layer due to setArcDirection().
                 target: arc.target.id,
                 reversed: false,
-                path: [] // The path will contain the ids of the dummy vertices.
+                path: [], // The path will contain the ids of the dummy vertices.
+                minLayer: -1,
+                maxLayer: -1
             };
         });
     }
@@ -54,29 +56,36 @@ class OCPNLayout {
     }
 
 
-    static getAllArcsBetweenRanks(lowerRank, ocpnLayout) {
-        if (lowerRank + 1 >= ocpnLayout.layering.length) return [];
+    getAllArcsBetweenRanks(lowerRank) {
+        if (lowerRank + 1 >= this.layering.length) return [];
 
         const upperRank = lowerRank + 1;
         const arcs = [];
-        ocpnLayout.arcs.forEach(arc => {
+        Object.values(this.arcs).forEach(arc => {
             if (arc.path.length > 0) {
                 // Arc has to be split into multiple arcs.
-                const firstDummy = arc.reversed ? arc.target : arc.source;
-                if (ocpnLayout.vertices[firstDummy].layer !== lowerRank) {
-                    firstDummy = arc.path.find(dummy => ocpnLayout.vertices[dummy].layer === lowerRank);
+                if (arc.minLayer <= lowerRank && upperRank <= arc.maxLayer) {
+                    let lDiff = lowerRank - arc.minLayer;
+                    let uDiff = arc.maxLayer - upperRank;
+                    let source = lDiff === 0 ? arc.source : arc.path[lDiff - 1];
+                    let target = uDiff === 0 ? arc.target : arc.path[lDiff];
+                    arcs.push(
+                        {
+                            source: source,
+                            target: target,
+                        });
                 }
-                
             } else {
                 // Arc is not split.
-                let inLower = arc.reversed ? arc.target : arc.source;
-                let inUpper = arc.reversed ? arc.source : arc.target;
-                if (ocpnLayout.vertices[inLower].layer === lowerRank &&
-                    ocpnLayout.vertices[inUpper].layer === upperRank) {
-                    arcs.push({ source: inLower, target: inUpper });
+                if (arc.minLayer === lowerRank && arc.maxLayer === upperRank) {
+                    arcs.push(
+                        {
+                            source: arc.source,
+                            target: arc.target,
+                        });
                 }
             }
-        })
+        });
         return arcs;
     }
 }

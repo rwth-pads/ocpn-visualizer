@@ -16,6 +16,8 @@ function insertDummyVertices(ocpn) {
         let lower = ocpn.layout.arcs[arc.id].target;
         let sourceLayer = ocpn.layout.vertices[upper].layer;
         let targetLayer = ocpn.layout.vertices[lower].layer;
+        ocpn.layout.arcs[arc.id].minLayer = sourceLayer,
+        ocpn.layout.arcs[arc.id].maxLayer = targetLayer;
         const slack = targetLayer - sourceLayer;
         if (slack > 1) {
             let dummies = [];

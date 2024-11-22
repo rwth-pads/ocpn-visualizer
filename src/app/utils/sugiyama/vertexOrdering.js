@@ -304,9 +304,8 @@ function countCrossings(ocpn, layering) {
     // Compute the crossings between all layers.
     for (let l = 0; l < layering.length - 1; l++) {
         // Get all arcs between the current and the next layer.
-        var arcs = ocpn.arcs.filter(arc =>
-            arc.reversed ? arc.target.layer == l && arc.source.layer == l + 1 :
-                arc.source.layer == l && arc.target.layer == l + 1);
+        // TODO: next step here.
+        var arcs = ocpn.layout.getAllArcsBetweenRanks(l);
 
         var currLayer = layering[l];
         var nextLayer = layering[l + 1];
@@ -317,10 +316,10 @@ function countCrossings(ocpn, layering) {
                 let arc1 = arcs[i];
                 let arc2 = arcs[j];
                 // Get the indices of the adjacent vertices in the current and next layer.
-                let upper1Index = arc1.reversed ? currLayer.indexOf(arc1.target.name) : currLayer.indexOf(arc1.source.name);
-                let lower1Index = arc1.reversed ? nextLayer.indexOf(arc1.source.name) : nextLayer.indexOf(arc1.target.name);
-                let upper2Index = arc2.reversed ? currLayer.indexOf(arc2.target.name) : currLayer.indexOf(arc2.source.name);
-                let lower2Index = arc2.reversed ? nextLayer.indexOf(arc2.source.name) : nextLayer.indexOf(arc2.target.name);
+                let upper1Index = currLayer.indexOf(arc1.source);
+                let lower1Index = nextLayer.indexOf(arc1.target);
+                let upper2Index = currLayer.indexOf(arc2.source);
+                let lower2Index = nextLayer.indexOf(arc2.target);
 
                 // Check if the arcs cross.
                 if (upper1Index > upper2Index && lower1Index < lower2Index ||
@@ -331,6 +330,7 @@ function countCrossings(ocpn, layering) {
             }
         }
     }
+    console.log(`Crossing count: ${crossings}`);
     return crossings;
 }
 
