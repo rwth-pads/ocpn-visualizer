@@ -8,8 +8,7 @@
         {"name": "m2", "objectType": "type", "initial": false, "final": false},
         {"name": "r1", "objectType": "type", "initial": true, "final": false},
         {"name": "r2", "objectType": "type", "initial": false, "final": false},
-        {"name": "r3", "objectType": "type", "initial": false, "final": false},
-        {"name": "independent", "objectType": "type", "initial": true, "final": false}
+        {"name": "r3", "objectType": "type", "initial": false, "final": false}
     ],
     "transitions": [
         {"name": "upperleft", "label": "Upper Left", "properties": {}, "silent": false},

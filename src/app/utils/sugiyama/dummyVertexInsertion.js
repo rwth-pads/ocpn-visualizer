@@ -11,6 +11,7 @@ import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
  */
 function insertDummyVertices(ocpn, layering) {
     var dummyCount = 0;
+    console.log("Dummy Insertion: ", ocpn);
     for (const arc of ocpn.arcs) {
         let sourceLayer = arc.source.layer; // The layer of the source node.
         let targetLayer = arc.target.layer; // The layer of the target node.

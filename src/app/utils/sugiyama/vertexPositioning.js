@@ -225,6 +225,8 @@ function isMarked(ocpn, u, v) {
  */
 function horizontalCompaction(ocpn, layering, roots, aligns, pos) {
     const MIN_VERTEX_SEP = 10; // TODO use user config.
+    // TODO: MIN_VERTEX_SEP based on whether place, transition, or dummy vertex.
+    // TODO: sep should be computed by min sep + width of the vertex type.
 
     const x = {};
     const sink = {};
@@ -332,7 +334,7 @@ function alignAssignments(layouts) {
 function setCoordinates(ocpn, layering, layouts, config) {
     console.log("Setting coordinates...");
 
-    const LAYER_SEP = 20; // TODO: use user config.
+    const LAYER_SEP = 10; // TODO: use user config.
     const BORDER_PADDING = 10;
 
     for (let i = 0; i < layering.length; i++) {

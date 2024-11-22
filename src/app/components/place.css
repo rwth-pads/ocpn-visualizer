@@ -1,0 +1,15 @@
+.ocpn-place {
+    fill: orange;
+}
+
+.ocpn-transition {
+    fill: none;
+    stroke: black;
+    stroke-width: 0.3;
+}
+
+.ocpn-arc {
+    fill: none;
+    stroke: black;
+    stroke-width: 0.3;
+}

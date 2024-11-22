@@ -57,6 +57,7 @@ const Home = () => {
         setImportError(null);
     };
 
+    // TODO: allow for importing multiple OCPNs. Currently only supports importing one OCPN at a time
     const handleFileImport = async (file: File) => {
         const reader = new FileReader();
         reader.onload = async (e: ProgressEvent<FileReader>) => {
