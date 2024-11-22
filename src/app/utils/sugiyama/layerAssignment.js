@@ -5,15 +5,15 @@ const glpkModule = require('glpk.js');
 /**
  * Creates the objective function for the ILP formulation of the layer assignment problem.
  *
- * @param {*} arcs The arcs of the OCPN.
+ * @param {*} ocpn The OCPN.
  */
-function createILPObjective(arcs) {
+function createILPObjective(ocpn) {
     const vars = [];
-    for (const arc of arcs) {
+    for (const arc of ocpn.arcs) {
         // Change coefficient if the arc is reversed.
-        let dir = arc.reversed ? -1 : 1;
-        vars.push({ name: arc.target.name, coef: 1 * dir });
-        vars.push({ name: arc.source.name, coef: -1 * dir });
+        let dir = ocpn.layout.arcs[arc.id].reversed ? -1 : 1;
+        vars.push({ name: arc.target.id, coef: 1 * dir });
+        vars.push({ name: arc.source.id, coef: -1 * dir });
     }
     return combineCoefs(vars);
 }
@@ -39,20 +39,20 @@ function combineCoefs(vars) {
 /**
  * Creates the constraint: layer(target) - layer(source) >= 1 for all (source,target) in E.
  *
- * @param {*} arcs The arcs of the OCPN.
+ * @param {*} ocpn The OCPN.
  * @param {*} glpk The glpk instance.
  * @returns The arc span constraints.
  */
-function createArcSpanConstraints(arcs, glpk) {
+function createArcSpanConstraints(ocpn, glpk) {
     const edgeConstraints = [];
-    for (const arc of arcs) {
+    for (const arc of ocpn.arcs) {
         // Change coefficient if the arc is reversed.
-        let dir = arc.reversed ? -1 : 1;
+        let dir = ocpn.layout.arcs[arc.id].reversed ? -1 : 1;
         edgeConstraints.push({
             name: `edgespan_constraint_${arc.source.name}_${arc.target.name}`,
             vars: [
-                { name: arc.target.name, coef: 1 * dir },
-                { name: arc.source.name, coef: -1 * dir }
+                { name: arc.target.id, coef: 1 * dir },
+                { name: arc.source.id, coef: -1 * dir }
             ],
             // Set to minimize (GLP_LO), the lower bound to 1 (lb), and the upper bound to infinity (ub).
             bnds: { type: glpk.GLP_LO, lb: 1, ub: Infinity }
@@ -93,8 +93,8 @@ async function assignLayers(ocpn) {
 
     // Initialize the OCPN graph, the ILP objective and constraints.
     const ocpnGraph = new OCPNGraph(ocpn);
-    const objectiveVars = createILPObjective(ocpn.arcs);
-    const arcConstraint = createArcSpanConstraints(ocpn.arcs, glpk);
+    const objectiveVars = createILPObjective(ocpn);
+    const arcConstraint = createArcSpanConstraints(ocpn, glpk);
     const positiveConstraint = createPositiveLayerConstraints(ocpnGraph, glpk);
     // Define the linear program.
     const lp = {
@@ -130,10 +130,15 @@ async function assignLayers(ocpn) {
         // Add the node to the layer.
         layering[layer].push(node);
         // Find the corresponding node in the OCPN.
-        let nodeObj = ocpn.findElementByName(node);
-        // Assign the layer to the node in the OCPN.
-        nodeObj.layer = layer;
+        ocpn.layout.vertices[node].layer = layer;
     }
+    // Convert the layering object to an array of arrays.
+    var layeringArray = [];
+    for (const layer of Object.keys(layering)) {
+        layeringArray.push(layering[layer]);
+    }
+    // Assign the layering to the OCPN layout.
+    ocpn.layout.layering = layeringArray;
     return layering;
 }
 

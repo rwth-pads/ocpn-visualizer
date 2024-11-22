@@ -17,10 +17,10 @@ function reverseCycles(ocpn, sources, sinks) {
     var fas = modifiedGreedyFAS(net, sources, sinks);
     // console.log("FAS: ", fas);
     ocpn.arcs.forEach(arc => {
-        let sourceIndex = fas.indexOf(arc.source.name);
-        let targetIndex = fas.indexOf(arc.target.name);
+        let sourceIndex = fas.indexOf(arc.source.id);
+        let targetIndex = fas.indexOf(arc.target.id);
         // Reverse the arc if the source's index is greater than the target's index.
-        arc.setReverse(sourceIndex > targetIndex);
+        ocpn.layout.arcs[arc.id].reversed = sourceIndex > targetIndex;
         reversedArcs += sourceIndex > targetIndex ? 1 : 0;
     });
     return reversedArcs;

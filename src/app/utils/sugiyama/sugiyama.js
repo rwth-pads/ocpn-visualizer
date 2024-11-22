@@ -5,6 +5,7 @@ const insertDummyVertices = require('./dummyVertexInsertion');
 const orderVertices = require('./vertexOrdering');
 const positionVertices = require('./vertexPositioning');
 const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
+const OCPNLayout = require('../classes/OCPNLayout');
 
 
 // Define the path to the JSON file.
@@ -26,25 +27,25 @@ fs.readFile(jsonFilePath, 'utf8', async (err, data) => {
     const ocpn = ObjectCentricPetriNet.fromJSON(json);
     // Apply the Sugiyama layout algorithm.
     const result = await sugiyama(ocpn);
-
 });
 
 
 async function sugiyama(ocpn) {
-    console.log("Sugiyama input: ", ocpn);
+    // Init the OCPN Layout.
+    ocpn.layout = new OCPNLayout(ocpn);
     // Cycle Breaking.
-    var reversedArcsCount = reverseCycles(ocpn, [], []);
+    reverseCycles(ocpn, [], []);
     // Layer Assignment.
-    var layering = await assignLayers(ocpn);
-    // Dummy Vertex Insertion.
-    var [dummyCount, layeringArray] = insertDummyVertices(ocpn, layering);
-    console.log("Dummies ", layeringArray);
-    // Vertex Ordering.
+    await assignLayers(ocpn);
+    // // Dummy Vertex Insertion.
+    insertDummyVertices(ocpn);
+    // // Vertex Ordering.
     var [layeringScore, layeringArray] = orderVertices(ocpn, layeringArray, { oa: 0 });
-    console.log("Order ", layeringArray);
-    // Vertex Positioning.
-    positionVertices(ocpn, layeringArray, { ranksep: 1 });
-    // TODO: transform dummy vertices to edge points and reverse reversed arcs back to normal direction.
-    return ocpn;
+    console.log(ocpn.layout);
+    // console.log("Order ", layeringArray);
+    // // Vertex Positioning.
+    // positionVertices(ocpn, layeringArray, { ranksep: 1 });
+    // // TODO: transform dummy vertices to edge points and reverse reversed arcs back to normal direction.
+    // return ocpn;
 }
 
