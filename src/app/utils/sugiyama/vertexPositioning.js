@@ -1,7 +1,5 @@
-import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
-import { clone2DArray } from '../lib/arrays';
-// const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
-// const { clone2DArray } = require('../lib/arrays');
+const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
+const { clone2DArray } = require('../lib/arrays');
 
 /**
  * Heuristic approach description:
@@ -400,5 +398,4 @@ function getLowerNeighbors(ocpn, vertex) {
     }
 }
 
-// module.exports = positionVertices;
-export default positionVertices;
+module.exports = positionVertices;

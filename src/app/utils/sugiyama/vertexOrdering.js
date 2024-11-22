@@ -1,7 +1,5 @@
-import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
-import { clone2DArray, arraysEqual } from '../lib/arrays';
-// const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
-// const { clone2DArray, arraysEqual } = require('../lib/arrays');
+const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
+const { clone2DArray, arraysEqual } = require('../lib/arrays');
 
 
 /**
@@ -382,30 +380,4 @@ function reocurringLayering(currentLayering, computedLayerings) {
     return false;
 }
 
-// module.exports = orderVertices;
-export default orderVertices;
-
-/**
- * Barycenter method (BC method) as described in the paper:
- * "Methods for Visual Understanding of Hierarchical System Structures" Sugiyama et al. (1981)
- * 
- * Algorithm consists of two phases:
- *      Phase 1: barycenter ordering of rows and columns is repeated in turn. (equal barycenters are preserved)
- *      Phase 2: reordering of rows and columns with equal barycenters just after execution of Phase 1 calle 'reversion'
- *          Phase 2 uses Phase 1 as a subalgorithm
- * 
- * Phase 1:
- *      1. Compute initial ordering M* = M0 and the crossing count K* = K(M0)
- *      2. M1 = barycentric ordering of rows on M0
- *      3. if K(M1) < K* then M* = M1 and K* = K(M1)
- *      4. M2 = barycentric ordering of columns on M1
- *      5. if K(M2) < K* then M* = M2 and K* = K(M2)
- *      6. if M0 == M2 || maxiterations in Phase 1 reached goto 7. else goto 2.
- * 
- * Phase 2:
- *      7. M3 = row reversion of M2 -> equal barycenters reordered ([1,2,3,4] -> [4,3,2,1])
- *      8. if resulting column barycenters are not ordered in increasing order goto 11. (M0 := M3) else goto 9.
- *      9. M4 = column reversion of M3 -> equal barycenters reordered ([a,b,c,d] -> [a,c,b,d])
- *      10. if resulting row barycenters are not ordered in increasing order goto 11 . (M0 := M4) else TERMINATE
- *      11. goto 2. if not maxiterations reached else TERMINATE
- */
+module.exports = orderVertices;

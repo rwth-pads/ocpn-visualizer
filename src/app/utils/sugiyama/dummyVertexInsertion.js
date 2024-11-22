@@ -1,5 +1,4 @@
-import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
-// const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
+const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
 
 /**
  * For every arc that spans more than one layer, insert dummy vertices on
@@ -63,5 +62,4 @@ function insertDummyVertices(ocpn, layering) {
     return [dummyCount, layeringArray];
 }
 
-// module.exports = insertDummyVertices;
-export default insertDummyVertices;
+module.exports = insertDummyVertices;
