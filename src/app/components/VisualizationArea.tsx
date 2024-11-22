@@ -84,8 +84,8 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN }) =
             if (selectedOCPN) {
                 // Clear the existing SVG content
                 d3.select(svgRef.current!).selectAll('*').remove();
-                
-                const processedOCPN = await sugiyama(selectedOCPN);
+                // Temporary fix until OCPNLayout class implementation done.
+                const processedOCPN = selectedOCPN.dummyNodes.length > 0 ? selectedOCPN : await sugiyama(selectedOCPN);
                 
                 // Map the OCPN to a layout
                 mapOCPNToLayout(processedOCPN, svgRef.current!);
@@ -93,7 +93,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN }) =
         }
         updateVisualization();
     }, [selectedOCPN]);
-
+    // TODO: d3 zoom and pan.
     return (
         <Box
             sx={{
