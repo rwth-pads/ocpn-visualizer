@@ -1,6 +1,7 @@
-// import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
-const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
-const { clone2DArray } = require('../lib/arrays');
+import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
+import { clone2DArray } from '../lib/arrays';
+// const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
+// const { clone2DArray } = require('../lib/arrays');
 
 /**
  * Heuristic approach description:
@@ -344,7 +345,7 @@ function setCoordinates(ocpn, layering, layouts, config) {
             // Set the vertex coordinates.
             v.x = medianCoord + BORDER_PADDING;
             v.y = i * LAYER_SEP + BORDER_PADDING;
-            console.log(`\t${v.name}:\t(x: ${v.x}, y: ${v.y})`);
+            // console.log(`\t${v.name}:\t(x: ${v.x}, y: ${v.y})`);
         }
     }
 }
@@ -399,5 +400,5 @@ function getLowerNeighbors(ocpn, vertex) {
     }
 }
 
-module.exports = positionVertices;
-// export default positionVertices;
+// module.exports = positionVertices;
+export default positionVertices;

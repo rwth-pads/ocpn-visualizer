@@ -1,9 +1,9 @@
-// import glpkModule from 'glpk.js';
-// import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
-// import OCPNGraph from '../classes/OCPNGraph';
-const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
-const OCPNGraph = require('../classes/OCPNGraph');
-const glpkModule = require('glpk.js');
+import glpkModule from 'glpk.js';
+import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
+import OCPNGraph from '../classes/OCPNGraph';
+// const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
+// const OCPNGraph = require('../classes/OCPNGraph');
+// const glpkModule = require('glpk.js');
 
 /**
  * Creates the objective function for the ILP formulation of the layer assignment problem.
@@ -114,8 +114,9 @@ async function assignLayers(ocpn) {
         integers: ocpnGraph.nodes
     };
     // Solve the linear program.
-    const result = glpk.solve(lp);
+    const result = await glpk.solve(lp);
 
+    console.log(result);
     // Check for both optimal and feasible solutions.
     if (result.result.status !== glpk.GLP_OPT && result.result.status !== glpk.GLP_FEAS) {
         return null; // TODO: switch to other layer assignment algorithm.
@@ -139,5 +140,5 @@ async function assignLayers(ocpn) {
     return layering;
 }
 
-// export default assignLayers;
-module.exports = assignLayers;
+export default assignLayers;
+// module.exports = assignLayers;

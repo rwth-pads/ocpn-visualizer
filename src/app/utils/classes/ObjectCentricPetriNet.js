@@ -1,5 +1,5 @@
-// import { Parser } from 'xml2js';
-const { Parser } = require('xml2js');
+import { Parser } from 'xml2js';
+// const { Parser } = require('xml2js');
 
 /**
  * The ObjectCentricPetriNet class represents an object-centric Petri net.
@@ -36,6 +36,51 @@ class ObjectCentricPetriNet {
         this.properties = properties;
     }
 
+    deepCopy() {
+        const places = this.places.map(place => new ObjectCentricPetriNet.Place(
+            place.name,
+            place.objectType,
+            [],
+            [],
+            place.initial,
+            place.final
+        ));
+
+        const transitions = this.transitions.map(transition => new ObjectCentricPetriNet.Transition(
+            transition.name,
+            transition.label,
+            [],
+            [],
+            transition.properties,
+            transition.silent
+        ));
+
+        const arcs = this.arcs.map(arc => {
+            const source = places.find(place => place.name === arc.source.name) ||
+                transitions.find(transition => transition.name === arc.source.name);
+            const target = places.find(place => place.name === arc.target.name) ||
+                transitions.find(transition => transition.name === arc.target.name);
+
+            return new ObjectCentricPetriNet.Arc(
+                source,
+                target,
+                arc.reversed,
+                arc.variable,
+                arc.weight,
+                arc.properties
+            );
+        });
+
+        return new ObjectCentricPetriNet(
+            this.name,
+            places,
+            transitions,
+            [],
+            arcs,
+            this.objectTypes,
+            this.properties,
+        );
+    }
     /**
      * Finds and returns a place, transition, or dummy node by its unique name.
      *
@@ -423,5 +468,5 @@ ObjectCentricPetriNet.Dummy = class {
 }
 
 // Export the ObjectCentricPetriNet class and its subclasses
-// export default ObjectCentricPetriNet;
-module.exports = ObjectCentricPetriNet;
+export default ObjectCentricPetriNet;
+// module.exports = ObjectCentricPetriNet;

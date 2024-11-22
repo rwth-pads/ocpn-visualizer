@@ -1,6 +1,5 @@
-// import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
-const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
-// import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
+import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
+// const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
 
 /**
  * For every arc that spans more than one layer, insert dummy vertices on
@@ -39,7 +38,7 @@ function insertDummyVertices(ocpn, layering) {
             }
 
             // Insert arcs between the dummies and delete the original arc.
-            let = newArc = new ObjectCentricPetriNet.Arc(arc.source, dummies[0], arc.reversed);
+            let newArc = new ObjectCentricPetriNet.Arc(arc.source, dummies[0], arc.reversed);
             ocpn.arcs.push(newArc);
             arc.source.outArcs.push(newArc);
             for (let i = 0; i < dummies.length; i++) {
@@ -64,4 +63,5 @@ function insertDummyVertices(ocpn, layering) {
     return [dummyCount, layeringArray];
 }
 
-module.exports = insertDummyVertices;
+// module.exports = insertDummyVertices;
+export default insertDummyVertices;

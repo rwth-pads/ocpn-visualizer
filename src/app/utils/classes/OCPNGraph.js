@@ -1,5 +1,5 @@
-// import ObjectCentricPetriNet from "./ObjectCentricPetriNet";
-const ObjectCentricPetriNet = require('./ObjectCentricPetriNet');
+import ObjectCentricPetriNet from "./ObjectCentricPetriNet";
+// const ObjectCentricPetriNet = require('./ObjectCentricPetriNet');
 
 class OCPNGraph {
     /**
@@ -90,5 +90,5 @@ class OCPNGraph {
 }
 
 
-// export default OCPNGraph;
-module.exports = OCPNGraph;
+export default OCPNGraph;
+// module.exports = OCPNGraph;

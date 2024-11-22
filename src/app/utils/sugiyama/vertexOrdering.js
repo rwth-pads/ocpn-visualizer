@@ -1,6 +1,7 @@
-// import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
-const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
-const { clone2DArray, arraysEqual } = require('../lib/arrays');
+import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
+import { clone2DArray, arraysEqual } from '../lib/arrays';
+// const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
+// const { clone2DArray, arraysEqual } = require('../lib/arrays');
 
 
 /**
@@ -72,7 +73,7 @@ function upDownBarycenterBilayerSweep(ocpn, layering, config) {
         layering = adjustEqualBarycenters(ocpn, layering) // Phase 2
         var currentScore = computeLayeringScore(ocpn, layering, testConfig);
         console.log(`Sweep ${sweepCounter} score: ${currentScore}\nLayering:`);
-        console.log(layering);
+        // console.log(layering);
         // Check if the vertex order has improved.
         if (currentScore < bestScore) {
             bestScore = currentScore;
@@ -374,8 +375,8 @@ function reocurringLayering(currentLayering, computedLayerings) {
     return false;
 }
 
-module.exports = orderVertices;
-// export default orderVertices;
+// module.exports = orderVertices;
+export default orderVertices;
 
 /**
  * Barycenter method (BC method) as described in the paper:

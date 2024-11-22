@@ -1,7 +1,7 @@
-// import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
-// import OCPNGraph from '../classes/OCPNGraph';
-const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
-const OCPNGraph = require('../classes/OCPNGraph');
+import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
+import OCPNGraph from '../classes/OCPNGraph';
+// const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
+// const OCPNGraph = require('../classes/OCPNGraph');
 
 /**
  * Function that reverses cycles in the graph represented by the Object Centric Petri Net.
@@ -78,5 +78,5 @@ function modifiedGreedyFAS(net, sources, sinks) {
     return s1.concat(s2);
 }
 
-// export default reverseCycles;
-module.exports = reverseCycles;
+export default reverseCycles;
+// module.exports = reverseCycles;
