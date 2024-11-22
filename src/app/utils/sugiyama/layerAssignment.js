@@ -5,15 +5,14 @@ const glpkModule = require('glpk.js');
 /**
  * Creates the objective function for the ILP formulation of the layer assignment problem.
  *
- * @param {*} ocpn The OCPN.
+ * @param {*} arcs The OCPN.
  */
-function createILPObjective(ocpn) {
+function createILPObjective(arcs) {
     const vars = [];
-    for (const arc of ocpn.arcs) {
+    for (const arc of arcs) {
         // Change coefficient if the arc is reversed.
-        let dir = ocpn.layout.arcs[arc.id].reversed ? -1 : 1;
-        vars.push({ name: arc.target.id, coef: 1 * dir });
-        vars.push({ name: arc.source.id, coef: -1 * dir });
+        vars.push({ name: arc.target, coef: 1 });
+        vars.push({ name: arc.source, coef: -1 });
     }
     return combineCoefs(vars);
 }
@@ -39,20 +38,19 @@ function combineCoefs(vars) {
 /**
  * Creates the constraint: layer(target) - layer(source) >= 1 for all (source,target) in E.
  *
- * @param {*} ocpn The OCPN.
+ * @param {*} arcs
  * @param {*} glpk The glpk instance.
  * @returns The arc span constraints.
  */
-function createArcSpanConstraints(ocpn, glpk) {
+function createArcSpanConstraints(arcs, glpk) {
     const edgeConstraints = [];
-    for (const arc of ocpn.arcs) {
+    for (const arc of arcs) {
         // Change coefficient if the arc is reversed.
-        let dir = ocpn.layout.arcs[arc.id].reversed ? -1 : 1;
         edgeConstraints.push({
-            name: `edgespan_constraint_${arc.source.name}_${arc.target.name}`,
+            name: `edgespan_constraint_${arc.source}_${arc.target}`,
             vars: [
-                { name: arc.target.id, coef: 1 * dir },
-                { name: arc.source.id, coef: -1 * dir }
+                { name: arc.target, coef: 1 },
+                { name: arc.source, coef: -1 }
             ],
             // Set to minimize (GLP_LO), the lower bound to 1 (lb), and the upper bound to infinity (ub).
             bnds: { type: glpk.GLP_LO, lb: 1, ub: Infinity }
@@ -68,12 +66,12 @@ function createArcSpanConstraints(ocpn, glpk) {
  * @param {*} glpk The glpk instance.
  * @returns The positive layer constraints.
  */
-function createPositiveLayerConstraints(ocpnGraph, glpk) {
+function createPositiveLayerConstraints(vertices, glpk) {
     const positiveConstraints = [];
-    for (const node of ocpnGraph.nodes) {
+    for (const v of vertices) {
         positiveConstraints.push({
-            name: `positive_layer_constraint_${node}`,
-            vars: [{ name: node, coef: 1 }],
+            name: `positive_layer_constraint_${v}`,
+            vars: [{ name: v, coef: 1 }],
             bnds: { type: glpk.GLP_LO, lb: 0, ub: Infinity }
         });
     }
@@ -93,9 +91,9 @@ async function assignLayers(ocpn) {
 
     // Initialize the OCPN graph, the ILP objective and constraints.
     const ocpnGraph = new OCPNGraph(ocpn);
-    const objectiveVars = createILPObjective(ocpn);
-    const arcConstraint = createArcSpanConstraints(ocpn, glpk);
-    const positiveConstraint = createPositiveLayerConstraints(ocpnGraph, glpk);
+    const objectiveVars = createILPObjective(ocpnGraph.arcs);
+    const arcConstraint = createArcSpanConstraints(ocpnGraph.arcs, glpk);
+    const positiveConstraint = createPositiveLayerConstraints(ocpnGraph.nodes, glpk);
     // Define the linear program.
     const lp = {
         name: ocpn.name,

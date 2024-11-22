@@ -37,12 +37,14 @@ async function sugiyama(ocpn) {
     reverseCycles(ocpn, [], []);
     // Layer Assignment.
     await assignLayers(ocpn);
-    // // Dummy Vertex Insertion.
+    // Dummy Vertex Insertion.
     insertDummyVertices(ocpn);
+    console.log(ocpn.layout.arcs);
+    console.log(ocpn.layout.layering);
     // // Vertex Ordering.
     // TODO: switch to OCPNLayout instead of basic OCPN.
-    // var [layeringScore, layeringArray] = orderVertices(ocpn, layeringArray, { oa: 0 });
-    console.log(ocpn.layout);
+    // orderVertices(ocpn, { oa: 0 });
+    // console.log(ocpn.layout);
     // console.log("Order ", layeringArray);
     // // Vertex Positioning.
     // positionVertices(ocpn, layeringArray, { ranksep: 1 });

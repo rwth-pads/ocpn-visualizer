@@ -20,7 +20,7 @@ function reverseCycles(ocpn, sources, sinks) {
         let sourceIndex = fas.indexOf(arc.source.id);
         let targetIndex = fas.indexOf(arc.target.id);
         // Reverse the arc if the source's index is greater than the target's index.
-        ocpn.layout.arcs[arc.id].reversed = sourceIndex > targetIndex;
+        ocpn.layout.setArcDirection(arc.id, sourceIndex > targetIndex);
         reversedArcs += sourceIndex > targetIndex ? 1 : 0;
     });
     return reversedArcs;

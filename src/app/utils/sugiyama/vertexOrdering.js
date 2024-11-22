@@ -9,17 +9,17 @@ const { clone2DArray, arraysEqual } = require('../lib/arrays');
  * @param {*} config 
  * @returns 
  */
-function orderVertices(ocpn, layering, config) {
+function orderVertices(ocpn, config) {
     // TODO: Adjust the initial order within the layering according to the users object centrality.
     // if (config.objectCentralitySet) {
     // adjustLayeringOrderByObjectCentrality(ocpn, layering, config);
     // }
     // Implementation of the barycenter method for vertex ordering.
-    var [baryScore, baryOrder] = upDownBarycenterBilayerSweep(ocpn, layering, config);
+    var [baryScore, baryOrder] = upDownBarycenterBilayerSweep(ocpn, config);
     // Set the positions of the vertices in the layering according to the computed order.
-    for (let i = 0; i < layering.length; i++) {
-        for (let j = 0; j < layering[i].length; j++) {
-            let v = ocpn.findElementByName(layering[i][j]);
+    for (let i = 0; i < ocpn.layout.layering.length; i++) {
+        for (let j = 0; j < ocpn.layout.layering[i].length; j++) {
+            let v = ocpn.findElementByName(ocpn.layout.layering[i][j]);
             v.pos = baryOrder[i].indexOf(v.name);
             // console.log(`Vertex ${v.name} placed at position ${v.pos} in layer ${i}.`);
         }
@@ -43,11 +43,10 @@ function adjustLayeringOrderByObjectCentrality(ocpn, layering, config) {
 /**
  * 
  * @param {ObjectCentricPetriNet} ocpn 
- * @param {Array<Array<String>>} layering 
  * @param {*} config 
  * @returns 
  */
-function upDownBarycenterBilayerSweep(ocpn, layering, config) {
+function upDownBarycenterBilayerSweep(ocpn, config) {
     const MAXITERATIONS = 4;
     const OBJECT_ATTRACTION = 0.2;
     const OBJECT_ATTRACTION_RANGE_MIN = 1; // The layers taken into account when computing the place barycenters.
@@ -58,10 +57,11 @@ function upDownBarycenterBilayerSweep(ocpn, layering, config) {
         objectAttractionRangeMax: OBJECT_ATTRACTION_RANGE_MAX
     }
     // Computes the intitial score of the order.
-    var bestScore = computeLayeringScore(ocpn, layering, testConfig);
+    var bestScore = computeLayeringScore(ocpn, ocpn.layout.layering, testConfig);
     // Initialize the iteration counter that counts the iterations where no improvement was made.
     var noImprovementCounter = 0;
-    var best = clone2DArray(layering);
+    var best = clone2DArray(ocpn.layout.layering);
+    var layering = clone2DArray(ocpn.layout.layering);
     // List of computed layerings to check for reocurring layerings.
     var computedLayerings = [];
     computedLayerings.push(clone2DArray(layering));

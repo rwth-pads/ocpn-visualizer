@@ -106,7 +106,10 @@ class ObjectCentricPetriNet {
     getArcs() {
         var as = [];
         for (var arc of this.arcs) {
-            as.push({ source: arc.source.id, target: arc.target.id });
+            let rev = this.layout.arcs[arc.id].reversed;
+            let upper = rev ? arc.target.id : arc.source.id;
+            let lower = rev ? arc.source.id : arc.target.id;
+            as.push({ source: upper, target: lower, reversed: rev });
         }
         return as;
     }

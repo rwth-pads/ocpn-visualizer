@@ -12,15 +12,16 @@ const OCPNLayout = require('../classes/OCPNLayout');
 function insertDummyVertices(ocpn) {
     var dummyCount = 0;
     for (const arc of ocpn.arcs) {
-        let sourceLayer = ocpn.layout.vertices[arc.source.id].layer; // The layer of the source node.
-        let targetLayer = ocpn.layout.vertices[arc.target.id].layer; // The layer of the target node.
-        let dir = ocpn.layout.arcs[arc.id].reversed ? -1 : 1; // If the arc is reversed, the direction is negative.
-        const slack = (targetLayer - sourceLayer) * dir;
+        let upper = ocpn.layout.arcs[arc.id].source;
+        let lower = ocpn.layout.arcs[arc.id].target;
+        let sourceLayer = ocpn.layout.vertices[upper].layer;
+        let targetLayer = ocpn.layout.vertices[lower].layer;
+        const slack = targetLayer - sourceLayer;
         if (slack > 1) {
             let dummies = [];
             // Insert dummy vertices on the intermediate layers.
             for (let i = 1; i < slack; i++) {
-                let curLayer = sourceLayer + (i * dir);
+                let curLayer = sourceLayer + i;
                 // Create a dummy node.
                 var dummy = {
                     id : ObjectCentricPetriNet.generateDummyId(),
@@ -43,12 +44,10 @@ function insertDummyVertices(ocpn) {
             // Sort dummies by ascending layer.
             dummies.sort((a, b) => ocpn.layout.vertices[a].layer - ocpn.layout.vertices[b].layer);
             // Set the upper and lower vertex of the dummies.
-            let upper = dir == -1 ? arc.target.id : arc.source.id;
-            let lower = dir == -1 ? arc.source.id : arc.target.id;
             for (let i = 0; i < dummies.length; i++) {
                 let curDummy = dummies[i];
-                ocpn.layout.vertices[curDummy].upper = i === 0 ? upper : dummies[i - 1];
-                ocpn.layout.vertices[curDummy].lower = i === dummies.length - 1 ? lower : dummies[i + 1];
+                ocpn.layout.vertices[curDummy].upper = i === 0 ? arc.source.id : dummies[i - 1];
+                ocpn.layout.vertices[curDummy].lower = i === dummies.length - 1 ? arc.target.id : dummies[i + 1];
                 ocpn.layout.arcs[arc.id].path.push(curDummy); // Add the dummy to the path of the arc.
             }
         }
