@@ -1,25 +1,25 @@
 // const fs = require('fs');
-import reverseCycles from './cycleBreaking';
 // const reverseCycles = require('./cycleBreaking');
-import assignLayers from './layerAssignment';
 // const assignLayers = require('./layerAssignment');
-import insertDummyVertices from './dummyVertexInsertion';
 // const insertDummyVertices = require('./dummyVertexInsertion');
-import orderVertices from './vertexOrdering';
 // const orderVertices = require('./vertexOrdering');
-import positionVertices from './vertexPositioning';
 // const positionVertices = require('./vertexPositioning');
-import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 // const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
+import reverseCycles from './cycleBreaking';
+import assignLayers from './layerAssignment';
+import insertDummyVertices from './dummyVertexInsertion';
+import orderVertices from './vertexOrdering';
+import positionVertices from './vertexPositioning';
+import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 
 // Define the path to the JSON file.
 // const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\ocpa_p2p-normal.json';
-// const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\cyclic-ocpn.json';
+const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\cyclic-ocpn.json';
 // const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\simple_ocpn.json';
 // const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\double_edge_ocpn.json';
-const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\type1-conflict-ocpn.json';
+// const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\type1-conflict-ocpn.json';
 
-// Read the JSON file.
+// // Read the JSON file.
 // fs.readFile(jsonFilePath, 'utf8', async (err, data) => {
 //     if (err) {
 //         console.error('Error reading the JSON file:', err);
@@ -66,14 +66,17 @@ const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Sem
 
 
 async function sugiyama(ocpn) {
+    console.log("Sugiyama input: ", ocpn);
     // Cycle Breaking.
     var reversedArcsCount = reverseCycles(ocpn, [], []);
     // Layer Assignment.
     var layering = await assignLayers(ocpn);
     // Dummy Vertex Insertion.
     var [dummyCount, layeringArray] = insertDummyVertices(ocpn, layering);
+    console.log("Dummies ", layeringArray);
     // Vertex Ordering.
     var [layeringScore, layeringArray] = orderVertices(ocpn, layeringArray, { oa: 0 });
+    console.log("Order ", layeringArray);
     // Vertex Positioning.
     positionVertices(ocpn, layeringArray, { ranksep: 1 });
     // TODO: transform dummy vertices to edge points and reverse reversed arcs back to normal direction.

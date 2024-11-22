@@ -328,143 +328,143 @@ class ObjectCentricPetriNet {
 
         return `${this.name}\nPlaces:\n${placesStr}\nTransitions:\n${transitionsStr}\nDummy Nodes:\n${dummyNodesStr ? dummyNodesStr : "\tNo dummy Nodes yet!"}\nArcs:\n${arcsStr}\nProperties:\n${propertiesStr}`;
     }
-}
 
-ObjectCentricPetriNet.Place = class {
-    /**
-     * The constructor for the Place class.
-     * 
-     * @param {*} name The name of the place
-     * @param {*} objectType The object type the place belongs to.
-     * @param {*} outArcs The set of arcs that have the place as source
-     * @param {*} inArcs The set of arcs that have the place as target
-     * @param {*} initial Boolean that determines whether the place is a source place
-     * @param {*} final Boolean that determines whether the place is a sink place
-     */
-    constructor(name, objectType, outArcs = [], inArcs = [], initial = false, final = false) {
-        this.name = name;
-        this.objectType = objectType;
-        this.initial = initial;
-        this.final = final;
-        this.inArcs = inArcs;
-        this.outArcs = outArcs;
-        this.layer = -1;
-        this.pos = -1;
-        this.x = undefined;
-        this.y = undefined;
-    }
-
-    /**
-     * Converts the place to a string representation.
-     * 
-     * @returns {string} The string representation of the place.
-     */
-    toString() {
-        return `\tName: ${this.name}, ObjectType: ${this.objectType}\n`;
-    }
-};
-
-ObjectCentricPetriNet.Transition = class {
-    /**
-     * Constructor for the Transition class.
-     * 
-     * @param {*} name The name of the transition.
-     * @param {*} label The label of the transition.
-     * @param {*} inArcs The set of arcs that have the transition as target.
-     * @param {*} outArcs The set of arcs that have the transition as source.
-     * @param {*} properties Additional properties of the transition.
-     * @param {*} silent Boolean that determines whether the transition is silent.
-     */
-    constructor(name, label = null, inArcs = [], outArcs = [], properties = {}, silent = false) {
-        this.name = name;
-        this.label = label;
-        this.inArcs = inArcs;
-        this.outArcs = outArcs;
-        this.silent = silent;
-        this.layer = -1;
-        this.pos = -1;
-        this.x = undefined;
-        this.y = undefined;
-        this.properties = properties;
-    }
-
-    /**
-     * Converts the transition to a string representation.
-     * 
-     * @returns {string} The string representation of the transition.
-     */
-    toString() {
-        return `\tName: ${this.name}, Label: ${this.label}\n`;
-    }
-};
-
-ObjectCentricPetriNet.Arc = class {
-    /**
-     * Constructor for the Arc class.
-     * 
-     * @param {*} source The source of the arc.
-     * @param {*} target The target of the arc.
-     * @param {*} reversed Boolean that indicates whether the arc is reversed.
-     * @param {*} variable Boolean that determines whether the arc is a variable arc.
-     * @param {*} weight The weight of the arc.
-     * @param {*} properties Additional properties of the arc.
-     */
-    constructor(source, target, reversed = false, variable = false, weight = 1, properties = {}) {
-        if ((source instanceof ObjectCentricPetriNet.Place && target instanceof ObjectCentricPetriNet.Place) ||
-            (source instanceof ObjectCentricPetriNet.Transition && target instanceof ObjectCentricPetriNet.Transition)) {
-            throw new Error('Petri nets are bipartite graphs!');
+    static Place = class {
+        /**
+         * The constructor for the Place class.
+         * 
+         * @param {*} name The name of the place
+         * @param {*} objectType The object type the place belongs to.
+         * @param {*} outArcs The set of arcs that have the place as source
+         * @param {*} inArcs The set of arcs that have the place as target
+         * @param {*} initial Boolean that determines whether the place is a source place
+         * @param {*} final Boolean that determines whether the place is a sink place
+         */
+        constructor(name, objectType, outArcs = [], inArcs = [], initial = false, final = false) {
+            this.name = name;
+            this.objectType = objectType;
+            this.initial = initial;
+            this.final = final;
+            this.inArcs = inArcs;
+            this.outArcs = outArcs;
+            this.layer = -1;
+            this.pos = -1;
+            this.x = undefined;
+            this.y = undefined;
         }
-        this.source = source;
-        this.target = target;
-        this.reversed = reversed;
-        this.weight = weight;
-        this.variable = variable;
-        this.properties = properties;
-    }
 
-    /**
-     * Sets the reversed property of the arc.
-     * 
-     * @param {boolean} reversed The new value of the reversed property.
-     */
-    setReverse(reversed) {
-        this.reversed = reversed;
-    }
+        /**
+         * Converts the place to a string representation.
+         * 
+         * @returns {string} The string representation of the place.
+         */
+        toString() {
+            return `\tName: ${this.name}, ObjectType: ${this.objectType}\n`;
+        }
+    };
 
-    /**
-     * Converts the arc to a string representation.
-     * 
-     * @returns {string} The string representation of the arc.
-     */
-    toString() {
-        return `\t${this.source.name} -> ${this.target.name}`;
-    }
-};
+    static Transition = class {
+        /**
+         * Constructor for the Transition class.
+         * 
+         * @param {*} name The name of the transition.
+         * @param {*} label The label of the transition.
+         * @param {*} inArcs The set of arcs that have the transition as target.
+         * @param {*} outArcs The set of arcs that have the transition as source.
+         * @param {*} properties Additional properties of the transition.
+         * @param {*} silent Boolean that determines whether the transition is silent.
+         */
+        constructor(name, label = null, inArcs = [], outArcs = [], properties = {}, silent = false) {
+            this.name = name;
+            this.label = label;
+            this.inArcs = inArcs;
+            this.outArcs = outArcs;
+            this.silent = silent;
+            this.layer = -1;
+            this.pos = -1;
+            this.x = undefined;
+            this.y = undefined;
+            this.properties = properties;
+        }
 
-ObjectCentricPetriNet.Dummy = class {
-    /**
-     * Constructor for the Dummy Node class.
-     * 
-     * @param {*} name The name of the dummy node.
-     * @param {*} from The node from which the dummy node receives an arc.
-     * @param {*} to The node to which the dummy node sends an arc.
-     * @param {*} layer The layer in which the dummy node is placed.
-     * @param {Boolean} arcReversed Boolean that determines whether the corresponding arc is reversed.
-     */
-    constructor(name, from, to, layer, arcReversed = false) {
-        this.name = name;
-        this.from = from;
-        this.to = to;
-        this.layer = layer;
-        this.pos = -1;
-        this.x = undefined;
-        this.y = undefined;
-        this.arcReversed = arcReversed;
-    }
+        /**
+         * Converts the transition to a string representation.
+         * 
+         * @returns {string} The string representation of the transition.
+         */
+        toString() {
+            return `\tName: ${this.name}, Label: ${this.label}\n`;
+        }
+    };
 
-    toString() {
-        return `\tName: ${this.name}\n`;
-    }
+    static Arc = class {
+        /**
+         * Constructor for the Arc class.
+         * 
+         * @param {*} source The source of the arc.
+         * @param {*} target The target of the arc.
+         * @param {*} reversed Boolean that indicates whether the arc is reversed.
+         * @param {*} variable Boolean that determines whether the arc is a variable arc.
+         * @param {*} weight The weight of the arc.
+         * @param {*} properties Additional properties of the arc.
+         */
+        constructor(source, target, reversed = false, variable = false, weight = 1, properties = {}) {
+            if ((source instanceof ObjectCentricPetriNet.Place && target instanceof ObjectCentricPetriNet.Place) ||
+                (source instanceof ObjectCentricPetriNet.Transition && target instanceof ObjectCentricPetriNet.Transition)) {
+                throw new Error('Petri nets are bipartite graphs!');
+            }
+            this.source = source;
+            this.target = target;
+            this.reversed = reversed;
+            this.weight = weight;
+            this.variable = variable;
+            this.properties = properties;
+        }
+
+        /**
+         * Sets the reversed property of the arc.
+         * 
+         * @param {boolean} reversed The new value of the reversed property.
+         */
+        setReverse(reversed) {
+            this.reversed = reversed;
+        }
+
+        /**
+         * Converts the arc to a string representation.
+         * 
+         * @returns {string} The string representation of the arc.
+         */
+        toString() {
+            return `\t${this.source.name} -> ${this.target.name}`;
+        }
+    };
+
+    static Dummy = class {
+        /**
+         * Constructor for the Dummy Node class.
+         * 
+         * @param {*} name The name of the dummy node.
+         * @param {*} from The node from which the dummy node receives an arc.
+         * @param {*} to The node to which the dummy node sends an arc.
+         * @param {*} layer The layer in which the dummy node is placed.
+         * @param {Boolean} arcReversed Boolean that determines whether the corresponding arc is reversed.
+         */
+        constructor(name, from, to, layer, arcReversed = false) {
+            this.name = name;
+            this.from = from;
+            this.to = to;
+            this.layer = layer;
+            this.pos = -1;
+            this.x = undefined;
+            this.y = undefined;
+            this.arcReversed = arcReversed;
+        }
+
+        toString() {
+            return `\tName: ${this.name}\n`;
+        }
+    };
 }
 
 // Export the ObjectCentricPetriNet class and its subclasses

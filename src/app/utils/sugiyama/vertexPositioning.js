@@ -345,7 +345,7 @@ function setCoordinates(ocpn, layering, layouts, config) {
             // Set the vertex coordinates.
             v.x = medianCoord + BORDER_PADDING;
             v.y = i * LAYER_SEP + BORDER_PADDING;
-            // console.log(`\t${v.name}:\t(x: ${v.x}, y: ${v.y})`);
+            console.log(`\t${v.name}:\t(x: ${v.x}, y: ${v.y})`);
         }
     }
 }

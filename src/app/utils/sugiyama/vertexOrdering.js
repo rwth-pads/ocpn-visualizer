@@ -26,6 +26,7 @@ function orderVertices(ocpn, layering, config) {
             // console.log(`Vertex ${v.name} placed at position ${v.pos} in layer ${i}.`);
         }
     }
+    console.log(baryOrder);
     return [baryScore, baryOrder];
 }
 
@@ -50,7 +51,7 @@ function adjustLayeringOrderByObjectCentrality(ocpn, layering, config) {
  */
 function upDownBarycenterBilayerSweep(ocpn, layering, config) {
     const MAXITERATIONS = 4;
-    const OBJECT_ATTRACTION = 0.1;
+    const OBJECT_ATTRACTION = 0.2;
     const OBJECT_ATTRACTION_RANGE_MIN = 1; // The layers taken into account when computing the place barycenters.
     const OBJECT_ATTRACTION_RANGE_MAX = 2; // The layers taken into account when computing the place barycenters.
     const testConfig = {
@@ -70,10 +71,11 @@ function upDownBarycenterBilayerSweep(ocpn, layering, config) {
     var sweepCounter = 1;
     while (true) {
         layering = singleUpDownSweep(ocpn, layering, testConfig); // Phase 1
+        console.log("UpDown ", layering);
         layering = adjustEqualBarycenters(ocpn, layering) // Phase 2
         var currentScore = computeLayeringScore(ocpn, layering, testConfig);
         console.log(`Sweep ${sweepCounter} score: ${currentScore}\nLayering:`);
-        // console.log(layering);
+        console.log(layering);
         // Check if the vertex order has improved.
         if (currentScore < bestScore) {
             bestScore = currentScore;
@@ -142,6 +144,7 @@ function adjustEqualBarycenters(ocpn, layering) {
 function modifiedBarycenterOrder(ocpn, layering, layer, down, config) {
     // Compute the barycenter values for the current layer.
     var barycenters = computeModifiedBarycenters(ocpn, layering, layer, down, config);
+    console.log(`Layer ${layer} barycenters: `, barycenters);
     // Sort the vertices in the layer according to the barycenter values.
     // The greater the barycenter value the more to the right the vertex is placed.
     // Equal barycenter values are sorted by the original order.
@@ -166,6 +169,7 @@ function computeModifiedBarycenters(ocpn, layering, layer, down, config) {
             barycenters[vName] = placeBarycenter(ocpn, v, layering, layer, down, config);
         } else if (v instanceof ObjectCentricPetriNet.Transition) {
             barycenters[vName] = transitionBarycenter(ocpn, v, layering, layer, down, config);
+            console.log(`Transition ${vName} barycenter: ${barycenters[vName]}`);
         } else if (v instanceof ObjectCentricPetriNet.Dummy) {
             barycenters[vName] = dummyBarycenter(v, layering, layer, down);
         }
@@ -235,10 +239,13 @@ function transitionBarycenter(ocpn, transition, layering, layer, down, config) {
     // For transitions we only need to regard adjacent vertices (places or dummies) in the fixed layer.
     var fixedLayer = down ? layer - 1 : layer + 1;
     // Only consider the neighbors that are in the fixed layer.
+    console.log("\tI", transition.inArcs);
+    console.log("\tO", transition.outArcs);
     var neighbors = transition.inArcs.map(arc => arc.source)
         .concat(transition.outArcs.map(arc => arc.target))
         .filter(v => v.layer == fixedLayer);
 
+    console.log(`Transition ${transition.name} neighbors: `, neighbors);
     // If there are no neighbors in the fixed layer, return the current index + 1.
     if (neighbors.length == 0) {
         return layering[layer].indexOf(transition.name) + 1;

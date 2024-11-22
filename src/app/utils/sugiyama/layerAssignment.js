@@ -116,7 +116,7 @@ async function assignLayers(ocpn) {
     // Solve the linear program.
     const result = await glpk.solve(lp);
 
-    console.log(result);
+    // console.log(result);
     // Check for both optimal and feasible solutions.
     if (result.result.status !== glpk.GLP_OPT && result.result.status !== glpk.GLP_FEAS) {
         return null; // TODO: switch to other layer assignment algorithm.
