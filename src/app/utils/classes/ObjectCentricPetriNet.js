@@ -1,5 +1,4 @@
-import { Parser } from 'xml2js';
-// const { Parser } = require('xml2js');
+const { Parser } = require('xml2js');
 
 /**
  * The ObjectCentricPetriNet class represents an object-centric Petri net.
@@ -468,5 +467,4 @@ class ObjectCentricPetriNet {
 }
 
 // Export the ObjectCentricPetriNet class and its subclasses
-export default ObjectCentricPetriNet;
-// module.exports = ObjectCentricPetriNet;
+module.exports = ObjectCentricPetriNet;
