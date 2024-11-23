@@ -25,20 +25,20 @@ function positionVertices(ocpn, config) {
     // --------------------------------------------------------------------------------
 
     // Mark type 1 conflicts in the OCPN given the layering.
-    const conflictCount = markType1Conflicts(ocpn);
+    markType1Conflicts(ocpn);
     const layouts = [];
     console.log("Computing the four alignments...");
     for (const verticalDir in [0, 1]) { // 0: down, 1: up
         for (const horizontalDir in [0, 1]) { // 0: left, 1: right
 
             // Reverse the outer and inner layers depending on the directions.
-            let [currentLayering, pos] = transformLayering(clone2DArray(layering), verticalDir, horizontalDir);
+            let [currentLayering, pos] = transformLayering(clone2DArray(ocpn.layout.layering), verticalDir, horizontalDir);
 
             // Align each vertex vertically with its median neighbor where possible.
             let [roots, aligns] = verticalAlignment(ocpn, currentLayering, pos, verticalDir == 0);
 
             // Determine coordinates subject to the current alignment.
-            let [coords, maxCoord] = horizontalCompaction(ocpn, currentLayering, roots, aligns, pos);
+            let [coords, maxCoord] = horizontalCompaction(currentLayering, roots, aligns, pos);
 
             // If direction from right to left, flip coordinates back to original order.
             if (horizontalDir == 1) {
@@ -52,7 +52,7 @@ function positionVertices(ocpn, config) {
     // Align to assignment of smallest width (height).
     alignAssignments(layouts);
     // Set the actual coordinates to average median of aligned candidates.
-    setCoordinates(ocpn, layering, layouts, config);
+    setCoordinates(ocpn, ocpn.layout.layering, layouts, config);
 }
 
 /**
@@ -111,12 +111,8 @@ function markType1Conflicts(ocpn) {
                         let k = layer.indexOf(upperNeighbor);
                         if (k < k0 || k > k1) {
                             // Mark the arc from upperNeighbor to nextLayer[l] as type 1.
-                            let arc = ocpn.arcs.filter(arc =>
-                                arc.source.name == upperNeighbor && arc.target.name == nextLayer[l] ||
-                                arc.source.name == nextLayer[l] && arc.target.name == upperNeighbor
-                            ); // If arcs (u,v) and (v,u) exist, both are marked which is fine.
-                            console.log(`\tMarking arc (${upperNeighbor} -> ${nextLayer[l]}) as type 1...`);
-                            arc.forEach(a => {
+                            let arcs = ocpn.layout.getArcsBetween(upperNeighbor, nextLayer[l]);
+                            arcs.forEach(a => {
                                 if (!isIncidentToInnerSegment(ocpn, upperNeighbor) || !isIncidentToInnerSegment(ocpn, nextLayer[l])) {
                                     a.type1 = true;
                                 }
@@ -181,20 +177,14 @@ function verticalAlignment(ocpn, layering, pos, down) {
 }
 
 function isMarked(ocpn, u, v) {
-    let arc = ocpn.arcs.filter(arc =>
-        arc.source.name == u && arc.target.name == v ||
-        arc.source.name == v && arc.target.name == u
-    );
+    let arc = ocpn.layout.getArcsBetween(u, v);
     return arc.length > 0 && arc[0].type1;
 }
 
 /**
  * Coordinate assignment is determined subject to a vertical algignment. 
- * 
- * @param {*} ocpn 
- * @param {*} layering 
  */
-function horizontalCompaction(ocpn, layering, roots, aligns, pos) {
+function horizontalCompaction(layering, roots, aligns, pos) {
     const MIN_VERTEX_SEP = 10; // TODO use user config.
 
     const x = {};
@@ -286,8 +276,6 @@ function alignAssignments(layouts) {
         return current.width < arr[minIndex].width ? index : minIndex;
     }, 0);
 
-    // console.log(minMax[minWidthIndex]);
-
     // Align all other layouts to the lowest coordinate of the layout with the minimum width.
     layouts.forEach((layout, i) => {
         const shift = i % 2 === 0
@@ -305,18 +293,16 @@ function setCoordinates(ocpn, layering, layouts, config) {
 
     const LAYER_SEP = 20; // TODO: use user config.
     const BORDER_PADDING = 10;
-
     for (let i = 0; i < layering.length; i++) {
         for (let j = 0; j < layering[i].length; j++) {
-            const v = ocpn.findElementByName(layering[i][j]);
+            const v = layering[i][j];
             // Get the four candidate coordinates for the vertex in ascending order.
-            const candidateCoords = layouts.map(layout => layout[v.name]).sort((a, b) => a - b);
+            const candidateCoords = layouts.map(layout => layout[v]).sort((a, b) => a - b);
             // Compute the average median of the four candidate coordinates.
             const medianCoord = Math.floor((candidateCoords[1] + candidateCoords[2]) / 2);
             // Set the vertex coordinates.
-            v.x = medianCoord + BORDER_PADDING;
-            v.y = i * LAYER_SEP + BORDER_PADDING;
-            console.log(`\t${v.name}:\t(x: ${v.x}, y: ${v.y})`);
+            ocpn.layout.vertices[v].x = medianCoord + BORDER_PADDING;
+            ocpn.layout.vertices[v].y = i * LAYER_SEP + BORDER_PADDING;
         }
     }
 }

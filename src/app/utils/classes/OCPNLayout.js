@@ -65,27 +65,29 @@ class OCPNLayout {
         const upperRank = lowerRank + 1;
         const arcs = [];
         Object.values(this.arcs).forEach(arc => {
-            if (arc.path.length > 0) {
-                // Arc has to be split into multiple arcs.
-                if (arc.minLayer <= lowerRank && upperRank <= arc.maxLayer) {
-                    let lDiff = lowerRank - arc.minLayer;
-                    let uDiff = arc.maxLayer - upperRank;
-                    let source = lDiff === 0 ? arc.source : arc.path[lDiff - 1];
-                    let target = uDiff === 0 ? arc.target : arc.path[lDiff];
-                    arcs.push(
-                        {
-                            source: source,
-                            target: target,
-                        });
-                }
-            } else {
-                // Arc is not split.
-                if (arc.minLayer === lowerRank && arc.maxLayer === upperRank) {
-                    arcs.push(
-                        {
-                            source: arc.source,
-                            target: arc.target,
-                        });
+            if (arc.original) {
+                if (arc.path.length > 0) {
+                    // Arc has to be split into multiple arcs.
+                    if (arc.minLayer <= lowerRank && upperRank <= arc.maxLayer) {
+                        let lDiff = lowerRank - arc.minLayer;
+                        let uDiff = arc.maxLayer - upperRank;
+                        let source = lDiff === 0 ? arc.source : arc.path[lDiff - 1];
+                        let target = uDiff === 0 ? arc.target : arc.path[lDiff];
+                        arcs.push(
+                            {
+                                source: source,
+                                target: target,
+                            });
+                    }
+                } else {
+                    // Arc is not split.
+                    if (arc.minLayer === lowerRank && arc.maxLayer === upperRank) {
+                        arcs.push(
+                            {
+                                source: arc.source,
+                                target: arc.target,
+                            });
+                    }
                 }
             }
         });
@@ -101,24 +103,24 @@ class OCPNLayout {
             let idx = arc.path.indexOf(vertexId);
             // Path is sorted by ascending layer.
             let upper = idx === 0 ? arc.source : arc.path[idx - 1];
-            console.log(`Upper: ${upper} of ${vertexId}`);
             return [upper];
         } else {
             Object.values(this.arcs).forEach(arc => {
-                if (arc.path.length == 0) {
-                    if (arc.target === vertexId) {
-                        neighbors.push(arc.source);
-                    }
-                } else {
-                    // Since vertex is not a dummy, it can only be the target of the arc.
-                    if (arc.target === vertexId) {
-                        let idx = arc.path.length - 1;
-                        neighbors.push(arc.path[idx]);
+                if (arc.original) {
+                    if (arc.path.length == 0) {
+                        if (arc.target === vertexId) {
+                            neighbors.push(arc.source);
+                        }
+                    } else {
+                        // Since vertex is not a dummy, it can only be the target of the arc.
+                        if (arc.target === vertexId) {
+                            let idx = arc.path.length - 1;
+                            neighbors.push(arc.path[idx]);
+                        }
                     }
                 }
             });
         }
-        console.log(`Upper neighbors of ${vertexId}: ${neighbors}`);
         return neighbors;
     }
 
@@ -131,24 +133,35 @@ class OCPNLayout {
             let idx = arc.path.indexOf(vertexId);
             // Path is sorted by ascending layer.
             let lower = idx === arc.path.length - 1 ? arc.target : arc.path[idx + 1];
-            console.log(`Lower: ${lower} of ${vertexId}`);
             return [lower];
         } else {
             Object.values(this.arcs).forEach(arc => {
-                if (arc.path.length == 0) {
-                    if (arc.source === vertexId) {
-                        neighbors.push(arc.target);
-                    }
-                } else {
-                    // Since vertex is not a dummy, it can only be the source of the arc.
-                    if (arc.source === vertexId) {
-                        neighbors.push(arc.path[0]);
+                if (arc.original) {
+                    if (arc.path.length == 0) {
+                        if (arc.source === vertexId) {
+                            neighbors.push(arc.target);
+                        }
+                    } else {
+                        // Since vertex is not a dummy, it can only be the source of the arc.
+                        if (arc.source === vertexId) {
+                            neighbors.push(arc.path[0]);
+                        }
                     }
                 }
             });
         }
-        console.log(`Lower neighbors of ${vertexId}: ${neighbors}`);
         return neighbors;
+    }
+
+    getArcsBetween(sourceId, targetId) {
+        // maximal 2 arcs if one of the arcs was reversed.
+        const arcs = [];
+        Object.values(this.arcs).forEach(arc => {
+            if (arc.source === sourceId && arc.target === targetId) {
+                arcs.push(arc);
+            }
+        });
+        return arcs;
     }
 }
 
