@@ -52,6 +52,7 @@ async function sugiyama(ocpn, config) {
     // Route edges.
     console.log("Routing arcs...");
     routeArcs(ocpn);
+    // Return the OCPN Layout.
     return ocpn.layout;
 }
 
