@@ -26,23 +26,22 @@ fs.readFile(jsonFilePath, 'utf8', async (err, data) => {
     // Create an ObjectCentricPetriNet instance from the JSON data.
     const ocpn = ObjectCentricPetriNet.fromJSON(json);
     // Apply the Sugiyama layout algorithm.
-    const result = await sugiyama(ocpn);
+    const result = await sugiyama(ocpn, {});
 });
 
 
-async function sugiyama(ocpn) {
+async function sugiyama(ocpn, config) {
     // Init the OCPN Layout.
-    ocpn.layout = new OCPNLayout(ocpn);
+    ocpn.layout = new OCPNLayout(ocpn, config);
     // Cycle Breaking.
     reverseCycles(ocpn, [], []);
     // Layer Assignment.
     await assignLayers(ocpn);
     // Dummy Vertex Insertion.
     insertDummyVertices(ocpn);
-    console.log(ocpn.layout.arcs);
-    // // Vertex Ordering.
-    // TODO: switch to OCPNLayout instead of basic OCPN.
-    orderVertices(ocpn, { oa: 0 });
+    // Vertex Ordering.
+    orderVertices(ocpn, config);
+    // console.log(ocpn.layout);
     // console.log(ocpn.layout);
     // console.log("Order ", layeringArray);
     // // Vertex Positioning.

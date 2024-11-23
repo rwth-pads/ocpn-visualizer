@@ -48,8 +48,8 @@ function insertDummyVertices(ocpn) {
             // Set the upper and lower vertex of the dummies.
             for (let i = 0; i < dummies.length; i++) {
                 let curDummy = dummies[i];
-                ocpn.layout.vertices[curDummy].upper = i === 0 ? arc.source.id : dummies[i - 1];
-                ocpn.layout.vertices[curDummy].lower = i === dummies.length - 1 ? arc.target.id : dummies[i + 1];
+                ocpn.layout.vertices[curDummy].upper = i === 0 ? upper : dummies[i - 1];
+                ocpn.layout.vertices[curDummy].lower = i === dummies.length - 1 ? lower : dummies[i + 1];
                 ocpn.layout.arcs[arc.id].path.push(curDummy); // Add the dummy to the path of the arc.
             }
         }

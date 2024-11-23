@@ -1,4 +1,5 @@
 const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
+const OCPNLayout = require('../classes/OCPNLayout');
 const { clone2DArray, arraysEqual } = require('../lib/arrays');
 
 
@@ -15,17 +16,16 @@ function orderVertices(ocpn, config) {
     // adjustLayeringOrderByObjectCentrality(ocpn, layering, config);
     // }
     // Implementation of the barycenter method for vertex ordering.
-    var [baryScore, baryOrder] = upDownBarycenterBilayerSweep(ocpn, config);
+    upDownBarycenterBilayerSweep(ocpn, config);
+    // console.log("Best Layering: ", ocpn.layout.layering);
     // Set the positions of the vertices in the layering according to the computed order.
     for (let i = 0; i < ocpn.layout.layering.length; i++) {
         for (let j = 0; j < ocpn.layout.layering[i].length; j++) {
-            let v = ocpn.findElementByName(ocpn.layout.layering[i][j]);
-            v.pos = baryOrder[i].indexOf(v.name);
-            // console.log(`Vertex ${v.name} placed at position ${v.pos} in layer ${i}.`);
+            let v = ocpn.layout.layering[i][j];
+            ocpn.layout.vertices[v].pos = j;
+            // console.log(`${v} at pos ${ocpn.layout.vertices[v].pos}`);
         }
     }
-    console.log(baryOrder);
-    return [baryScore, baryOrder];
 }
 
 /**
@@ -73,7 +73,7 @@ function upDownBarycenterBilayerSweep(ocpn, config) {
         layering = adjustEqualBarycenters(ocpn, layering) // Phase 2
         var currentScore = computeLayeringScore(ocpn, layering, testConfig);
         console.log(`Sweep ${sweepCounter} score: ${currentScore}\nLayering:`);
-        console.log(layering);
+        // console.log(layering);
         // Check if the vertex order has improved.
         if (currentScore < bestScore) {
             bestScore = currentScore;
@@ -85,7 +85,7 @@ function upDownBarycenterBilayerSweep(ocpn, config) {
         }
         // Check the termination conditions.
         if (noImprovementCounter >= MAXITERATIONS) {
-            console.log(`Terminating barycenter sweep due to reocurring layering! (Iteration: ${sweepCounter})`);
+            console.log(`Terminating barycenter sweep due to no improvements! (Iteration: ${sweepCounter})`);
             break;
         } else if (reocurringLayering(layering, computedLayerings)) {
             console.log(`Terminating barycenter sweep due to reocurring layering! (Iteration: ${sweepCounter})`);
@@ -96,7 +96,7 @@ function upDownBarycenterBilayerSweep(ocpn, config) {
         }
         sweepCounter++;
     }
-    return [bestScore, best];
+    ocpn.layout.layering = best;
 }
 
 /**
@@ -142,7 +142,6 @@ function adjustEqualBarycenters(ocpn, layering) {
 function modifiedBarycenterOrder(ocpn, layering, layer, down, config) {
     // Compute the barycenter values for the current layer.
     var barycenters = computeModifiedBarycenters(ocpn, layering, layer, down, config);
-    console.log(`Layer ${layer} barycenters: `, barycenters);
     // Sort the vertices in the layer according to the barycenter values.
     // The greater the barycenter value the more to the right the vertex is placed.
     // Equal barycenter values are sorted by the original order.
@@ -161,15 +160,13 @@ function computeModifiedBarycenters(ocpn, layering, layer, down, config) {
     var barycenters = {};
     var vertices = layering[layer];
     for (let i = 0; i < vertices.length; i++) {
-        var vName = vertices[i];
-        var v = ocpn.findElementByName(vName);
-        if (v instanceof ObjectCentricPetriNet.Place) {
-            barycenters[vName] = placeBarycenter(ocpn, v, layering, layer, down, config);
-        } else if (v instanceof ObjectCentricPetriNet.Transition) {
-            barycenters[vName] = transitionBarycenter(ocpn, v, layering, layer, down, config);
-            console.log(`Transition ${vName} barycenter: ${barycenters[vName]}`);
-        } else if (v instanceof ObjectCentricPetriNet.Dummy) {
-            barycenters[vName] = dummyBarycenter(v, layering, layer, down);
+        var v = vertices[i];
+        if (ocpn.layout.vertices[v].type === OCPNLayout.PLACE_TYPE) {
+            barycenters[v] = placeBarycenter(ocpn, v, layering, layer, down, config);
+        } else if (ocpn.layout.vertices[v].type === OCPNLayout.TRANSITION_TYPE) {
+            barycenters[v] = transitionBarycenter(ocpn, v, layering, layer, down, config);
+        } else if (ocpn.layout.vertices[v].type === OCPNLayout.DUMMY_TYPE) {
+            barycenters[v] = dummyBarycenter(ocpn, v, layering, layer, down);
         }
     }
     return barycenters;
@@ -184,24 +181,17 @@ function computeModifiedBarycenters(ocpn, layering, layer, down, config) {
  * @returns 
  */
 function placeBarycenter(ocpn, place, layering, layer, down, config) {
-    var fixedLayer = down ? layer - 1 : layer + 1;
-    // Only consider vertices (transitions or dummies) in the next fixed layer.
-    var neighbors = place.inArcs.map(arc => arc.source)
-        .concat(place.outArcs.map(arc => arc.target))
-        .filter(v => v.layer == fixedLayer);
-
-    // If there are no neighbors in the fixed layer, return the current index + 1.
-    if (neighbors.length == 0) {
-        return layering[layer].indexOf(place.name) + 1; // TODO: add (1- oa) ... + oa * ...
-    }
-
-    // Compute the barycenter value.
     var barycenter = 0;
     var objectBarycenter = 0;
-    for (let i = 0; i < neighbors.length; i++) {
-        barycenter += layering[fixedLayer].indexOf(neighbors[i].name) + 1;
-    }
+    // Get the neighbors of the place in the upper (dir = down) or lower (dir = up) layer.
+    var neighbors = ocpn.layout.getAllArcsBetweenRanks(down ? layer - 1 : layer)
+        .filter(arc => down ? arc.target === place : arc.source === place)
+        .map(arc => down ? arc.source : arc.target);
 
+    // Compute the barycenter value.
+    for (let i = 0; i < neighbors.length; i++) {
+        barycenter += layering[down ? layer - 1 : layer + 1].indexOf(neighbors[i]) + 1;
+    }
     // Get the average index of all places of the same object type in the layers above (down) or below (up).
     var objectNeighbors = [];
     for (let i = config.objectAttractionRangeMin; i <= config.objectAttractionRangeMax; i++) {
@@ -209,13 +199,18 @@ function placeBarycenter(ocpn, place, layering, layer, down, config) {
         if (layerIndex < 0 || layerIndex >= layering.length) {
             break;
         } else {
-            let ons = layering[layerIndex].filter(v => ocpn.findElementByName(v).objectType == place.objectType)
+            let ons = layering[layerIndex].filter(v => ocpn.layout.vertices[v].objectType == ocpn.layout.vertices[place].objectType);
             objectNeighbors = objectNeighbors.concat(ons.map(on => layering[layerIndex].indexOf(on) + 1));
         }
     }
     objectBarycenter = objectNeighbors.length > 0 ? objectNeighbors.reduce((a, b) => a + b) / objectNeighbors.length : 0;
-    barycenter = barycenter / neighbors.length;
 
+    // If there are no neighbors in the fixed layer, return the current object barycenter.
+    if (neighbors.length == 0) {
+        objectBarycenter = objectBarycenter == 0 ? layering[layer].indexOf(place) + 1 : objectBarycenter;
+        return objectBarycenter;
+    }
+    barycenter = barycenter / neighbors.length;
     // If there are no places of the same object type in the layers above or below, return the computed barycenter.
     if (objectBarycenter == 0) {
         return barycenter;
@@ -237,23 +232,21 @@ function transitionBarycenter(ocpn, transition, layering, layer, down, config) {
     // For transitions we only need to regard adjacent vertices (places or dummies) in the fixed layer.
     var fixedLayer = down ? layer - 1 : layer + 1;
     // Only consider the neighbors that are in the fixed layer.
-    console.log("\tI", transition.inArcs);
-    console.log("\tO", transition.outArcs);
-    var neighbors = transition.inArcs.map(arc => arc.source)
-        .concat(transition.outArcs.map(arc => arc.target))
-        .filter(v => v.layer == fixedLayer);
+    var neighbors = ocpn.layout.getAllArcsBetweenRanks(down ? layer - 1 : layer)
+        .filter(arc => down ? arc.target === transition : arc.source === transition)
+        .map(arc => down ? arc.source : arc.target);
 
-    console.log(`Transition ${transition.name} neighbors: `, neighbors);
+    // console.log(`Transition ${transition} neighbors: `, neighbors);
     // If there are no neighbors in the fixed layer, return the current index + 1.
     if (neighbors.length == 0) {
-        return layering[layer].indexOf(transition.name) + 1;
+        return layering[layer].indexOf(transition) + 1;
     }
 
     // Compute the barycenter value.
     var barycenter = 0;
     for (let i = 0; i < neighbors.length; i++) {
         // TODO: object weight -> different weights for different object types.
-        barycenter += layering[fixedLayer].indexOf(neighbors[i].name) + 1;
+        barycenter += layering[fixedLayer].indexOf(neighbors[i]) + 1;
     }
 
     return barycenter / neighbors.length;
@@ -267,11 +260,11 @@ function transitionBarycenter(ocpn, transition, layering, layer, down, config) {
  * @param {*} down 
  * @returns 
  */
-function dummyBarycenter(dummy, layering, layer, down) {
+function dummyBarycenter(ocpn, dummy, layering, layer, down) {
     // For dummies we return the same value as the source or target's index.
-    var fixedLayer = down ? layer - 1 : layer + 1;
-    var neighbor = down ? (dummy.arcReversed ? dummy.to : dummy.from) : (dummy.arcReversed ? dummy.from : dummy.to);
-    var index = layering[fixedLayer].indexOf(neighbor.name) + 1;
+    var d = ocpn.layout.vertices[dummy];
+    var neighbor = down ? d.upper : d.lower;
+    var index = layering[down ? layer - 1 : layer + 1].indexOf(neighbor) + 1;
     return index;
 }
 
@@ -330,7 +323,6 @@ function countCrossings(ocpn, layering) {
             }
         }
     }
-    console.log(`Crossing count: ${crossings}`);
     return crossings;
 }
 
@@ -347,12 +339,12 @@ function countCrossings(ocpn, layering) {
 function measureObjectAttractionCount(ocpn, layering, config) {
     // For each object type compute the average deviation from the average index.
     var objectDeviation = 0;
-    ocpn.objectTypes.forEach(objectType => {
+    ocpn.layout.objectTypes.forEach(objectType => {
         var objectPlaces = [];
         // Get the indices of the places of the current object type in each layer.
         for (let l = 0; l < layering.length; l++) {
-            let places = layering[l].filter(v => ocpn.findElementByName(v).objectType == objectType);
-            objectPlaces = objectPlaces.concat(places.map(place => ({name: place, index: layering[l].indexOf(place) + 1})));
+            let places = layering[l].filter(v => ocpn.layout.vertices[v].objectType == objectType);
+            objectPlaces = objectPlaces.concat(places.map(place => ({ name: place, index: layering[l].indexOf(place) + 1 })));
         }
         // Compute the average index of the places of the current object type.
         var avgIndex = objectPlaces.reduce((a, b) => a + b.index, 0) / objectPlaces.length;

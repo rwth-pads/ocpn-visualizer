@@ -5,15 +5,16 @@ class OCPNLayout {
     static TRANSITION_TYPE = 1;
     static DUMMY_TYPE = 2;
 
-    constructor(ocpn) {
+    constructor(ocpn, config) {
         this.vertices = {};
         this.arcs = {};
         this.layering = [];
+        this.objectTypes = ocpn.objectTypes; // TODO filter only user included subset.
 
         ocpn.places.forEach(place => {
             this.vertices[place.id] = {
                 name: place.name,
-                objecttype: place.objectType,
+                objectType: place.objectType,
                 x: undefined,
                 y: undefined,
                 layer: -1,
