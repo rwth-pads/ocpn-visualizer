@@ -42,7 +42,9 @@ class OCPNLayout {
                 reversed: false,
                 path: [], // The path will contain the ids of the dummy vertices.
                 minLayer: -1,
-                maxLayer: -1
+                maxLayer: -1,
+                type1: false,
+                original: true,
             };
         });
     }
@@ -88,6 +90,65 @@ class OCPNLayout {
             }
         });
         return arcs;
+    }
+
+    getUpperNeighbors(vertexId) {
+        const vertex = this.vertices[vertexId];
+        const neighbors = [];
+        if (vertex.type === OCPNLayout.DUMMY_TYPE) {
+            let arc = this.arcs[vertex.belongsTo];
+            // arc.path.length > 0
+            let idx = arc.path.indexOf(vertexId);
+            // Path is sorted by ascending layer.
+            let upper = idx === 0 ? arc.source : arc.path[idx - 1];
+            console.log(`Upper: ${upper} of ${vertexId}`);
+            return [upper];
+        } else {
+            Object.values(this.arcs).forEach(arc => {
+                if (arc.path.length == 0) {
+                    if (arc.target === vertexId) {
+                        neighbors.push(arc.source);
+                    }
+                } else {
+                    // Since vertex is not a dummy, it can only be the target of the arc.
+                    if (arc.target === vertexId) {
+                        let idx = arc.path.length - 1;
+                        neighbors.push(arc.path[idx]);
+                    }
+                }
+            });
+        }
+        console.log(`Upper neighbors of ${vertexId}: ${neighbors}`);
+        return neighbors;
+    }
+
+    getLowerNeighbors(vertexId) {
+        const vertex = this.vertices[vertexId];
+        const neighbors = [];
+        if (vertex.type === OCPNLayout.DUMMY_TYPE) {
+            let arc = this.arcs[vertex.belongsTo];
+            // arc.path.length > 0
+            let idx = arc.path.indexOf(vertexId);
+            // Path is sorted by ascending layer.
+            let lower = idx === arc.path.length - 1 ? arc.target : arc.path[idx + 1];
+            console.log(`Lower: ${lower} of ${vertexId}`);
+            return [lower];
+        } else {
+            Object.values(this.arcs).forEach(arc => {
+                if (arc.path.length == 0) {
+                    if (arc.source === vertexId) {
+                        neighbors.push(arc.target);
+                    }
+                } else {
+                    // Since vertex is not a dummy, it can only be the source of the arc.
+                    if (arc.source === vertexId) {
+                        neighbors.push(arc.path[0]);
+                    }
+                }
+            });
+        }
+        console.log(`Lower neighbors of ${vertexId}: ${neighbors}`);
+        return neighbors;
     }
 }
 

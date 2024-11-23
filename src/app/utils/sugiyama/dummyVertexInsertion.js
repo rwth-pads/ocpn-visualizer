@@ -52,6 +52,29 @@ function insertDummyVertices(ocpn) {
                 ocpn.layout.vertices[curDummy].lower = i === dummies.length - 1 ? lower : dummies[i + 1];
                 ocpn.layout.arcs[arc.id].path.push(curDummy); // Add the dummy to the path of the arc.
             }
+            // Create two new arcs for markingType1 conflicts in the vertexPositioning step.
+            let arc1Id = ObjectCentricPetriNet.generateArcId();
+            let arc2Id = ObjectCentricPetriNet.generateArcId();
+            ocpn.layout.arcs[arc1Id] = {
+                source: upper,
+                target: dummies[0],
+                reversed: ocpn.layout.arcs[arc.id].reversed,
+                path: [],
+                minLayer: sourceLayer,
+                maxLayer: sourceLayer + 1,
+                type1: false,
+                original: false,
+            };
+            ocpn.layout.arcs[arc2Id] = {
+                source: dummies[dummies.length - 1],
+                target: lower,
+                reversed: ocpn.layout.arcs[arc.id].reversed,
+                path: [],
+                minLayer: targetLayer - 1,
+                maxLayer: targetLayer,
+                type1: false,
+                original: false,
+            };
         }
     }
 }

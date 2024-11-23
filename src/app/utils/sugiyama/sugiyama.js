@@ -10,10 +10,10 @@ const OCPNLayout = require('../classes/OCPNLayout');
 
 // Define the path to the JSON file.
 // const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\ocpa_p2p-normal.json';
-const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\cyclic-ocpn.json';
+// const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\cyclic-ocpn.json';
 // const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\simple_ocpn.json';
 // const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\double_edge_ocpn.json';
-// const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\type1-conflict-ocpn.json';
+const jsonFilePath = 'C:\\Users\\tobia\\Documents\\Studium\\RWTH_Informatik\\Semester\\7. WiSe 24_25\\BA\\code\\ocpn-visualizer\\public\\sample_ocpns\\json\\type1-conflict-ocpn.json';
 
 // Read the JSON file.
 fs.readFile(jsonFilePath, 'utf8', async (err, data) => {
@@ -34,18 +34,23 @@ async function sugiyama(ocpn, config) {
     // Init the OCPN Layout.
     ocpn.layout = new OCPNLayout(ocpn, config);
     // Cycle Breaking.
-    reverseCycles(ocpn, [], []);
+    console.log("Reversing cycles...");
+    reverseCycles(ocpn, config);
     // Layer Assignment.
+    console.log("Assigning layers...");
     await assignLayers(ocpn);
     // Dummy Vertex Insertion.
+    console.log("Inserting dummy vertices...");
     insertDummyVertices(ocpn);
-    // Vertex Ordering.
-    orderVertices(ocpn, config);
-    // console.log(ocpn.layout);
-    // console.log(ocpn.layout);
-    // console.log("Order ", layeringArray);
+    console.log(ocpn.layout.arcs);
+    console.log(ocpn.layout.layering);
+    // // Vertex Ordering.
+    // console.log("Ordering vertices...");
+    // orderVertices(ocpn, config);
     // // Vertex Positioning.
-    // positionVertices(ocpn, layeringArray, { ranksep: 1 });
+    // console.log("Positioning vertices...");
+    // console.log(ocpn.layout.layering);
+    // positionVertices(ocpn, config);
     // // TODO: transform dummy vertices to edge points and reverse reversed arcs back to normal direction.
     // return ocpn;
 }

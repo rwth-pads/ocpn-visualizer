@@ -5,16 +5,15 @@ const OCPNGraph = require('../classes/OCPNGraph');
  * Function that reverses cycles in the graph represented by the Object Centric Petri Net.
  * 
  * @param {ObjectCentricPetriNet} ocpn The Object Centric Petri Net to reverse cycles in.
- * @param {String[]} sources The ids of the places that are marked as sources.
- * @param {String[]} sinks The ids of the places that are marked as sinks.
+ * @param {*} config The configuration object.
  * @returns {Number} The number of arcs that were reversed.
  */
-function reverseCycles(ocpn, sources, sinks) {
+function reverseCycles(ocpn, config) {
     let reversedArcs = 0;
     // Construct the graph from the OCPN.
     var net = new OCPNGraph(ocpn);
     // Compute solution to the modified FAS problem.
-    var fas = modifiedGreedyFAS(net, sources, sinks);
+    var fas = modifiedGreedyFAS(net, [], []); // TODO: use the config.sources and config.sinks set by user.
     // console.log("FAS: ", fas);
     ocpn.arcs.forEach(arc => {
         let sourceIndex = fas.indexOf(arc.source.id);
