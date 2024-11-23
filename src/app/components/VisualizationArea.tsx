@@ -103,7 +103,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN }) =
         if (!node) return;
         const bbox = node.getBBox();
         const width = svgRef.clientWidth;
-        const height = svgRef.clientHeight;
+        const height = svgRef.clientHeight - 2 * padding;
 
         // Calculate scaling and translation to fit and center the layout with padding
         const scale = Math.min((width - 2 * padding) / bbox.width, (height - 2 * padding) / bbox.height);
