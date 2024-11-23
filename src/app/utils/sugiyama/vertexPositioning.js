@@ -1,35 +1,6 @@
 import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
+import OCPNLayout from '../classes/OCPNLayout';
 import { clone2DArray } from '../lib/arrays';
-// const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
-// const { clone2DArray } = require('../lib/arrays');
-
-/**
- * Heuristic approach description:
- * 
- * Source: "Fast and Simple Horizontal Coordinate Assignment"
- * 
- * Objective:
- *      Align each vertex vertically (horizontally) with its median neighbor where possible.
- *
- * Overview:
- *      1. Vertical alignment -> try to align each vertex with either its median upper or median lower neighbor.
- *      2. Horizontal compaction -> aligned vertices are constrained to obtain the same x (y) coordinate.
- *          - Steps 1 and 2 are repeated for {up, down} x {leftmost, rightmost}.
- *      3. Combination of the four computed assignments -> balance their biases.
- * 
- *     - arcs are called segments
- *     - arcs between two dummy vertices are called inner segments
- * 
- * Types of conflicts:
- *      Type 0: a pair of non-inner segments that either cross or share a vertex.
- *      Type 1: non-inner segment crosses an inner segment.
- *      Type 2: two inner segments cross.
- *          -> type 2 should be avoided by the vertex ordering step. TODO: check if this is the case.
- *          -> alternatively, type 2 conflicts can be resolved by a preprocessing step:
- *                 - swapping the two lower vertices involved until the crossing is no longer between two inner segments.
- *          ->  If the ordering is more important than vertical inner segments, the original ordering can be restored in the final layout.
- *              - TODO: add user checkbox for this. if type 2 can occur at all.
- */
 
 /**
  * Heuristic algorithm for the coordinate assignment of the vertices of the OCPN.
@@ -40,7 +11,7 @@ import { clone2DArray } from '../lib/arrays';
  * @param {*} layering The ordered layering of the OCPN, determining the relative position of the vertices.
  * @param {*} config User defined configurations for the vertex positioning.
  */
-function positionVertices(ocpn, layering, config) {
+function positionVertices(ocpn, config) {
     const FLOW_DIRECTION = 'down'; // or 'right' TODO
     const PLACE_RADIUS = 10;
     const TRANSITION_WIDTH = 40;
@@ -53,20 +24,20 @@ function positionVertices(ocpn, layering, config) {
     // --------------------------------------------------------------------------------
 
     // Mark type 1 conflicts in the OCPN given the layering.
-    const conflictCount = markType1Conflicts(ocpn, layering);
+    markType1Conflicts(ocpn);
     const layouts = [];
     console.log("Computing the four alignments...");
     for (const verticalDir in [0, 1]) { // 0: down, 1: up
         for (const horizontalDir in [0, 1]) { // 0: left, 1: right
 
             // Reverse the outer and inner layers depending on the directions.
-            let [currentLayering, pos] = transformLayering(clone2DArray(layering), verticalDir, horizontalDir);
+            let [currentLayering, pos] = transformLayering(clone2DArray(ocpn.layout.layering), verticalDir, horizontalDir);
 
             // Align each vertex vertically with its median neighbor where possible.
             let [roots, aligns] = verticalAlignment(ocpn, currentLayering, pos, verticalDir == 0);
 
             // Determine coordinates subject to the current alignment.
-            let [coords, maxCoord] = horizontalCompaction(ocpn, currentLayering, roots, aligns, pos);
+            let [coords, maxCoord] = horizontalCompaction(currentLayering, roots, aligns, pos);
 
             // If direction from right to left, flip coordinates back to original order.
             if (horizontalDir == 1) {
@@ -80,7 +51,7 @@ function positionVertices(ocpn, layering, config) {
     // Align to assignment of smallest width (height).
     alignAssignments(layouts);
     // Set the actual coordinates to average median of aligned candidates.
-    setCoordinates(ocpn, layering, layouts, config);
+    setCoordinates(ocpn, ocpn.layout.layering, layouts, config);
 }
 
 /**
@@ -116,15 +87,14 @@ function transformLayering(layering, verticalDir, horizontalDir) {
  * crossing inner segments not being aligned in the following steps. 
  * 
  * @param {*} ocpn The OCPN.
- * @param {*} layering The ordered layering of the OCPN graph.
  */
-function markType1Conflicts(ocpn, layering) {
+function markType1Conflicts(ocpn) {
     console.log("Marking type 1 conflicts...");
 
     // Between layer first and second (last - 1 and last) there cannot be any type 1 conflicts.
-    for (let i = 1; i < layering.length - 2; i++) {
-        const layer = layering[i];
-        const nextLayer = layering[i + 1];
+    for (let i = 1; i < ocpn.layout.layering.length - 2; i++) {
+        const layer = ocpn.layout.layering[i];
+        const nextLayer = ocpn.layout.layering[i + 1];
         let k0 = 0;
         let l = 0;
 
@@ -140,12 +110,8 @@ function markType1Conflicts(ocpn, layering) {
                         let k = layer.indexOf(upperNeighbor);
                         if (k < k0 || k > k1) {
                             // Mark the arc from upperNeighbor to nextLayer[l] as type 1.
-                            let arc = ocpn.arcs.filter(arc =>
-                                arc.source.name == upperNeighbor && arc.target.name == nextLayer[l] ||
-                                arc.source.name == nextLayer[l] && arc.target.name == upperNeighbor
-                            ); // If arcs (u,v) and (v,u) exist, both are marked which is fine.
-                            console.log(`\tMarking arc (${upperNeighbor} -> ${nextLayer[l]}) as type 1...`);
-                            arc.forEach(a => {
+                            let arcs = ocpn.layout.getArcsBetween(upperNeighbor, nextLayer[l]);
+                            arcs.forEach(a => {
                                 if (!isIncidentToInnerSegment(ocpn, upperNeighbor) || !isIncidentToInnerSegment(ocpn, nextLayer[l])) {
                                     a.type1 = true;
                                 }
@@ -210,20 +176,14 @@ function verticalAlignment(ocpn, layering, pos, down) {
 }
 
 function isMarked(ocpn, u, v) {
-    let arc = ocpn.arcs.filter(arc =>
-        arc.source.name == u && arc.target.name == v ||
-        arc.source.name == v && arc.target.name == u
-    );
+    let arc = ocpn.layout.getArcsBetween(u, v);
     return arc.length > 0 && arc[0].type1;
 }
 
 /**
  * Coordinate assignment is determined subject to a vertical algignment. 
- * 
- * @param {*} ocpn 
- * @param {*} layering 
  */
-function horizontalCompaction(ocpn, layering, roots, aligns, pos) {
+function horizontalCompaction(layering, roots, aligns, pos) {
     const MIN_VERTEX_SEP = 10; // TODO use user config.
     // TODO: MIN_VERTEX_SEP based on whether place, transition, or dummy vertex.
     // TODO: sep should be computed by min sep + width of the vertex type.
@@ -317,8 +277,6 @@ function alignAssignments(layouts) {
         return current.width < arr[minIndex].width ? index : minIndex;
     }, 0);
 
-    // console.log(minMax[minWidthIndex]);
-
     // Align all other layouts to the lowest coordinate of the layout with the minimum width.
     layouts.forEach((layout, i) => {
         const shift = i % 2 === 0
@@ -336,18 +294,16 @@ function setCoordinates(ocpn, layering, layouts, config) {
 
     const LAYER_SEP = 10; // TODO: use user config.
     const BORDER_PADDING = 10;
-
     for (let i = 0; i < layering.length; i++) {
         for (let j = 0; j < layering[i].length; j++) {
-            const v = ocpn.findElementByName(layering[i][j]);
+            const v = layering[i][j];
             // Get the four candidate coordinates for the vertex in ascending order.
-            const candidateCoords = layouts.map(layout => layout[v.name]).sort((a, b) => a - b);
+            const candidateCoords = layouts.map(layout => layout[v]).sort((a, b) => a - b);
             // Compute the average median of the four candidate coordinates.
             const medianCoord = Math.floor((candidateCoords[1] + candidateCoords[2]) / 2);
             // Set the vertex coordinates.
-            v.x = medianCoord + BORDER_PADDING;
-            v.y = i * LAYER_SEP + BORDER_PADDING;
-            console.log(`\t${v.name}:\t(x: ${v.x}, y: ${v.y})`);
+            ocpn.layout.vertices[v].x = medianCoord + BORDER_PADDING;
+            ocpn.layout.vertices[v].y = i * LAYER_SEP + BORDER_PADDING;
         }
     }
 }
@@ -360,10 +316,10 @@ function setCoordinates(ocpn, layering, layouts, config) {
  * @returns Boolean value indicating whether the vertex is incident to an inner segment.
  */
 function isIncidentToInnerSegment(ocpn, vertex) {
-    let v = ocpn.findElementByName(vertex);
-    if (v instanceof ObjectCentricPetriNet.Dummy) {
-        let upper = v.arcReversed ? v.to : v.from;
-        if (upper instanceof ObjectCentricPetriNet.Dummy) {
+    let v = ocpn.layout.vertices[vertex];
+    if (v.type === OCPNLayout.DUMMY_TYPE) {
+        let upper = ocpn.layout.vertices[v.upper];
+        if (upper.type === OCPNLayout.DUMMY_TYPE) {
             return true;
         }
     }
@@ -377,30 +333,11 @@ function isIncidentToInnerSegment(ocpn, vertex) {
  * @returns An array of the names of the upper neighbors of the vertex.
  */
 function getUpperNeighbors(ocpn, vertex) {
-    let v = ocpn.findElementByName(vertex);
-    if (v instanceof ObjectCentricPetriNet.Dummy) {
-        let upper = v.arcReversed ? v.to : v.from;
-        return [upper.name];
-    } else {
-        // V is place or transition.
-        const upperInArcs = v.inArcs.filter(arc => !arc.reversed).map(arc => arc.source.name);
-        const upperOutArcs = v.outArcs.filter(arc => arc.reversed).map(arc => arc.target.name);
-        return [...upperInArcs, ...upperOutArcs];
-    }
+    return ocpn.layout.getUpperNeighbors(vertex);
 }
 
 function getLowerNeighbors(ocpn, vertex) {
-    let v = ocpn.findElementByName(vertex);
-    if (v instanceof ObjectCentricPetriNet.Dummy) {
-        let lower = v.arcReversed ? v.from : v.to;
-        return [lower.name];
-    } else {
-        // V is place or transition.
-        const lowerInArcs = v.inArcs.filter(arc => arc.reversed).map(arc => arc.source.name);
-        const lowerOutArcs = v.outArcs.filter(arc => !arc.reversed).map(arc => arc.target.name);
-        return [...lowerInArcs, ...lowerOutArcs];
-    }
+    return ocpn.layout.getLowerNeighbors(vertex);
 }
 
-// module.exports = positionVertices;
 export default positionVertices;

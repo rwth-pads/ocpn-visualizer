@@ -3,30 +3,39 @@ import assignLayers from './layerAssignment';
 import insertDummyVertices from './dummyVertexInsertion';
 import orderVertices from './vertexOrdering';
 import positionVertices from './vertexPositioning';
+import routeArcs from './arcRouting';
 import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
-
+import OCPNLayout from '../classes/OCPNLayout';
 
 /**
  * 
- * @param {ObjectCentricPetriNet} ocpn 
- * @returns 
+ * @param {*} ocpn 
+ * @param {*} config 
+ * @returns OCPNLayout The layout of the Object Centric Petri Net.
  */
-async function sugiyama(ocpn) {
+async function sugiyama(ocpn, config) {
+    ocpn.layout = new OCPNLayout(ocpn, config);
     console.log("Sugiyama input: ", ocpn);
     // Cycle Breaking.
-    var reversedArcsCount = reverseCycles(ocpn, [], []);
+    console.log("Reversing cycles...");
+    reverseCycles(ocpn, config);
     // Layer Assignment.
-    var layering = await assignLayers(ocpn);
+    console.log("Assigning layers...");
+    await assignLayers(ocpn);
     // Dummy Vertex Insertion.
-    var [dummyCount, layeringArray] = insertDummyVertices(ocpn, layering);
-    console.log("Dummies ", layeringArray);
+    console.log("Inserting dummy vertices...");
+    insertDummyVertices(ocpn);
     // Vertex Ordering.
-    var [layeringScore, layeringArray] = orderVertices(ocpn, layeringArray, { oa: 0 });
-    console.log("Order ", layeringArray);
+    console.log("Ordering vertices...");
+    orderVertices(ocpn, config);
     // Vertex Positioning.
-    positionVertices(ocpn, layeringArray, { ranksep: 1 });
-    // TODO: transform dummy vertices to edge points and reverse reversed arcs back to normal direction.
-    return ocpn;
+    console.log("Positioning vertices...");
+    positionVertices(ocpn, config);
+    // Route edges.
+    console.log("Routing arcs...");
+    routeArcs(ocpn);
+    // Return the OCPN Layout.
+    return ocpn.layout;
 }
 
 export default sugiyama;

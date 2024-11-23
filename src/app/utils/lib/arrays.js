@@ -27,4 +27,3 @@ function arraysEqual(arr1, arr2) {
 }
 
 export { clone2DArray, arraysEqual };
-// module.exports = { clone2DArray, arraysEqual };

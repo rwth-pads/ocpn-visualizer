@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import Box from '@mui/material/Box';
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
+import OCPNLayout from '../utils/classes/OCPNLayout';
 import sugiyama from '../utils/sugiyama/sugiyama.js';
 import './place.css';
 
@@ -13,54 +14,27 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN }) =
     const svgRef = useRef<SVGSVGElement>(null!); // Initialize as not null
     const padding = 20; // Define padding value
 
-    function mapOCPNToLayout(ocpn: ObjectCentricPetriNet, svgRef: SVGSVGElement) {
+    function mapOCPNToLayout(layout: OCPNLayout, svgRef: SVGSVGElement) {
         const svg = d3.select(svgRef);
         const g = svg.append('g');
 
-        ocpn.places.forEach((place: InstanceType<typeof ObjectCentricPetriNet.Place>) => {
-            g.append('circle')
-                .attr('cx', place.x)
-                .attr('cy', place.y)
-                .attr('r', 2.5) // TODO: user defined radius
-                .attr('class', 'ocpn-place');
-        });
-
-        ocpn.transitions.forEach((transition: InstanceType<typeof ObjectCentricPetriNet.Transition>) => {
-            g.append('rect')
-                .attr('x', transition.x - 3.5)
-                .attr('y', transition.y - 2.5)
-                .attr('width', 7) // TODO: user defined width
-                .attr('height', 5) // TODO: user defined height
-                .attr('class', 'ocpn-transition'); // TODO: color based on transition type
-        });
-
-        ocpn.dummyNodes.forEach((dummyNode: InstanceType<typeof ObjectCentricPetriNet.Dummy>) => {
-            g.append('rect')
-                .attr('x', dummyNode.x - 2.5) // half the width
-                .attr('y', dummyNode.y - 2.5) // half the height
-                .attr('width', 5) // TODO: user defined width
-                .attr('height', 5) // TODO: user defined height
-                .style('fill', 'green'); // TODO: color based on dummy node type
-        });
-
-        ocpn.arcs.forEach((arc: InstanceType<typeof ObjectCentricPetriNet.Arc>) => {
-            const dir = arc.reversed ? -1 : 1;
-            var targetX = dir == -1 ? arc.source.x : arc.target.x;
-            var sourceX = dir == -1 ? arc.target.x : arc.source.x;
-            var sourceY = arc.source.y + dir * 2.5;
-            var targetY = arc.target.y - dir * 2.5;
-            if (dir == -1) {
-                const temp = sourceY;
-                sourceY = targetY;
-                targetY = temp;
+        for (const v in layout.vertices) {
+            const vertex = layout.vertices[v];
+            if (vertex.type === OCPNLayout.PLACE_TYPE) {
+                g.append('circle')
+                    .attr('cx', vertex.x)
+                    .attr('cy', vertex.y)
+                    .attr('r', 2.5) // TODO: user defined radius
+                    .attr('class', 'ocpn-place');
+            } else if (vertex.type === OCPNLayout.TRANSITION_TYPE) {
+                g.append('rect')
+                    .attr('x', vertex.x - 3.5)
+                    .attr('y', vertex.y - 2.5)
+                    .attr('width', 7) // TODO: user defined width
+                    .attr('height', 5) // TODO: user defined height
+                    .attr('class', 'ocpn-transition'); // TODO: color based on transition type
             }
-            g.append('line')
-                .attr('x1', sourceX)
-                .attr('y1', sourceY)
-                .attr('x2', targetX)
-                .attr('y2', targetY)
-                .attr('class', 'ocpn-arc');
-        });
+        }
 
         // Calculate the bounding box of the layout
         const node = g.node();
@@ -85,10 +59,10 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN }) =
                 // Clear the existing SVG content
                 d3.select(svgRef.current!).selectAll('*').remove();
                 // Temporary fix until OCPNLayout class implementation done.
-                const processedOCPN = selectedOCPN.dummyNodes.length > 0 ? selectedOCPN : await sugiyama(selectedOCPN);
+                const ocpnLayout = await sugiyama(selectedOCPN, {});
                 
                 // Map the OCPN to a layout
-                mapOCPNToLayout(processedOCPN, svgRef.current!);
+                mapOCPNToLayout(ocpnLayout, svgRef.current!);
             }
         }
         updateVisualization();

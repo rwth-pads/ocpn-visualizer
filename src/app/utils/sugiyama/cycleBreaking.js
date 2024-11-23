@@ -1,28 +1,25 @@
 import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 import OCPNGraph from '../classes/OCPNGraph';
-// const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
-// const OCPNGraph = require('../classes/OCPNGraph');
 
 /**
  * Function that reverses cycles in the graph represented by the Object Centric Petri Net.
  * 
  * @param {ObjectCentricPetriNet} ocpn The Object Centric Petri Net to reverse cycles in.
- * @param {String[]} sources The ids of the places that are marked as sources.
- * @param {String[]} sinks The ids of the places that are marked as sinks.
+ * @param {*} config The configuration object.
  * @returns {Number} The number of arcs that were reversed.
  */
-function reverseCycles(ocpn, sources, sinks) {
+function reverseCycles(ocpn, config) {
     let reversedArcs = 0;
     // Construct the graph from the OCPN.
     var net = new OCPNGraph(ocpn);
     // Compute solution to the modified FAS problem.
-    var fas = modifiedGreedyFAS(net, sources, sinks);
+    var fas = modifiedGreedyFAS(net, [], []); // TODO: use the config.sources and config.sinks set by user.
     // console.log("FAS: ", fas);
     ocpn.arcs.forEach(arc => {
-        let sourceIndex = fas.indexOf(arc.source.name);
-        let targetIndex = fas.indexOf(arc.target.name);
+        let sourceIndex = fas.indexOf(arc.source.id);
+        let targetIndex = fas.indexOf(arc.target.id);
         // Reverse the arc if the source's index is greater than the target's index.
-        arc.setReverse(sourceIndex > targetIndex);
+        ocpn.layout.setArcDirection(arc.id, sourceIndex > targetIndex);
         reversedArcs += sourceIndex > targetIndex ? 1 : 0;
     });
     return reversedArcs;
@@ -79,4 +76,3 @@ function modifiedGreedyFAS(net, sources, sinks) {
 }
 
 export default reverseCycles;
-// module.exports = reverseCycles;

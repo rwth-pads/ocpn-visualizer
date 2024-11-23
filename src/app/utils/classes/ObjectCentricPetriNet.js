@@ -1,5 +1,5 @@
 import { Parser } from 'xml2js';
-// const { Parser } = require('xml2js');
+import OCPNLayout from './OCPNLayout';
 
 /**
  * The ObjectCentricPetriNet class represents an object-centric Petri net.
@@ -13,8 +13,28 @@ class ObjectCentricPetriNet {
     static DEFAULT_ARC_WEIGHT = 1; // Default weight of an arc.
     static DEFAULT_ARC_VARIABLE = false; // Default variable property of an arc.
     static DEFAULT_ARC_REVERSED = false; // Default reversed property of an arc.
-    // TODO implement a static counter that is used to generate unique names for all places, transitions, and dummy nodes.
-    static DEFAULT_VERTEX_NAME = "v"; // + nodeCounter = default name for vertices.
+    
+    static placeCounter = 0; // Static counter for generating unique place ids.
+    static transitionCounter = 0; // Static counter for generating unique transition ids.
+    static dummyCounter = 0; // Static counter for generating unique dummy node ids.
+    static arcCounter = 0; // Static counter for generating unique arc ids.
+
+    static generatePlaceId() {
+        return `place_${ObjectCentricPetriNet.placeCounter++}`;
+    }
+
+    static generateTransitionId() {
+        return `transition_${ObjectCentricPetriNet.transitionCounter++}`;
+    }
+
+    static generateDummyId() {
+        return `dummy_${ObjectCentricPetriNet.dummyCounter++}`;
+    }
+
+    static generateArcId() {
+        return `arc_${ObjectCentricPetriNet.arcCounter++}`;
+    }
+
     /**
      * Constructor for the ObjectCentricPetriNet class.
      * 
@@ -34,53 +54,9 @@ class ObjectCentricPetriNet {
         this.arcs = arcs;
         this.objectTypes = objectTypes;
         this.properties = properties;
+        this.layout = null;
     }
 
-    deepCopy() {
-        const places = this.places.map(place => new ObjectCentricPetriNet.Place(
-            place.name,
-            place.objectType,
-            [],
-            [],
-            place.initial,
-            place.final
-        ));
-
-        const transitions = this.transitions.map(transition => new ObjectCentricPetriNet.Transition(
-            transition.name,
-            transition.label,
-            [],
-            [],
-            transition.properties,
-            transition.silent
-        ));
-
-        const arcs = this.arcs.map(arc => {
-            const source = places.find(place => place.name === arc.source.name) ||
-                transitions.find(transition => transition.name === arc.source.name);
-            const target = places.find(place => place.name === arc.target.name) ||
-                transitions.find(transition => transition.name === arc.target.name);
-
-            return new ObjectCentricPetriNet.Arc(
-                source,
-                target,
-                arc.reversed,
-                arc.variable,
-                arc.weight,
-                arc.properties
-            );
-        });
-
-        return new ObjectCentricPetriNet(
-            this.name,
-            places,
-            transitions,
-            [],
-            arcs,
-            this.objectTypes,
-            this.properties,
-        );
-    }
     /**
      * Finds and returns a place, transition, or dummy node by its unique name.
      *
@@ -114,10 +90,10 @@ class ObjectCentricPetriNet {
     getNodeIds() {
         var nodes = [];
         for (var p of this.places) {
-            nodes.push(p.name);
+            nodes.push(p.id);
         }
         for (var t of this.transitions) {
-            nodes.push(t.name);
+            nodes.push(t.id);
         }
         return nodes;
     }
@@ -130,7 +106,10 @@ class ObjectCentricPetriNet {
     getArcs() {
         var as = [];
         for (var arc of this.arcs) {
-            as.push({ source: arc.source.name, target: arc.target.name });
+            let rev = this.layout.arcs[arc.id].reversed;
+            let upper = rev ? arc.target.id : arc.source.id;
+            let lower = rev ? arc.source.id : arc.target.id;
+            as.push({ source: upper, target: lower, reversed: rev });
         }
         return as;
     }
@@ -333,6 +312,7 @@ class ObjectCentricPetriNet {
         /**
          * The constructor for the Place class.
          * 
+         * @param {string} id The unique id of the place.
          * @param {*} name The name of the place
          * @param {*} objectType The object type the place belongs to.
          * @param {*} outArcs The set of arcs that have the place as source
@@ -341,6 +321,7 @@ class ObjectCentricPetriNet {
          * @param {*} final Boolean that determines whether the place is a sink place
          */
         constructor(name, objectType, outArcs = [], inArcs = [], initial = false, final = false) {
+            this.id = ObjectCentricPetriNet.generatePlaceId();
             this.name = name;
             this.objectType = objectType;
             this.initial = initial;
@@ -359,7 +340,7 @@ class ObjectCentricPetriNet {
          * @returns {string} The string representation of the place.
          */
         toString() {
-            return `\tName: ${this.name}, ObjectType: ${this.objectType}\n`;
+            return `\tId: ${this.id}, Name: ${this.name}, ObjectType: ${this.objectType}\n`;
         }
     };
 
@@ -367,6 +348,7 @@ class ObjectCentricPetriNet {
         /**
          * Constructor for the Transition class.
          * 
+         * @param {string} id The unique id of the transition.
          * @param {*} name The name of the transition.
          * @param {*} label The label of the transition.
          * @param {*} inArcs The set of arcs that have the transition as target.
@@ -375,6 +357,7 @@ class ObjectCentricPetriNet {
          * @param {*} silent Boolean that determines whether the transition is silent.
          */
         constructor(name, label = null, inArcs = [], outArcs = [], properties = {}, silent = false) {
+            this.id = ObjectCentricPetriNet.generateTransitionId();
             this.name = name;
             this.label = label;
             this.inArcs = inArcs;
@@ -401,9 +384,10 @@ class ObjectCentricPetriNet {
         /**
          * Constructor for the Arc class.
          * 
+         * @param {string} id The unique id of the arc.
          * @param {*} source The source of the arc.
          * @param {*} target The target of the arc.
-         * @param {*} reversed Boolean that indicates whether the arc is reversed.
+         * @param {*} reversed Boolean that indicates whether the arc is reversed. TODO: moved to OCPNLayout
          * @param {*} variable Boolean that determines whether the arc is a variable arc.
          * @param {*} weight The weight of the arc.
          * @param {*} properties Additional properties of the arc.
@@ -413,6 +397,7 @@ class ObjectCentricPetriNet {
                 (source instanceof ObjectCentricPetriNet.Transition && target instanceof ObjectCentricPetriNet.Transition)) {
                 throw new Error('Petri nets are bipartite graphs!');
             }
+            this.id = ObjectCentricPetriNet.generateArcId();
             this.source = source;
             this.target = target;
             this.reversed = reversed;
@@ -439,34 +424,7 @@ class ObjectCentricPetriNet {
             return `\t${this.source.name} -> ${this.target.name}`;
         }
     };
-
-    static Dummy = class {
-        /**
-         * Constructor for the Dummy Node class.
-         * 
-         * @param {*} name The name of the dummy node.
-         * @param {*} from The node from which the dummy node receives an arc.
-         * @param {*} to The node to which the dummy node sends an arc.
-         * @param {*} layer The layer in which the dummy node is placed.
-         * @param {Boolean} arcReversed Boolean that determines whether the corresponding arc is reversed.
-         */
-        constructor(name, from, to, layer, arcReversed = false) {
-            this.name = name;
-            this.from = from;
-            this.to = to;
-            this.layer = layer;
-            this.pos = -1;
-            this.x = undefined;
-            this.y = undefined;
-            this.arcReversed = arcReversed;
-        }
-
-        toString() {
-            return `\tName: ${this.name}\n`;
-        }
-    };
 }
 
 // Export the ObjectCentricPetriNet class and its subclasses
 export default ObjectCentricPetriNet;
-// module.exports = ObjectCentricPetriNet;

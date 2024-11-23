@@ -1,22 +1,18 @@
-import glpkModule from 'glpk.js';
 import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 import OCPNGraph from '../classes/OCPNGraph';
-// const ObjectCentricPetriNet = require('../classes/ObjectCentricPetriNet');
-// const OCPNGraph = require('../classes/OCPNGraph');
-// const glpkModule = require('glpk.js');
+import glpkModule from 'glpk.js';
 
 /**
  * Creates the objective function for the ILP formulation of the layer assignment problem.
  *
- * @param {*} arcs The arcs of the OCPN.
+ * @param {*} arcs The OCPN.
  */
 function createILPObjective(arcs) {
     const vars = [];
     for (const arc of arcs) {
         // Change coefficient if the arc is reversed.
-        let dir = arc.reversed ? -1 : 1;
-        vars.push({ name: arc.target.name, coef: 1 * dir });
-        vars.push({ name: arc.source.name, coef: -1 * dir });
+        vars.push({ name: arc.target, coef: 1 });
+        vars.push({ name: arc.source, coef: -1 });
     }
     return combineCoefs(vars);
 }
@@ -42,7 +38,7 @@ function combineCoefs(vars) {
 /**
  * Creates the constraint: layer(target) - layer(source) >= 1 for all (source,target) in E.
  *
- * @param {*} arcs The arcs of the OCPN.
+ * @param {*} arcs
  * @param {*} glpk The glpk instance.
  * @returns The arc span constraints.
  */
@@ -50,12 +46,11 @@ function createArcSpanConstraints(arcs, glpk) {
     const edgeConstraints = [];
     for (const arc of arcs) {
         // Change coefficient if the arc is reversed.
-        let dir = arc.reversed ? -1 : 1;
         edgeConstraints.push({
-            name: `edgespan_constraint_${arc.source.name}_${arc.target.name}`,
+            name: `edgespan_constraint_${arc.source}_${arc.target}`,
             vars: [
-                { name: arc.target.name, coef: 1 * dir },
-                { name: arc.source.name, coef: -1 * dir }
+                { name: arc.target, coef: 1 },
+                { name: arc.source, coef: -1 }
             ],
             // Set to minimize (GLP_LO), the lower bound to 1 (lb), and the upper bound to infinity (ub).
             bnds: { type: glpk.GLP_LO, lb: 1, ub: Infinity }
@@ -71,12 +66,12 @@ function createArcSpanConstraints(arcs, glpk) {
  * @param {*} glpk The glpk instance.
  * @returns The positive layer constraints.
  */
-function createPositiveLayerConstraints(ocpnGraph, glpk) {
+function createPositiveLayerConstraints(vertices, glpk) {
     const positiveConstraints = [];
-    for (const node of ocpnGraph.nodes) {
+    for (const v of vertices) {
         positiveConstraints.push({
-            name: `positive_layer_constraint_${node}`,
-            vars: [{ name: node, coef: 1 }],
+            name: `positive_layer_constraint_${v}`,
+            vars: [{ name: v, coef: 1 }],
             bnds: { type: glpk.GLP_LO, lb: 0, ub: Infinity }
         });
     }
@@ -96,9 +91,9 @@ async function assignLayers(ocpn) {
 
     // Initialize the OCPN graph, the ILP objective and constraints.
     const ocpnGraph = new OCPNGraph(ocpn);
-    const objectiveVars = createILPObjective(ocpn.arcs);
-    const arcConstraint = createArcSpanConstraints(ocpn.arcs, glpk);
-    const positiveConstraint = createPositiveLayerConstraints(ocpnGraph, glpk);
+    const objectiveVars = createILPObjective(ocpnGraph.arcs);
+    const arcConstraint = createArcSpanConstraints(ocpnGraph.arcs, glpk);
+    const positiveConstraint = createPositiveLayerConstraints(ocpnGraph.nodes, glpk);
     // Define the linear program.
     const lp = {
         name: ocpn.name,
@@ -133,12 +128,16 @@ async function assignLayers(ocpn) {
         // Add the node to the layer.
         layering[layer].push(node);
         // Find the corresponding node in the OCPN.
-        let nodeObj = ocpn.findElementByName(node);
-        // Assign the layer to the node in the OCPN.
-        nodeObj.layer = layer;
+        ocpn.layout.vertices[node].layer = layer;
     }
+    // Convert the layering object to an array of arrays.
+    var layeringArray = [];
+    for (const layer of Object.keys(layering)) {
+        layeringArray.push(layering[layer]);
+    }
+    // Assign the layering to the OCPN layout.
+    ocpn.layout.layering = layeringArray;
     return layering;
 }
 
 export default assignLayers;
-// module.exports = assignLayers;
