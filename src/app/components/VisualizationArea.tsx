@@ -6,6 +6,8 @@ import OCPNLayout from '../utils/classes/OCPNLayout';
 import sugiyama from '../utils/sugiyama/sugiyama.js';
 import './place.css';
 
+const COLORS_ARRAY = ['#f5a800', '#99cefd', '#002e57', 'red', 'green', 'purple', 'orange', 'yellow', 'pink', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'navy', 'olive', 'silver', 'aqua', 'fuchsia', 'gray', 'black'];
+
 interface VisualizationAreaProps {
     selectedOCPN: ObjectCentricPetriNet | null;
 }
@@ -13,23 +15,68 @@ interface VisualizationAreaProps {
 const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN }) => {
     const svgRef = useRef<SVGSVGElement>(null!); // Initialize as not null
     const padding = 20; // Define padding value
+    const previousOCPNRef = useRef<ObjectCentricPetriNet | null>(null);
 
     function mapOCPNToLayout(layout: OCPNLayout, svgRef: SVGSVGElement) {
+        // Create objectType -> color mapping
+        const objectTypeColorMap: Map<string, string> = new Map();
+        let colorIndex = 0;
+        for (const objectType of layout.objectTypes) {
+            objectTypeColorMap.set(objectType, COLORS_ARRAY[colorIndex]);
+            colorIndex = (colorIndex + 1) % COLORS_ARRAY.length;
+        }
+
         const svg = d3.select(svgRef);
         const g = svg.append('g');
 
         // Define arrowhead marker. TODO: change color based on object type
+        // TODO: arrow should not go into the place or transition.
         svg.append('defs').append('marker')
             .attr('id', 'arrowhead')
             .attr('viewBox', '0 0 10 10')
-            .attr('refX', 5)
+            .attr('refX', 10)
             .attr('refY', 5)
-            .attr('markerWidth', 4)
-            .attr('markerHeight', 4)
+            .attr('markerWidth', 3)
+            .attr('markerHeight', 3)
             .attr('orient', 'auto-start-reverse')
             .append('path')
             .attr('d', 'M 0 0 L 10 5 L 0 10 Z')
-            .attr('fill', 'black');
+            .attr('class', 'marker-arrow-fill');
+
+        for (const arcId in layout.arcs) {
+            let arc = layout.arcs[arcId];
+            let sourceX = layout.vertices[arc.source].x;
+            let sourceY = layout.vertices[arc.source].y;
+            let targetX = layout.vertices[arc.target].x;
+            let targetY = layout.vertices[arc.target].y;
+            let ot = arc.objectType;
+            let color = objectTypeColorMap.get(ot) || 'black';
+            sourceY += 2.5;
+            targetY -= 2.5;
+
+            if (arc.path.length > 0) {
+                let pathStart = `M ${sourceX} ${sourceY}`;
+                let pathEnd = `L ${targetX} ${targetY}`;
+                let startDummy = layout.vertices[arc.path[0]];
+                let endDummy = layout.vertices[arc.path[arc.path.length - 1]];
+                let pathMid = `L ${startDummy.x} ${startDummy.y} L ${endDummy.x} ${endDummy.y}`;
+
+                g.append('path')
+                    .attr('d', pathStart + pathMid + pathEnd)
+                    .attr('stroke', color)
+                    .attr('fill', 'none')
+                    .attr('class', 'ocpn-arc')
+                    .attr('marker-end', arc.reversed ? null : 'url(#arrowhead)')
+                    .attr('marker-start', arc.reversed ? 'url(#arrowhead)' : null); // TODO: set fill for arrowhead but not for the path
+            } else {
+                g.append('path')
+                    .attr('d', `M ${sourceX} ${sourceY} L ${targetX} ${targetY}`)
+                    .attr('stroke', color)
+                    .attr('class', 'ocpn-arc')
+                    .attr('marker-end', arc.reversed ? null : 'url(#arrowhead)')
+                    .attr('marker-start', arc.reversed ? 'url(#arrowhead)' : null);
+            }
+        }
 
         for (const vertexId in layout.vertices) {
             const vertex = layout.vertices[vertexId];
@@ -38,7 +85,8 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN }) =
                     .attr('cx', vertex.x)
                     .attr('cy', vertex.y)
                     .attr('r', 2.5) // TODO: user defined radius
-                    .attr('class', 'ocpn-place');
+                    .attr('class', 'ocpn-place')
+                    .attr('fill', objectTypeColorMap.get(vertex.objectType) || 'black');
             } else if (vertex.type === OCPNLayout.TRANSITION_TYPE) {
                 g.append('rect')
                     .attr('x', vertex.x - 3.5)
@@ -49,37 +97,6 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN }) =
             }
         }
 
-        for (const arcId in layout.arcs) {
-            let arc = layout.arcs[arcId];
-            let rev = arc.reversed;
-            let sourceX = layout.vertices[arc.source].x;
-            let sourceY = layout.vertices[arc.source].y;
-            let targetX = layout.vertices[arc.target].x;
-            let targetY = layout.vertices[arc.target].y;
-
-            sourceY += 2.5;
-            targetY -= 2.5;
-
-            if (arc.path.length > 0) {
-                let pathStart = `M ${sourceX} ${sourceY}`;
-                let pathEnd = `L ${targetX} ${targetY}`;
-                let pathMid = '';
-                for (let i = 0; i < arc.path.length; i++) {
-                    pathMid += `L ${arc.path[i].x} ${arc.path[i].y}`;
-                }
-                g.append('path')
-                    .attr('d', pathStart + pathMid + pathEnd)
-                    .attr('class', 'ocpn-arc')
-                    .attr('marker-end', arc.reversed ? null : 'url(#arrowhead)')
-                    .attr('marker-start', arc.reversed ? 'url(#arrowhead)' : null);
-            } else {
-                g.append('path')
-                    .attr('d', `M ${sourceX} ${sourceY} L ${targetX} ${targetY}`)
-                    .attr('class', 'ocpn-arc')
-                    .attr('marker-end', arc.reversed ? null : 'url(#arrowhead)')
-                    .attr('marker-start', arc.reversed ? 'url(#arrowhead)' : null);
-            }
-        }
 
         // Calculate the bounding box of the layout
         const node = g.node();
@@ -100,14 +117,16 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN }) =
 
     useEffect(() => {
         const updateVisualization = async () => {
-            if (selectedOCPN) {
+            // TODO: layout is recomputed for the same layout if window size changes so much that the visualization area is closed and reopened.
+            if (selectedOCPN && selectedOCPN !== previousOCPNRef.current) {
                 // Clear the existing SVG content
                 d3.select(svgRef.current!).selectAll('*').remove();
                 // Temporary fix until OCPNLayout class implementation done.
                 const ocpnLayout = await sugiyama(selectedOCPN, {});
-
+                if (!ocpnLayout) return;
                 // Map the OCPN to a layout
                 mapOCPNToLayout(ocpnLayout, svgRef.current!);
+                previousOCPNRef.current = selectedOCPN;
             }
         }
         updateVisualization();
@@ -119,7 +138,6 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN }) =
                 border: '2px dotted',
                 height: '100%',
                 width: '100%',
-                padding: 2,
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',

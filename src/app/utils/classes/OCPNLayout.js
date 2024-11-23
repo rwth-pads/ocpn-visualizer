@@ -44,6 +44,7 @@ class OCPNLayout {
                 maxLayer: -1,
                 type1: false,
                 original: true,
+                objectType: undefined,
             };
         });
     }

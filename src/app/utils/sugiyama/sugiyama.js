@@ -14,6 +14,9 @@ import OCPNLayout from '../classes/OCPNLayout';
  * @returns OCPNLayout The layout of the Object Centric Petri Net.
  */
 async function sugiyama(ocpn, config) {
+    if (!(ocpn instanceof ObjectCentricPetriNet)) {
+        return undefined;
+    }
     ocpn.layout = new OCPNLayout(ocpn, config);
     console.log("Sugiyama input: ", ocpn);
     // Cycle Breaking.

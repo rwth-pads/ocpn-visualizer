@@ -1,0 +1,104 @@
+{
+    "name": "OCPN 1",
+    "places": [
+        {
+            "name": "p1",
+            "objectType": "type1",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "p2",
+            "objectType": "type1",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "p3",
+            "objectType": "type1",
+            "initial": false,
+            "final": false
+        }
+    ],
+    "transitions": [
+        {
+            "name": "t1",
+            "label": "Start",
+            "properties": {
+                "cost": 5
+            },
+            "silent": false
+        },
+        {
+            "name": "t2",
+            "label": "Process",
+            "properties": {
+                "cost": 10
+            },
+            "silent": false
+        },
+        {
+            "name": "t3",
+            "label": "End",
+            "properties": {
+                "cost": 5
+            },
+            "silent": false
+        }
+    ],
+    "arcs": [
+        {
+            "source": "p1",
+            "target": "t1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t1",
+            "target": "p2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "p2",
+            "target": "t2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t2",
+            "target": "p3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "p3",
+            "target": "t3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t3",
+            "target": "p1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "p1",
+            "target": "t3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        }
+    ],
+    "properties": {
+        "creator": "Tobias Br.",
+        "version": "1.0"
+    }
+}

@@ -1,15 +1,16 @@
 .ocpn-place {
-    fill: orange;
 }
 
 .ocpn-transition {
-    fill: none;
+    fill: white;
     stroke: black;
     stroke-width: 0.3;
 }
 
 .ocpn-arc {
-    fill: none;
-    stroke: black;
     stroke-width: 0.3;
+}
+
+.marker-arrow-fill {
+    fill: context-stroke;
 }
