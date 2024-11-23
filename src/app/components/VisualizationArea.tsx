@@ -18,8 +18,21 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN }) =
         const svg = d3.select(svgRef);
         const g = svg.append('g');
 
-        for (const v in layout.vertices) {
-            const vertex = layout.vertices[v];
+        // Define arrowhead marker. TODO: change color based on object type
+        svg.append('defs').append('marker')
+            .attr('id', 'arrowhead')
+            .attr('viewBox', '0 0 10 10')
+            .attr('refX', 5)
+            .attr('refY', 5)
+            .attr('markerWidth', 4)
+            .attr('markerHeight', 4)
+            .attr('orient', 'auto-start-reverse')
+            .append('path')
+            .attr('d', 'M 0 0 L 10 5 L 0 10 Z')
+            .attr('fill', 'black');
+
+        for (const vertexId in layout.vertices) {
+            const vertex = layout.vertices[vertexId];
             if (vertex.type === OCPNLayout.PLACE_TYPE) {
                 g.append('circle')
                     .attr('cx', vertex.x)
@@ -33,6 +46,38 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN }) =
                     .attr('width', 7) // TODO: user defined width
                     .attr('height', 5) // TODO: user defined height
                     .attr('class', 'ocpn-transition'); // TODO: color based on transition type
+            }
+        }
+
+        for (const arcId in layout.arcs) {
+            let arc = layout.arcs[arcId];
+            let rev = arc.reversed;
+            let sourceX = layout.vertices[arc.source].x;
+            let sourceY = layout.vertices[arc.source].y;
+            let targetX = layout.vertices[arc.target].x;
+            let targetY = layout.vertices[arc.target].y;
+
+            sourceY += 2.5;
+            targetY -= 2.5;
+
+            if (arc.path.length > 0) {
+                let pathStart = `M ${sourceX} ${sourceY}`;
+                let pathEnd = `L ${targetX} ${targetY}`;
+                let pathMid = '';
+                for (let i = 0; i < arc.path.length; i++) {
+                    pathMid += `L ${arc.path[i].x} ${arc.path[i].y}`;
+                }
+                g.append('path')
+                    .attr('d', pathStart + pathMid + pathEnd)
+                    .attr('class', 'ocpn-arc')
+                    .attr('marker-end', arc.reversed ? null : 'url(#arrowhead)')
+                    .attr('marker-start', arc.reversed ? 'url(#arrowhead)' : null);
+            } else {
+                g.append('path')
+                    .attr('d', `M ${sourceX} ${sourceY} L ${targetX} ${targetY}`)
+                    .attr('class', 'ocpn-arc')
+                    .attr('marker-end', arc.reversed ? null : 'url(#arrowhead)')
+                    .attr('marker-start', arc.reversed ? 'url(#arrowhead)' : null);
             }
         }
 
@@ -60,7 +105,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN }) =
                 d3.select(svgRef.current!).selectAll('*').remove();
                 // Temporary fix until OCPNLayout class implementation done.
                 const ocpnLayout = await sugiyama(selectedOCPN, {});
-                
+
                 // Map the OCPN to a layout
                 mapOCPNToLayout(ocpnLayout, svgRef.current!);
             }
