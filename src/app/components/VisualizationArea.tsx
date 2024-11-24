@@ -6,7 +6,7 @@ import OCPNLayout from '../utils/classes/OCPNLayout';
 import sugiyama from '../utils/sugiyama/sugiyama.js';
 import './place.css';
 
-const COLORS_ARRAY = ['#f5a800', '#99cefd', '#002e57', 'red', 'green', 'purple', 'orange', 'yellow', 'pink', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'navy', 'olive', 'silver', 'aqua', 'fuchsia', 'gray', 'black'];
+const COLORS_ARRAY = ['#99cefd', '#f5a800', '#002e57', 'red', 'green', 'purple', 'orange', 'yellow', 'pink', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'navy', 'olive', 'silver', 'aqua', 'fuchsia', 'gray', 'black'];
 
 interface VisualizationAreaProps {
     selectedOCPN: ObjectCentricPetriNet | null;
@@ -36,8 +36,8 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN }) =
             .attr('viewBox', '0 0 10 10')
             .attr('refX', 10)
             .attr('refY', 5)
-            .attr('markerWidth', 3)
-            .attr('markerHeight', 3)
+            .attr('markerWidth', 5)
+            .attr('markerHeight', 5)
             .attr('orient', 'auto-start-reverse')
             .append('path')
             .attr('d', 'M 0 0 L 10 5 L 0 10 Z')

@@ -16,7 +16,7 @@ const CustomThemeProvider = ({ children, darkMode }: CustomThemeProviderProps) =
         light: darkMode ? '#000000' : '#0000000',
       },
       secondary: {
-        main: darkMode ? '#002e57' : '#002e57',
+        main: darkMode ? '#000000' : '#002e57',
       },
       background: {
         default: darkMode ? '#ffffff' : '#ffffff',

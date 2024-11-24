@@ -13,7 +13,7 @@ interface TabMenuProps {
 const TabMenu: React.FC<TabMenuProps> = ({ open, tabValue, handleTabChange}) => {
     return (
         <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ width: '100%', bgcolor: 'background.default', marginBottom: '1%', paddingX: 2 }}>
+            <Box sx={{ width: '100%', bgcolor: 'white', marginBottom: '1%', paddingX: 2 }}>
                 <Tabs
                     value={tabValue}
                     onChange={handleTabChange}
@@ -24,7 +24,6 @@ const TabMenu: React.FC<TabMenuProps> = ({ open, tabValue, handleTabChange}) => 
                     <Tab label="Visualization" />
                     <Tab label="Styling Options" />
                     <Tab label="OCPN Options" />
-                    <Tab label="Editor" />
                 </Tabs>
             </Box>
         </Collapse>
