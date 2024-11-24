@@ -21,7 +21,7 @@ async function sugiyama(ocpn, config) {
     if (!(config instanceof OCPNConfig)) {
         return undefined;
     }
-    ocpn.layout = new OCPNLayout(ocpn, config);
+    ocpn.layout = new OCPNLayout(ocpn);
     console.log("Sugiyama input: ", ocpn);
     // Cycle Breaking.
     console.log("Reversing cycles...");

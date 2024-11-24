@@ -1,3 +1,4 @@
+import { transition } from "d3";
 
 class OCPNConfig {
 
@@ -19,8 +20,13 @@ class OCPNConfig {
         borderPaddingX = 10,
         borderPaddingY = 10,
         typeColorMapping = {},
-        defaultPlaceColor = "#ffffff",
-        defaultTransitionColor = "#ffffff"
+        defaultPlaceColor = "#000000",
+        transitionColor = "#000000",
+        transitionFillColor = "#ffffff",
+        transitionBorderSize = 0.3,
+        arcSize = 0.2,
+        arrowHeadSize = 5,
+        arcDefaultColor = "#000000",
     ) {
         // Cycle Breaking
         this.sources = sources; // The ids of user selected sources.
@@ -44,7 +50,12 @@ class OCPNConfig {
         // Styling
         this.typeColorMapping = typeColorMapping;
         this.defaultPlaceColor = defaultPlaceColor;
-        this.defaultTransitionColor = defaultTransitionColor;
+        this.transitionColor = transitionColor;
+        this.transitionFillColor = transitionFillColor;
+        this.transitionBorderSize = transitionBorderSize;
+        this.arcSize = arcSize;
+        this.arrowHeadSize = arrowHeadSize;
+        this.arcDefaultColor = arcDefaultColor;
     }
 }
 

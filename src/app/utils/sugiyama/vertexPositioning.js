@@ -12,17 +12,6 @@ import { clone2DArray } from '../lib/arrays';
  * @param {*} config User defined configurations for the vertex positioning.
  */
 function positionVertices(ocpn, config) {
-    const FLOW_DIRECTION = 'down'; // or 'right' TODO
-    const PLACE_RADIUS = 10;
-    const TRANSITION_WIDTH = 40;
-    const TRANSITION_HEIGHT = 20;
-    const DUMMY_WIDTH = 5;
-    const USER_DEFINED_RANK_SEP = 2;
-    const LAYER_SEP = 10 + TRANSITION_HEIGHT * USER_DEFINED_RANK_SEP;
-    const MIN_VERTEX_SEP = 10;
-    // TODO: use the actual values from the user configuration.
-    // --------------------------------------------------------------------------------
-
     // Mark type 1 conflicts in the OCPN given the layering.
     markType1Conflicts(ocpn);
     const layouts = [];
@@ -37,7 +26,6 @@ function positionVertices(ocpn, config) {
             let [roots, aligns] = verticalAlignment(ocpn, currentLayering, pos, verticalDir == 0);
 
             // Determine coordinates subject to the current alignment.
-            // TODO use the config values here.
             let [coords, maxCoord] = horizontalCompaction(ocpn, currentLayering, roots, aligns, pos, config);
 
             // If direction from right to left, flip coordinates back to original order.
@@ -245,30 +233,31 @@ function placeBlock(ocpn, layering, v, x, pos, roots, sink, shift, aligns, confi
                 }
                 if (sink[v] != sink[u]) {
                     // Compute the seperation based on vertexSep and the type of the vertex.
-                    let delta = config.vertexSep;
-                    // TODO: WARNING THIS MIGHT GO WRONG.
+                    let delta = config.vertexSep + config.vertexSep + Math.max(config.direction == "TB" ? config.transitionWidth : config.transitionHeight, config.placeRadius * 2);
+                    // TODO: Redo this part. It doesn't work since all sinks are places and hence lead to transitions overlapping.
                     // Get the type of size of u.
-                    if (ocpn.layout.vertices[u].type == OCPNLayout.PLACE_TYPE) {
-                        delta += config.placeRadius * 2;
-                    } else if (ocpn.layout.vertices[u].type == OCPNLayout.TRANSITION_TYPE) {
-                        // TODO: add individual width (maybe height) for transitions based on the length of their label.
-                        delta += config.direction == "TB" ? config.transitionWidth : config.transitionHeight;
-                    } else if (ocpn.layout.vertices[u].type == OCPNLayout.DUMMY_TYPE) {
-                        delta += config.dummySize;
-                    }
+                    // if (ocpn.layout.vertices[v].type == OCPNLayout.PLACE_TYPE) {
+                    //     delta += config.placeRadius * 2;
+                    // } else if (ocpn.layout.vertices[v].type == OCPNLayout.TRANSITION_TYPE) {
+                    //     // TODO: add individual width (maybe height) for transitions based on the length of their label.
+                    //     delta += config.direction == "TB" ? config.transitionWidth : config.transitionHeight;
+                    // } else if (ocpn.layout.vertices[v].type == OCPNLayout.DUMMY_TYPE) {
+                    //     delta = config.dummySize;
+                    // }
 
                     shift[sink[u]] = Math.min(shift[sink[u]], x[v] - x[u] - delta); // TODO config
                 } else {
-                    let delta = config.vertexSep;
+                    let delta = config.vertexSep + Math.max(config.direction == "TB" ? config.transitionWidth : config.transitionHeight, config.placeRadius * 2);
                     // Get the type of size of u.
-                    if (ocpn.layout.vertices[u].type == OCPNLayout.PLACE_TYPE) {
-                        delta += config.placeRadius * 2;
-                    } else if (ocpn.layout.vertices[u].type == OCPNLayout.TRANSITION_TYPE) {
-                        // TODO: add individual width (maybe height) for transitions based on the length of their label.
-                        delta += config.direction == "TB" ? config.transitionWidth : config.transitionHeight;
-                    } else if (ocpn.layout.vertices[u].type == OCPNLayout.DUMMY_TYPE) {
-                        delta = config.dummySize; // TODO check this. = not +=
-                    }
+                    // TODO: redo this part.
+                    // if (ocpn.layout.vertices[v].type == OCPNLayout.PLACE_TYPE) {
+                    //     delta += config.placeRadius * 2;
+                    // } else if (ocpn.layout.vertices[v].type == OCPNLayout.TRANSITION_TYPE) {
+                    //     // TODO: add individual width (maybe height) for transitions based on the length of their label.
+                    //     delta += config.direction == "TB" ? config.transitionWidth : config.transitionHeight;
+                    // } else if (ocpn.layout.vertices[v].type == OCPNLayout.DUMMY_TYPE) {
+                    //     delta = config.dummySize; // TODO check this. = not +=
+                    // }
                     // Maximum of own x and x of predecessor + minimum vertex separation.
                     x[v] = Math.max(x[v], x[u] + delta); // TODO config
                 }
@@ -317,8 +306,10 @@ function setCoordinates(ocpn, layering, layouts, config) {
             const v = layering[i][j];
             let type = ocpn.layout.vertices[v].type;
             if (type == OCPNLayout.PLACE_TYPE) {
+                // All nodes have the same radius.
                 layerSize = config.placeRadius * 2;
             } else if (type == OCPNLayout.TRANSITION_TYPE) {
+                // TODO get actual width of transition. Height is the same for all transitions.
                 let thisSize = config.direction == "TB" ? config.transitionHeight : config.transitionWidth;
                 layerSize = Math.max(layerSize, thisSize);
             }
@@ -331,6 +322,7 @@ function setCoordinates(ocpn, layering, layouts, config) {
             ocpn.layout.vertices[v].y = curSize;
         }
         curSize += (layerSize + config.layerSep);
+        ocpn.layout.layerSizes.push({layer: i, size: layerSize}); // TODO: to adjust the y coordinate of the lower dummy vertices to the bottom of the layer.
     }
 }
 

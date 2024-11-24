@@ -38,46 +38,29 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
             .attr('viewBox', '0 0 10 10')
             .attr('refX', 10)
             .attr('refY', 5)
-            .attr('markerWidth', 5)
-            .attr('markerHeight', 5)
+            .attr('markerWidth', config.arrowHeadSize)
+            .attr('markerHeight', config.arrowHeadSize)
             .attr('orient', 'auto-start-reverse')
             .append('path')
             .attr('d', 'M 0 0 L 10 5 L 0 10 Z')
             .attr('class', 'marker-arrow-fill');
 
         for (const arcId in layout.arcs) {
-            let arc = layout.arcs[arcId];
-            let sourceX = layout.vertices[arc.source].x;
-            let sourceY = layout.vertices[arc.source].y;
-            let targetX = layout.vertices[arc.target].x;
-            let targetY = layout.vertices[arc.target].y;
-            let ot = arc.objectType;
-            let color = objectTypeColorMap.get(ot) || 'black';
-            sourceY += 2.5;
-            targetY -= 2.5;
-
-            if (arc.path.length > 0) {
-                let pathStart = `M ${sourceX} ${sourceY}`;
-                let pathEnd = `L ${targetX} ${targetY}`;
-                let startDummy = layout.vertices[arc.path[0]];
-                let endDummy = layout.vertices[arc.path[arc.path.length - 1]];
-                let pathMid = `L ${startDummy.x} ${startDummy.y} L ${endDummy.x} ${endDummy.y}`;
-
-                g.append('path')
-                    .attr('d', pathStart + pathMid + pathEnd)
-                    .attr('stroke', color)
-                    .attr('fill', 'none')
-                    .attr('class', 'ocpn-arc')
-                    .attr('marker-end', arc.reversed ? null : 'url(#arrowhead)')
-                    .attr('marker-start', arc.reversed ? 'url(#arrowhead)' : null); // TODO: set fill for arrowhead but not for the path
-            } else {
-                g.append('path')
-                    .attr('d', `M ${sourceX} ${sourceY} L ${targetX} ${targetY}`)
-                    .attr('stroke', color)
-                    .attr('class', 'ocpn-arc')
-                    .attr('marker-end', arc.reversed ? null : 'url(#arrowhead)')
-                    .attr('marker-start', arc.reversed ? 'url(#arrowhead)' : null);
-            }
+            const arc = layout.arcs[arcId];
+            var path = getArcPath(arcId, layout, config);
+            console.log(`Source: ${arc.source}, Target: ${arc.target}`);
+            console.log(`Source: ${layout.vertices[arc.source].x}, ${layout.vertices[arc.source].y}`);
+            console.log(`Target: ${layout.vertices[arc.target].x}, ${layout.vertices[arc.target].y}`);
+            console.log("\t", path);
+            var ot = arc.objectType;
+            var color = objectTypeColorMap.get(ot) || config.arcDefaultColor;
+            g.append('path')
+                .attr('d', path)
+                .attr('stroke', color)
+                .attr('fill', 'none')
+                .attr('stroke-width', config.arcSize)
+                .attr('marker-end', arc.reversed ? null : 'url(#arrowhead)')
+                .attr('marker-start', arc.reversed ? 'url(#arrowhead)' : null); // TODO: set fill for arrowhead but not for the path
         }
 
         for (const vertexId in layout.vertices) {
@@ -86,16 +69,36 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
                 g.append('circle')
                     .attr('cx', vertex.x)
                     .attr('cy', vertex.y)
-                    .attr('r', 2.5) // TODO: user defined radius
+                    .attr('r', config.placeRadius) // TODO: user defined radius
                     .attr('class', 'ocpn-place')
+                    .attr('id', vertexId)
                     .attr('fill', objectTypeColorMap.get(vertex.objectType) || 'black');
+
+                g.append('text')
+                    .attr('x', vertex.x)
+                    .attr('y', vertex.y)
+                    .attr('text-anchor', 'middle')
+                    .attr('alignment-baseline', 'middle')
+                    .attr('font-size', '3px')
+                    .attr('fill', 'black')
+                    .text(vertexId);
             } else if (vertex.type === OCPNLayout.TRANSITION_TYPE) {
                 g.append('rect')
-                    .attr('x', vertex.x - 3.5)
-                    .attr('y', vertex.y - 2.5)
-                    .attr('width', 7) // TODO: user defined width
-                    .attr('height', 5) // TODO: user defined height
+                    .attr('x', vertex.x - config.transitionWidth / 2)
+                    .attr('y', vertex.y - config.transitionHeight / 2)
+                    .attr('width', config.transitionWidth) // TODO: user defined width
+                    .attr('height', config.transitionHeight) // TODO: user defined height
+                    .attr('id', vertexId)
                     .attr('class', 'ocpn-transition'); // TODO: color based on transition type
+
+                g.append('text')
+                    .attr('x', vertex.x)
+                    .attr('y', vertex.y)
+                    .attr('text-anchor', 'middle')
+                    .attr('alignment-baseline', 'middle')
+                    .attr('font-size', '3px')
+                    .attr('fill', 'black')
+                    .text(vertexId);
             }
         }
 
@@ -124,7 +127,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
             if (selectedOCPN && selectedOCPN !== previousOCPNRef.current) {
                 // Clear the existing SVG content
                 d3.select(svgRef.current!).selectAll('*').remove();
-                var ocpnConfig = getUserConfig(); // Initialize with the user selected values.
+                const ocpnConfig = getUserConfig(); // Initialize with the user selected values.
                 console.log(ocpnConfig);
                 const ocpnLayout: OCPNLayout = await sugiyama(selectedOCPN, ocpnConfig);
                 if (!ocpnLayout) return;
@@ -149,15 +152,20 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
         let direction = "TB";
         let placeRadius = 5;
         let transitionWidth = 20;
-        let transitionHeight = 10;
+        let transitionHeight = 5;
         let dummySize = 2;
         let layerSep = 10;
-        let vertexSep = 5; // For now bigger than any other size declaration to avoid overlapping. TODO
+        let vertexSep = 10; // For now bigger than any other size declaration to avoid overlapping. TODO
         let borderPaddingX = 10;
         let borderPaddingY = 10;
         let typeColorMapping = {};
-        let defaultPlaceColor = "#ffffff";
-        let defaultTransitionColor = "#ffffff";
+        let defaultPlaceColor = "#0000000";
+        let transitionColor = "#000000";
+        let transitionFillColor = "#ffffff";
+        let transitionBorderSize = 0.3;
+        let arcSize = 0.6;
+        let arrowHeadSize = 5;
+        let arcDefaultColor = "#000000";
         return new OCPNConfig(
             sources,
             sinks,
@@ -177,8 +185,46 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
             borderPaddingY,
             typeColorMapping,
             defaultPlaceColor,
-            defaultTransitionColor
+            transitionColor,
+            transitionFillColor,
+            transitionBorderSize,
+            arcSize,
+            arrowHeadSize,
+            arcDefaultColor
         );
+    }
+
+    function getArcPath(arcId: String, layout: OCPNLayout, config: OCPNConfig): string {
+        var path = '';
+        var arc = layout.arcs[arcId];
+        var sourcePoint = getArcConnectionPoint(arcId, true, layout, config);
+        path += `M ${sourcePoint.x} ${sourcePoint.y}`;
+        if (arc.path.length > 0) {
+            let startDummy = layout.vertices[arc.path[0]];
+            let endDummy = layout.vertices[arc.path[arc.path.length - 1]];
+            let dummyAdjust = layout.layerSizes.find(layerSize => layerSize.layer === endDummy.layer).size || 0;
+            path += ` L ${startDummy.x} ${startDummy.y} L ${endDummy.x} ${endDummy.y + dummyAdjust}`;
+        }
+        var targetPoint = getArcConnectionPoint(arcId, false, layout, config);
+        path += ` L ${targetPoint.x} ${targetPoint.y}`;
+        return path;
+    }
+
+    function getArcConnectionPoint(arcId: String, isSource: boolean, layout: OCPNLayout, config: OCPNConfig): Point {
+        let arc = layout.arcs[arcId];
+        let vertexId = isSource ? arc.source : arc.target;
+        let vertex = layout.vertices[vertexId];
+        if (vertex.type === OCPNLayout.PLACE_TYPE) {
+            return { x: vertex.x, y: vertex.y + (config.placeRadius) * (isSource ? 1 : -1) };
+        } else if (vertex.type === OCPNLayout.TRANSITION_TYPE) {
+            return { x: vertex.x, y: vertex.y + (config.transitionHeight / 2) * (isSource ? 1 : -1) };
+        }
+        return { x: 0, y: 0 };
+    }
+
+    interface Point {
+        x: number;
+        y: number;
     }
 
     return (
