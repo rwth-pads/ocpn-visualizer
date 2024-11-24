@@ -14,10 +14,8 @@ import ObjectCentricPetriNet from './utils/classes/ObjectCentricPetriNet';
 
 const Home = () => {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-    const isSmallScreen = useMediaQuery('(max-width: 900px)'); // Adjust the threshold as needed
     const [darkMode, setDarkMode] = useState(prefersDarkMode);
     const [menuOpen, setMenuOpen] = useState(true);
-    const [tabValue, setTabValue] = useState(0);
     const [importDialogOpen, setImportDialogOpen] = useState(false);
     const [importedObjects, setImportedObjects] = useState<ObjectCentricPetriNet[]>([]);
     const [importError, setImportError] = useState<string | null>(null);
@@ -27,22 +25,12 @@ const Home = () => {
         setDarkMode(prefersDarkMode);
     }, [prefersDarkMode]);
 
-    useEffect(() => {
-        if (isSmallScreen) {
-            setMenuOpen(false);
-        }
-    }, [isSmallScreen]);
-
     const handleToggleDarkMode = () => {
         setDarkMode(!darkMode);
     };
 
     const handleMenuClick = () => {
         setMenuOpen(!menuOpen);
-    };
-
-    const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-        setTabValue(newValue);
     };
 
     const handleImportClick = () => {

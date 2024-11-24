@@ -13,7 +13,7 @@ function reverseCycles(ocpn, config) {
     // Construct the graph from the OCPN.
     var net = new OCPNGraph(ocpn);
     // Compute solution to the modified FAS problem.
-    var fas = modifiedGreedyFAS(net, [], []); // TODO: use the config.sources and config.sinks set by user.
+    var fas = modifiedGreedyFAS(net, config.sources, config.sinks);
     // console.log("FAS: ", fas);
     ocpn.arcs.forEach(arc => {
         let sourceIndex = fas.indexOf(arc.source.id);

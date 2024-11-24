@@ -10,8 +10,7 @@ function routeArcs(ocpn) {
         } else {
             let source = ocpn.layout.vertices[ocpn.layout.arcs[arcId].source];
             let target = ocpn.layout.vertices[ocpn.layout.arcs[arcId].target];
-            let ot = source.type === OCPNLayout.PLACE_TYPE ?
-                source.objectType : target.objectType;
+            let ot = source.type === OCPNLayout.PLACE_TYPE ? source.objectType : target.objectType;
             ocpn.layout.arcs[arcId].objectType = ot;
         }
     }

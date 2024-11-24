@@ -10,10 +10,11 @@ import { clone2DArray, arraysEqual } from '../lib/arrays';
  * @returns 
  */
 function orderVertices(ocpn, config) {
-    // TODO: Adjust the initial order within the layering according to the users object centrality.
-    // if (config.objectCentralitySet) {
-    // adjustLayeringOrderByObjectCentrality(ocpn, layering, config);
-    // }
+    // Adjust the initial order within the layering according to the users object centrality.
+    if (config.objectCentralitySet) {
+        console.log("Adjusting Initial Relative Order of Vertices...");
+        adjustLayeringOrderByObjectCentrality(ocpn, config);
+    }
     // Implementation of the barycenter method for vertex ordering.
     upDownBarycenterBilayerSweep(ocpn, config);
     // console.log("Best Layering: ", ocpn.layout.layering);
@@ -28,15 +29,37 @@ function orderVertices(ocpn, config) {
 }
 
 /**
- * Adjusts the initial order of the vertices within the layering according to the user defined object centrality.
- * 
- * @param {*} ocpn 
- * @param {*} layering 
- * @param {*} config 
+ * Adjusts the initial order of the vertices within the layering according to the user defined object centrality. 
  */
-function adjustLayeringOrderByObjectCentrality(ocpn, layering, config) {
+function adjustLayeringOrderByObjectCentrality(ocpn, config) {
     console.log("Adjusting layering order by object centrality...");
-    // TODO
+    const objectCentrality = config.objectCentrality;
+    // Iterate over the layers of the OCPN.
+    for (let i = 0; i < ocpn.layout.layering.length; i++) {
+        let j = 0;
+        let layerType = OCPNLayout.DUMMY_TYPE;
+        while (j < ocpn.layout.layering[i].length) {
+            // Check whether the current layer is a 'place' or 'transition' layer.
+            let type = ocpn.layout.vertices[ocpn.layout.layering[i][j]].type;
+            if (type === OCPNLayout.PLACE_TYPE) {
+                layerType = OCPNLayout.PLACE_TYPE;
+                break;
+            } else if (type === OCPNLayout.TRANSITION_TYPE) {
+                layerType = OCPNLayout.TRANSITION_TYPE;
+                break;
+            } else {
+                j++;
+            }
+        }
+        if (layerType === OCPNLayout.PLACE_TYPE) {
+            // Sort the places according to the user defined object centrality.
+            // Example: objectCentrality = { "A": 3, "B": 1, "C": 2 } -> [placeA, placeC, placeB]
+
+            ocpn.layout.layering[i].sort((a, b) =>
+                objectCentrality[ocpn.layout.vertices[b].objectType] ?? 1
+                - objectCentrality[ocpn.layout.vertices[a].objectType] ?? 1);
+        }
+    }
 }
 
 /**
@@ -46,17 +69,8 @@ function adjustLayeringOrderByObjectCentrality(ocpn, layering, config) {
  * @returns 
  */
 function upDownBarycenterBilayerSweep(ocpn, config) {
-    const MAXITERATIONS = 4;
-    const OBJECT_ATTRACTION = 0.2;
-    const OBJECT_ATTRACTION_RANGE_MIN = 1; // The layers taken into account when computing the place barycenters.
-    const OBJECT_ATTRACTION_RANGE_MAX = 2; // The layers taken into account when computing the place barycenters.
-    const testConfig = {
-        objectAttraction: OBJECT_ATTRACTION,
-        objectAttractionRangeMin: OBJECT_ATTRACTION_RANGE_MIN,
-        objectAttractionRangeMax: OBJECT_ATTRACTION_RANGE_MAX
-    }
     // Computes the intitial score of the order.
-    var bestScore = computeLayeringScore(ocpn, ocpn.layout.layering, testConfig);
+    var bestScore = computeLayeringScore(ocpn, ocpn.layout.layering, config);
     // Initialize the iteration counter that counts the iterations where no improvement was made.
     var noImprovementCounter = 0;
     var best = clone2DArray(ocpn.layout.layering);
@@ -67,10 +81,10 @@ function upDownBarycenterBilayerSweep(ocpn, config) {
     // Perform the barycenter method going up and down the layers.
     var sweepCounter = 1;
     while (true) {
-        layering = singleUpDownSweep(ocpn, layering, testConfig); // Phase 1
+        layering = singleUpDownSweep(ocpn, layering, config); // Phase 1
         // console.log("UpDown ", layering);
         layering = adjustEqualBarycenters(ocpn, layering) // Phase 2
-        var currentScore = computeLayeringScore(ocpn, layering, testConfig);
+        var currentScore = computeLayeringScore(ocpn, layering, config);
         // console.log(`Sweep ${sweepCounter} score: ${currentScore}\nLayering:`);
         // console.log(layering);
         // Check if the vertex order has improved.
@@ -83,7 +97,7 @@ function upDownBarycenterBilayerSweep(ocpn, config) {
             noImprovementCounter++;
         }
         // Check the termination conditions.
-        if (noImprovementCounter >= MAXITERATIONS) {
+        if (noImprovementCounter >= config.maxBarycenterIterations) {
             console.log(`Terminating barycenter sweep due to no improvements! (Iteration: ${sweepCounter})`);
             break;
         } else if (reocurringLayering(layering, computedLayerings)) {
@@ -163,7 +177,7 @@ function computeModifiedBarycenters(ocpn, layering, layer, down, config) {
         if (ocpn.layout.vertices[v].type === OCPNLayout.PLACE_TYPE) {
             barycenters[v] = placeBarycenter(ocpn, v, layering, layer, down, config);
         } else if (ocpn.layout.vertices[v].type === OCPNLayout.TRANSITION_TYPE) {
-            barycenters[v] = transitionBarycenter(ocpn, v, layering, layer, down, config);
+            barycenters[v] = transitionBarycenter(ocpn, v, layering, layer, down);
         } else if (ocpn.layout.vertices[v].type === OCPNLayout.DUMMY_TYPE) {
             barycenters[v] = dummyBarycenter(ocpn, v, layering, layer, down);
         }
@@ -227,7 +241,7 @@ function placeBarycenter(ocpn, place, layering, layer, down, config) {
  * @param {*} down Determines the direction of the sweep.
  * @returns The computed barycenter value.
  */
-function transitionBarycenter(ocpn, transition, layering, layer, down, config) {
+function transitionBarycenter(ocpn, transition, layering, layer, down) {
     // For transitions we only need to regard adjacent vertices (places or dummies) in the fixed layer.
     var fixedLayer = down ? layer - 1 : layer + 1;
     // Only consider the neighbors that are in the fixed layer.
@@ -280,7 +294,7 @@ function computeLayeringScore(ocpn, layering, config) {
     // Compute value that measures the quality of object attraction in the current layering.
     var objectAttractionCount = measureObjectAttractionCount(ocpn, layering, config);
     // Return combined score.  oa is always 0 currently -> only the crossing count is considered.
-    return (1 - config.objectAttraction) * crossingCount + config.objectAttraction * objectAttractionCount; // TODO: check if this is the correct formula.
+    return (1 - config.objectAttraction) * crossingCount + config.objectAttraction * objectAttractionCount;
 }
 
 /**

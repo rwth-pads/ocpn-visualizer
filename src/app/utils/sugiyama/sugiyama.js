@@ -6,6 +6,7 @@ import positionVertices from './vertexPositioning';
 import routeArcs from './arcRouting';
 import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 import OCPNLayout from '../classes/OCPNLayout';
+import OCPNConfig from '../classes/OCPNConfig';
 
 /**
  * 
@@ -15,6 +16,9 @@ import OCPNLayout from '../classes/OCPNLayout';
  */
 async function sugiyama(ocpn, config) {
     if (!(ocpn instanceof ObjectCentricPetriNet)) {
+        return undefined;
+    }
+    if (!(config instanceof OCPNConfig)) {
         return undefined;
     }
     ocpn.layout = new OCPNLayout(ocpn, config);

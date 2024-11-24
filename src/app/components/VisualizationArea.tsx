@@ -3,9 +3,9 @@ import * as d3 from 'd3';
 import Box from '@mui/material/Box';
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
 import OCPNLayout from '../utils/classes/OCPNLayout';
+import OCPNConfig from '../utils/classes/OCPNConfig';
 import sugiyama from '../utils/sugiyama/sugiyama.js';
 import './place.css';
-import { dark } from '@mui/material/styles/createPalette';
 
 const COLORS_ARRAY = ['#99cefd', '#f5a800', '#002e57', 'red', 'green', 'purple', 'orange', 'yellow', 'pink', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'navy', 'olive', 'silver', 'aqua', 'fuchsia', 'gray', 'black'];
 
@@ -19,7 +19,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
     const padding = 20; // Define padding value
     const previousOCPNRef = useRef<ObjectCentricPetriNet | null>(null);
 
-    function mapOCPNToLayout(layout: OCPNLayout, svgRef: SVGSVGElement) {
+    function mapOCPNToLayout(layout: OCPNLayout, config: OCPNConfig, svgRef: SVGSVGElement) {
         // Create objectType -> color mapping
         const objectTypeColorMap: Map<string, string> = new Map();
         let colorIndex = 0;
@@ -115,6 +115,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
 
         // Apply transformations
         g.attr('transform', `translate(${translateX}, ${translateY}) scale(${scale})`);
+        // TODO: d3 zoom and pan.
     }
 
     useEffect(() => {
@@ -123,17 +124,63 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
             if (selectedOCPN && selectedOCPN !== previousOCPNRef.current) {
                 // Clear the existing SVG content
                 d3.select(svgRef.current!).selectAll('*').remove();
-                // Temporary fix until OCPNLayout class implementation done.
-                const ocpnLayout = await sugiyama(selectedOCPN, {});
+                var ocpnConfig = getUserConfig(); // Initialize with the user selected values.
+                console.log(ocpnConfig);
+                const ocpnLayout: OCPNLayout = await sugiyama(selectedOCPN, ocpnConfig);
                 if (!ocpnLayout) return;
                 // Map the OCPN to a layout
-                mapOCPNToLayout(ocpnLayout, svgRef.current!);
+                console.log(ocpnLayout);
+                mapOCPNToLayout(ocpnLayout, ocpnConfig, svgRef.current!);
                 previousOCPNRef.current = selectedOCPN;
             }
         }
         updateVisualization();
     }, [selectedOCPN]);
-    // TODO: d3 zoom and pan.
+
+    // TODO: Get the actual values from the user.
+    function getUserConfig(): OCPNConfig {
+        let sources: string[] = [];
+        let sinks: string[] = [];
+        let objectCentrality = {};
+        let maxBarycenterIterations = 4;
+        let objectAttraction = 0.1;
+        let objectAttractionRangeMin = 1;
+        let objectAttractionRangeMax = 2;
+        let direction = "TB";
+        let placeRadius = 5;
+        let transitionWidth = 20;
+        let transitionHeight = 10;
+        let dummySize = 2;
+        let layerSep = 10;
+        let vertexSep = 5; // For now bigger than any other size declaration to avoid overlapping. TODO
+        let borderPaddingX = 10;
+        let borderPaddingY = 10;
+        let typeColorMapping = {};
+        let defaultPlaceColor = "#ffffff";
+        let defaultTransitionColor = "#ffffff";
+        return new OCPNConfig(
+            sources,
+            sinks,
+            objectCentrality,
+            maxBarycenterIterations,
+            objectAttraction,
+            objectAttractionRangeMin,
+            objectAttractionRangeMax,
+            direction,
+            placeRadius,
+            transitionWidth,
+            transitionHeight,
+            dummySize,
+            layerSep,
+            vertexSep,
+            borderPaddingX,
+            borderPaddingY,
+            typeColorMapping,
+            defaultPlaceColor,
+            defaultTransitionColor
+        );
+    }
+
     return (
         <Box
             sx={{
