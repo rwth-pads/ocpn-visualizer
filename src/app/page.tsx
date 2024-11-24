@@ -109,7 +109,7 @@ const Home = () => {
 
 return (
     <CustomThemeProvider darkMode={darkMode}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh'}}>
             <Header
                 onMenuClick={handleMenuClick}
                 onImportClick={handleImportClick}
@@ -120,27 +120,7 @@ return (
                 selectedOCPN={selectedOCPN}
                 handleSelectChange={handleSelectChange}
             />
-            <TabMenu
-                open={menuOpen}
-                tabValue={tabValue}
-                handleTabChange={handleTabChange}
-            />
-            <Box
-                sx={{
-                    flexGrow: 1,
-                    display: 'grid',
-                    gridTemplateColumns: tabValue === 0 || isSmallScreen ? '1fr' : 'auto 3fr',
-                    overflow: 'hidden',
-                }}
-            >
-                {tabValue !== 0 && (
-                    <Box sx={{ bgcolor: 'background.paper', overflow: 'auto', mt: 2 }}>
-                        {tabValue === 1 && <Typography variant="h6">Styling Options</Typography>}
-                        {tabValue === 2 && <Typography variant="h6">OCPN Options</Typography>}
-                    </Box>
-                )}
-                {(tabValue === 0 || !isSmallScreen) && <VisualizationArea selectedOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null} />}
-            </Box>
+            <VisualizationArea selectedOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null} darkMode={darkMode} />
         </Box>
         <ImportDialog
             open={importDialogOpen}

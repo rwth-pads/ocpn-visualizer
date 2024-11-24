@@ -5,14 +5,16 @@ import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
 import OCPNLayout from '../utils/classes/OCPNLayout';
 import sugiyama from '../utils/sugiyama/sugiyama.js';
 import './place.css';
+import { dark } from '@mui/material/styles/createPalette';
 
 const COLORS_ARRAY = ['#99cefd', '#f5a800', '#002e57', 'red', 'green', 'purple', 'orange', 'yellow', 'pink', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'navy', 'olive', 'silver', 'aqua', 'fuchsia', 'gray', 'black'];
 
 interface VisualizationAreaProps {
     selectedOCPN: ObjectCentricPetriNet | null;
+    darkMode: boolean;
 }
 
-const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN }) => {
+const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, darkMode }) => {
     const svgRef = useRef<SVGSVGElement>(null!); // Initialize as not null
     const padding = 20; // Define padding value
     const previousOCPNRef = useRef<ObjectCentricPetriNet | null>(null);
@@ -135,7 +137,6 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN }) =
     return (
         <Box
             sx={{
-                border: '2px dotted',
                 height: '100%',
                 width: '100%',
                 display: 'flex',
@@ -143,7 +144,17 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN }) =
                 alignItems: 'center',
             }}
         >
-            <svg ref={svgRef} width="100%" height="100%"></svg>
+            <Box
+                sx={{
+                    border: '2px solid',
+                    height: '98%',
+                    width: '98%',
+                    margin: '2%',
+                    bgcolor: darkMode ? '#f7f5f0' : '#f7f5f0',
+                    overflow: 'hidden',
+                }}>
+                <svg ref={svgRef} width="100%" height="100%"></svg>
+            </Box>
         </Box>
     );
 };

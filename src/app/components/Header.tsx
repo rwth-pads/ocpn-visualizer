@@ -49,11 +49,11 @@ const Header: React.FC<HeaderProps> = ({
                         value={selectedOCPN !== null ? selectedOCPN : 'default'}
                         onChange={handleSelectChange}
                         displayEmpty
-                        sx={{ margin: '0 10px', padding: '0 10px', minWidth: 200, bgcolor: darkMode ? '#383838' : '#2f5373', color: 'white' }}
+                        sx={{ margin: '0 10px', padding: '0 10px', minWidth: 200, bgcolor: darkMode ? '#212121' : '#2f5373', color: 'white' }}
                         MenuProps={{
                             PaperProps: {
                                 sx: {
-                                    backgroundColor: darkMode ? '#383838' : '#2f5373',
+                                    backgroundColor: darkMode ? '#212121' : '#2f5373',
                                     color: 'white',
                                     maxHeight: ITEM_HEIGHT * 10,
                                     '&::-webkit-scrollbar': {
