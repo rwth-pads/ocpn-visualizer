@@ -233,7 +233,7 @@ function placeBlock(ocpn, layering, v, x, pos, roots, sink, shift, aligns, confi
                 }
                 if (sink[v] != sink[u]) {
                     // Compute the seperation based on vertexSep and the type of the vertex.
-                    let delta = config.vertexSep + config.vertexSep + Math.max(config.direction == "TB" ? config.transitionWidth : config.transitionHeight, config.placeRadius * 2);
+                    let delta = config.vertexSep + Math.max(config.direction == "TB" ? config.transitionWidth : config.transitionHeight, config.placeRadius * 2);
                     // TODO: Redo this part. It doesn't work since all sinks are places and hence lead to transitions overlapping.
                     // Get the type of size of u.
                     // if (ocpn.layout.vertices[v].type == OCPNLayout.PLACE_TYPE) {
@@ -244,7 +244,6 @@ function placeBlock(ocpn, layering, v, x, pos, roots, sink, shift, aligns, confi
                     // } else if (ocpn.layout.vertices[v].type == OCPNLayout.DUMMY_TYPE) {
                     //     delta = config.dummySize;
                     // }
-
                     shift[sink[u]] = Math.min(shift[sink[u]], x[v] - x[u] - delta); // TODO config
                 } else {
                     let delta = config.vertexSep + Math.max(config.direction == "TB" ? config.transitionWidth : config.transitionHeight, config.placeRadius * 2);
@@ -298,31 +297,41 @@ function alignAssignments(layouts) {
 function setCoordinates(ocpn, layering, layouts, config) {
     console.log("Setting coordinates...");
 
-    var curSize = config.borderPaddingY; // TODO: check config.direciton influence.
+    const layerHalfs = [];
     for (let i = 0; i < layering.length; i++) {
-        let layerSize = Math.min(config.direction == "TB" ? config.transitionHeight : config.transitionWidth,
-            config.placeRadius * 2);
+        let layerSize = 0;
         for (let j = 0; j < layering[i].length; j++) {
             const v = layering[i][j];
             let type = ocpn.layout.vertices[v].type;
             if (type == OCPNLayout.PLACE_TYPE) {
                 // All nodes have the same radius.
-                layerSize = config.placeRadius * 2;
+                layerSize = config.placeRadius;
+                break; // Layer either contains only places or only transitions (+ dummies for both).
             } else if (type == OCPNLayout.TRANSITION_TYPE) {
-                // TODO get actual width of transition. Height is the same for all transitions.
-                let thisSize = config.direction == "TB" ? config.transitionHeight : config.transitionWidth;
-                layerSize = Math.max(layerSize, thisSize);
+                // TODO implement custom widths based on label length.
+                let curSize = config.direction == "TB" ? config.transitionHeight / 2: config.transitionWidth / 2;
+                layerSize = Math.max(layerSize, curSize);
             }
+        }
+        layerHalfs.push({layer: i, size: layerSize});
+        ocpn.layout.layerSizes.push({layer: i, size: layerSize * 2}); // TODO: to adjust the y coordinate of the lower dummy vertices to the bottom of the layer.
+    }
+
+
+
+    var curSize = config.borderPaddingY; // TODO: check config.direciton influence.
+    for (let i = 0; i < layering.length; i++) {
+        for (let j = 0; j < layering[i].length; j++) {
+            const v = layering[i][j];
             // Get the four candidate coordinates for the vertex in ascending order.
             const candidateCoords = layouts.map(layout => layout[v]).sort((a, b) => a - b);
             // Compute the average median of the four candidate coordinates.
             const medianCoord = Math.floor((candidateCoords[1] + candidateCoords[2]) / 2);
             // Set the vertex coordinates.
             ocpn.layout.vertices[v].x = medianCoord + config.borderPaddingX;
-            ocpn.layout.vertices[v].y = curSize;
+            ocpn.layout.vertices[v].y = curSize + layerHalfs.find(l => l.layer == i).size;
         }
-        curSize += (layerSize + config.layerSep);
-        ocpn.layout.layerSizes.push({layer: i, size: layerSize}); // TODO: to adjust the y coordinate of the lower dummy vertices to the bottom of the layer.
+        curSize = curSize + layerHalfs.find(l => l.layer == i).size * 2 + config.layerSep;
     }
 }
 

@@ -101,7 +101,11 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
                     .text(vertex.label);
             }
         }
+        for (const layer in layout.layering) {
+            // append vertical lines to seperate layers
 
+
+        }
 
         // Calculate the bounding box of the layout
         const node = g.node();
@@ -155,15 +159,15 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
         let transitionHeight = 5;
         let dummySize = 2;
         let layerSep = 10;
-        let vertexSep = 10; // For now bigger than any other size declaration to avoid overlapping. TODO
+        let vertexSep = 0; // For now bigger than any other size declaration to avoid overlapping. TODO
         let borderPaddingX = 10;
-        let borderPaddingY = 10;
+        let borderPaddingY = 0;
         let typeColorMapping = {};
         let defaultPlaceColor = "#0000000";
         let transitionColor = "#000000";
         let transitionFillColor = "#ffffff";
         let transitionBorderSize = 0.3;
-        let arcSize = 0.6;
+        let arcSize = 0.3;
         let arrowHeadSize = 5;
         let arcDefaultColor = "#000000";
         return new OCPNConfig(
