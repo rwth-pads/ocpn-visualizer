@@ -120,6 +120,7 @@ return (
                 selectedOCPN={selectedOCPN}
                 handleSelectChange={handleSelectChange}
             />
+            {/* TODO: on menu tab click slide in configuration options. */}
             <VisualizationArea selectedOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null} darkMode={darkMode} />
         </Box>
         <ImportDialog
