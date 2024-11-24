@@ -74,14 +74,14 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
                     .attr('id', vertexId)
                     .attr('fill', objectTypeColorMap.get(vertex.objectType) || 'black');
 
-                g.append('text')
-                    .attr('x', vertex.x)
-                    .attr('y', vertex.y)
-                    .attr('text-anchor', 'middle')
-                    .attr('alignment-baseline', 'middle')
-                    .attr('font-size', '3px')
-                    .attr('fill', 'black')
-                    .text(vertexId);
+                // g.append('text')
+                //     .attr('x', vertex.x)
+                //     .attr('y', vertex.y)
+                //     .attr('text-anchor', 'middle')
+                //     .attr('alignment-baseline', 'middle')
+                //     .attr('font-size', '3px')
+                //     .attr('fill', 'black')
+                //     .text(vertexId);
             } else if (vertex.type === OCPNLayout.TRANSITION_TYPE) {
                 g.append('rect')
                     .attr('x', vertex.x - config.transitionWidth / 2)
@@ -98,7 +98,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
                     .attr('alignment-baseline', 'middle')
                     .attr('font-size', '3px')
                     .attr('fill', 'black')
-                    .text(vertexId);
+                    .text(vertex.label);
             }
         }
 
@@ -151,7 +151,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
         let objectAttractionRangeMax = 2;
         let direction = "TB";
         let placeRadius = 5;
-        let transitionWidth = 20;
+        let transitionWidth = 30;
         let transitionHeight = 5;
         let dummySize = 2;
         let layerSep = 10;
@@ -202,8 +202,8 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
         if (arc.path.length > 0) {
             let startDummy = layout.vertices[arc.path[0]];
             let endDummy = layout.vertices[arc.path[arc.path.length - 1]];
-            let dummyAdjust = layout.layerSizes.find(layerSize => layerSize.layer === endDummy.layer).size || 0;
-            path += ` L ${startDummy.x} ${startDummy.y} L ${endDummy.x} ${endDummy.y + dummyAdjust}`;
+            // let dummyAdjust = layout.layerSizes.find(layerSize => layerSize.layer === endDummy.layer).size || 0;
+            path += ` L ${startDummy.x} ${startDummy.y} L ${endDummy.x} ${endDummy.y}`;
         }
         var targetPoint = getArcConnectionPoint(arcId, false, layout, config);
         path += ` L ${targetPoint.x} ${targetPoint.y}`;
@@ -243,7 +243,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
                     height: '98%',
                     width: '98%',
                     margin: '2%',
-                    bgcolor: darkMode ? '#f7f5f0' : '#f7f5f0',
+                    bgcolor: darkMode ? '#ffffff' : '#ffffff',
                     overflow: 'hidden',
                 }}>
                 <svg ref={svgRef} width="100%" height="100%"></svg>
