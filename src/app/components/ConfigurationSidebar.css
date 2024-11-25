@@ -1,6 +1,5 @@
 .sidebar {
     position: absolute;
-    padding: 1%;
     top: 0;
     left: -40vw;
     width: 40vw;
@@ -11,14 +10,21 @@
     /* background-color: #3a3a3a; */
 }
 
+.sidebar.open {
+    left: 30vw;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+}
+
 .sidebar.dark {
     background-color: #212121;
     color: white;
+    border-right: 2px solid white;
 }
 
 .sidebar.light {
     background-color: white;
     color: black;
+    border-right: 2px solid #002e57;
 }
 
 .sidebar::-webkit-scrollbar {
@@ -38,7 +44,52 @@
     background-color: #033561;
 }
 
-.sidebar.open {
-    left: 0;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+
+
+.sidebar-category.not-first {
+    margin: 2% 0;
 }
+
+.sidebar-category.open {} /* The open refers to the content beneath the title and toggle icon. */
+
+.sidebar-category.dark {}
+
+.sidebar-category.light {}
+
+.sidebar-category-title {
+    display: grid;
+    grid-template-columns: 98% 2%;
+    cursor: pointer;
+    padding: 2%;
+}
+
+.sidebar-category-title.dark {
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+.sidebar-category-title.dark:hover {
+    background-color: #333333;
+}
+
+.sidebar-category-title.light {
+    border-top: 2px solid #002e57;
+    border-bottom: 2px solid #002e57;
+}
+
+.sidebar-category-title.light:hover {
+    background-color: #002e573b;
+}
+
+.sidebar-category-content {
+    max-height: 0;
+    overflow: hidden;
+    width: 100%;
+    transition: max-height 0.3s ease-in-out;
+}
+
+
+
+.sidebar-category-content.dark {}
+
+.sidebar-category-content.light {}

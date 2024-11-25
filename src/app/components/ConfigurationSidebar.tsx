@@ -12,8 +12,12 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, dar
     const sidebarClass = isOpen ? "sidebar open " + mode : "sidebar " + mode;
     return (
         <div className={sidebarClass}>
-            <ConfigurationCategory title="Object Configurations" darkMode={darkMode} categoryOpen={true} />
-            <div>Object Configurations</div>
+            <ConfigurationCategory title="Object Configurations" darkMode={darkMode} categoryIndex={0} />
+            <ConfigurationCategory title="Sugiyama Configurations" darkMode={darkMode} categoryIndex={1} />
+            <ConfigurationCategory title="Styling Configurations" darkMode={darkMode} categoryIndex={2} />
+
+            
+            {/* <div>Object Configurations</div>
             <div style={{ paddingLeft: '4%' }}>
                 <div>Included object types</div>
                 <div>Sources and sinks</div>
@@ -40,7 +44,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, dar
                 <div>borderPaddingX / Y ???</div>
                 <div>default place, transition fill and stroke colors</div>
                 <div>transitionBorder size, arc size, arrowHeadSize, arcDefault color</div>
-            </div>
+            </div> */}
         </div>
     );
 }
