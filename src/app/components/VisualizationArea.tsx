@@ -159,7 +159,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
         let transitionHeight = 5;
         let dummySize = 2;
         let layerSep = 10;
-        let vertexSep = 0; // For now bigger than any other size declaration to avoid overlapping. TODO
+        let vertexSep = 2; // For now bigger than any other size declaration to avoid overlapping. TODO
         let borderPaddingX = 10;
         let borderPaddingY = 0;
         let typeColorMapping = {};
@@ -198,7 +198,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
         );
     }
 
-    function getArcPath(arcId: String, layout: OCPNLayout, config: OCPNConfig): string {
+    function getArcPath(arcId: string, layout: OCPNLayout, config: OCPNConfig): string {
         var path = '';
         var arc = layout.arcs[arcId];
         var sourcePoint = getArcConnectionPoint(arcId, true, layout, config);
@@ -214,7 +214,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
         return path;
     }
 
-    function getArcConnectionPoint(arcId: String, isSource: boolean, layout: OCPNLayout, config: OCPNConfig): Point {
+    function getArcConnectionPoint(arcId: string, isSource: boolean, layout: OCPNLayout, config: OCPNConfig): Point {
         let arc = layout.arcs[arcId];
         let vertexId = isSource ? arc.source : arc.target;
         let vertex = layout.vertices[vertexId];
