@@ -1,4 +1,5 @@
 import React from 'react';
+import ConfigurationCategory from './ConfigurationCategory';'./ConfigurationCategory';
 import './ConfigurationSidebar.css';
 
 interface ConfigurationSidebarProps {
@@ -7,26 +8,39 @@ interface ConfigurationSidebarProps {
 }
 
 const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, darkMode }) => {
-    const sidebarClass = isOpen ? "sidebar open" : "sidebar";
+    const mode = darkMode ? 'dark' : 'light';
+    const sidebarClass = isOpen ? "sidebar open " + mode : "sidebar " + mode;
     return (
-        <div className={sidebarClass}
-            style={{ 
-                backgroundColor: darkMode ? '#212121' : '#2f5373',
-                color: '#ffffff',
-                padding: '1%' }}>
-            <div><h3>Hello</h3></div>
-            <div>Sources and sinks</div>
-            <div>objectCentrality</div>
-            <div>maxBarycenterIterations</div>
-            <div>objectAttraction rangeMin rangeMax</div>
-            <div>flow direction</div>
-            <div>placeRadius transitionWidth (custom width) transitionHeight</div>
-            <div>dummySize ??</div>
-            <div>layerSep vertexSep</div>
-            <div>borderPaddingX / Y ???</div>
-            <div>type to color mapping</div>
-            <div>default place, transition fill and stroke colors</div>
-            <div>transitionBorder size, arc size, arrowHeadSize, arcDefault color</div>
+        <div className={sidebarClass}>
+            <ConfigurationCategory title="Object Configurations" darkMode={darkMode} categoryOpen={true} />
+            <div>Object Configurations</div>
+            <div style={{ paddingLeft: '4%' }}>
+                <div>Included object types</div>
+                <div>Sources and sinks</div>
+                <div>type to color mapping</div>
+            </div>
+
+            <hr style={{margin: '2% 0%'}} />
+
+            <div>Sugiyama Configurations</div>
+            <div style={{ paddingLeft: '4%' }}>
+                <div>flow direction</div>
+                <div>objectCentrality</div>
+                <div>objectAttraction rangeMin rangeMax</div>
+                <div>maxBarycenterIterations</div>
+            </div>
+
+            <hr style={{margin: '2% 0%'}} />
+            
+            <div>Styling</div>
+            <div style={{ paddingLeft: '4%' }}>
+                <div>placeRadius transitionWidth (custom width) transitionHeight</div>
+                <div>dummySize ??</div>
+                <div>layerSep vertexSep</div>
+                <div>borderPaddingX / Y ???</div>
+                <div>default place, transition fill and stroke colors</div>
+                <div>transitionBorder size, arc size, arrowHeadSize, arcDefault color</div>
+            </div>
         </div>
     );
 }
