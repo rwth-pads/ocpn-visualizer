@@ -5,7 +5,6 @@ import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
 import OCPNLayout from '../utils/classes/OCPNLayout';
 import OCPNConfig from '../utils/classes/OCPNConfig';
 import sugiyama from '../utils/sugiyama/sugiyama.js';
-import './place.css';
 
 const COLORS_ARRAY = ['#99cefd', '#f5a800', '#002e57', 'red', 'green', 'purple', 'orange', 'yellow', 'pink', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'navy', 'olive', 'silver', 'aqua', 'fuchsia', 'gray', 'black'];
 
@@ -43,7 +42,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
             .attr('orient', 'auto-start-reverse')
             .append('path')
             .attr('d', 'M 0 0 L 10 5 L 0 10 Z')
-            .attr('class', 'marker-arrow-fill');
+            .attr('fill', 'context-stroke');
 
         for (const arcId in layout.arcs) {
             const arc = layout.arcs[arcId];
@@ -58,6 +57,8 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
                 .attr('d', path)
                 .attr('stroke', color)
                 .attr('fill', 'none')
+                .attr('id', arcId)
+                .attr('class', 'ocpnarc')
                 .attr('stroke-width', config.arcSize)
                 .attr('marker-end', arc.reversed ? null : 'url(#arrowhead)')
                 .attr('marker-start', arc.reversed ? 'url(#arrowhead)' : null); // TODO: set fill for arrowhead but not for the path
@@ -70,9 +71,9 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
                     .attr('cx', vertex.x)
                     .attr('cy', vertex.y)
                     .attr('r', config.placeRadius) // TODO: user defined radius
-                    .attr('class', 'ocpn-place')
                     .attr('id', vertexId)
-                    .attr('fill', objectTypeColorMap.get(vertex.objectType) || 'black');
+                    .attr('class', 'ocpnplace')
+                    .attr('fill', objectTypeColorMap.get(vertex.objectType) || config.defaultPlaceColor);
 
                 // g.append('text')
                 //     .attr('x', vertex.x)
@@ -89,7 +90,10 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
                     .attr('width', config.transitionWidth) // TODO: user defined width
                     .attr('height', config.transitionHeight) // TODO: user defined height
                     .attr('id', vertexId)
-                    .attr('class', 'ocpn-transition'); // TODO: color based on transition type
+                    .attr('class', 'ocpntransition')
+                    .attr('fill', config.transitionFillColor)
+                    .attr('stroke', config.transitionColor)
+                    .attr('stroke-width', config.transitionBorderSize); // TODO: color based on transition type
 
                 g.append('text')
                     .attr('x', vertex.x)
@@ -167,7 +171,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
         let transitionColor = "#000000";
         let transitionFillColor = "#ffffff";
         let transitionBorderSize = 0.3;
-        let arcSize = 0.3;
+        let arcSize = 0.5;
         let arrowHeadSize = 5;
         let arcDefaultColor = "#000000";
         return new OCPNConfig(
@@ -234,22 +238,22 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
     return (
         <Box
             sx={{
-                height: '100%',
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}
-        >
+                height: '90vh',
+                width: '100vw',
+                bgcolor: darkMode ? '#ffffff' : '#ffffff',
+                overflow: 'hidden',
+            }}>
             <Box
                 sx={{
-                    border: '2px solid',
-                    height: '98%',
-                    width: '98%',
-                    margin: '2%',
-                    bgcolor: darkMode ? '#ffffff' : '#ffffff',
-                    overflow: 'hidden',
-                }}>
+                    border: '2px solid black',
+                    height: '88vh',
+                    width: '98vw',
+                    margin: '1vh 1vw',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
                 <svg ref={svgRef} width="100%" height="100%"></svg>
             </Box>
         </Box>

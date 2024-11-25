@@ -74,7 +74,14 @@ const Header: React.FC<HeaderProps> = ({
                             </MenuItem>
                         )}
                         {importedObjects.map((obj, index) => (
-                            <MenuItem key={index} value={index}>
+                            <MenuItem 
+                                key={index}
+                                value={index}
+                                sx={{
+                                    '&.Mui-selected': {
+                                        backgroundColor: darkMode ? '#000000' : '#002e57',
+                                    },
+                                }}>
                                 {obj.name}
                             </MenuItem>
                         ))}

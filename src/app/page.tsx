@@ -2,20 +2,20 @@
 
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CustomThemeProvider from './context/CustomThemeProvider';
 import Header from './components/Header';
-import TabMenu from './components/TabMenu';
 import VisualizationArea from './components/VisualizationArea';
 import { SelectChangeEvent } from '@mui/material/Select';
 import ImportDialog from './components/ImportDialog';
 import ObjectCentricPetriNet from './utils/classes/ObjectCentricPetriNet';
+import ConfigurationSidebar from './components/ConfigurationSidebar';
+import { dark } from '@mui/material/styles/createPalette';
 
 const Home = () => {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const [darkMode, setDarkMode] = useState(prefersDarkMode);
-    const [menuOpen, setMenuOpen] = useState(true);
+    const [menuOpen, setMenuOpen] = useState(false);
     const [importDialogOpen, setImportDialogOpen] = useState(false);
     const [importedObjects, setImportedObjects] = useState<ObjectCentricPetriNet[]>([]);
     const [importError, setImportError] = useState<string | null>(null);
@@ -95,31 +95,47 @@ const Home = () => {
         setSelectedOCPN(value === "default" ? null : value as number);
     };
 
-return (
-    <CustomThemeProvider darkMode={darkMode}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh'}}>
-            <Header
-                onMenuClick={handleMenuClick}
-                onImportClick={handleImportClick}
-                onExportClick={() => { }} // TODO: Implement export functionality
-                onToggleDarkMode={handleToggleDarkMode}
-                darkMode={darkMode}
-                importedObjects={importedObjects}
-                selectedOCPN={selectedOCPN}
-                handleSelectChange={handleSelectChange}
+    const handleListItemClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => {
+        setSelectedOCPN(index);
+    }
+
+    return (
+        <CustomThemeProvider darkMode={darkMode}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+                <Header
+                    onMenuClick={handleMenuClick}
+                    onImportClick={handleImportClick}
+                    onExportClick={() => { }} // TODO: Implement export functionality
+                    onToggleDarkMode={handleToggleDarkMode}
+                    darkMode={darkMode}
+                    importedObjects={importedObjects}
+                    selectedOCPN={selectedOCPN}
+                    handleSelectChange={handleSelectChange}
+                />
+                <Box
+                    sx={{
+                        height: '90vh',
+                        width: '100%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        position: 'absolute',
+                        top: '10vh',
+                        left: 0,
+                    }}
+                >
+                    <ConfigurationSidebar isOpen={menuOpen} darkMode={darkMode} />   
+                    <VisualizationArea selectedOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null} darkMode={darkMode} />
+                </Box>
+            </Box>
+            <ImportDialog
+                open={importDialogOpen}
+                onClose={handleImportClose}
+                onDrop={handleDrop}
+                onFileInputChange={handleFileInputChange}
+                importError={importError}
             />
-            {/* TODO: on menu tab click slide in configuration options. */}
-            <VisualizationArea selectedOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null} darkMode={darkMode} />
-        </Box>
-        <ImportDialog
-            open={importDialogOpen}
-            onClose={handleImportClose}
-            onDrop={handleDrop}
-            onFileInputChange={handleFileInputChange}
-            importError={importError}
-        />
-    </CustomThemeProvider>
-);
+        </CustomThemeProvider>
+    );
 };
 
 export default Home;

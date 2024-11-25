@@ -1,4 +1,3 @@
-import { transition } from "d3";
 
 class OCPNConfig {
 

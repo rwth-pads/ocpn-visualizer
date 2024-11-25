@@ -1,0 +1,14 @@
+.sidebar {
+    position: absolute;
+    top: 0;
+    left: -40vw;
+    width: 40vw;
+    height: 100%;
+    transition: left 0.3s ease-in-out;
+    /* background-color: #3a3a3a; */
+}
+
+.sidebar.open {
+    left: 0;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+}
