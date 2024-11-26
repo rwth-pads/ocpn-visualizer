@@ -43,10 +43,10 @@ class ObjectCentricPetriNet {
      * @param {*} transitions The set of transitions in the Petri net.
      * @param {*} dummyNodes The set of dummy nodes in the Petri net.
      * @param {*} arcs The set of arcs in the Petri net.
-     * @param {Object} objectTypes The Petri nets of projected object types within the Petri net.
+     * @param {Set} objectTypes The Petri nets of projected object types within the Petri net.
      * @param {Object} properties Additional properties of the Petri net.
      */
-    constructor(name = "", places = [], transitions = [], dummyNodes = [], arcs = [], objectTypes = {}, properties = {}) {
+    constructor(name = "", places = [], transitions = [], dummyNodes = [], arcs = [], objectTypes = new Set(), properties = {}) {
         this.name = name;
         this.places = places;
         this.transitions = transitions;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ConfigurationCategory from './ConfigurationCategory';
 import './ConfigurationSidebar.css';
+import './CustomMultiSelect.css';
 
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
 import OCPNConfig from '../utils/classes/OCPNConfig';
@@ -151,6 +152,16 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         handleConfigChange(attribute, value);
     };
 
+    const handleColorChange = (attribute: keyof OCPNConfig) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        handleConfigChange(attribute, value, false);
+    };
+
+    const handleColorBlur = (attribute: keyof OCPNConfig) => (e: React.FocusEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        handleConfigChange(attribute, value, true);
+    };
+
     return (
         <div className={sidebarClass}>
             <ConfigurationCategory title="Object Configurations" darkMode={darkMode} categoryIndex={0}>
@@ -158,10 +169,10 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     {(currentOCPN !== null) ? (
                         <>
                             {/* multi select */}
-                            <div>Included object types</div>
+                            <div>included object types</div>
                             {/* one select for object types + transition, one select which vertex -> highlict hovered vertex */}
                             <div>Sources and sinks</div>
-                            <div>Indicate sources, sinks with custom styling</div>
+                            <div>Indicate sources, sinks with custom styling checkbox</div>
                             {/* List of names and corresponding color pickers */}
                             <div>type to color mapping</div>
                         </>
@@ -248,6 +259,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                 </div>
             </ConfigurationCategory>
             <ConfigurationCategory title="Styling Configurations" darkMode={darkMode} categoryIndex={2}>
+                {/* Add subheadings: sizing, colors */}
                 <div style={{ paddingLeft: '4%' }}>
                     <div>
                         <label className='custom-configuration-label' htmlFor='place-radius'>Place radius</label>
@@ -343,8 +355,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='color'
                             className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
                             value={defaultPlaceColor}
-                            onChange={handleInputChange('defaultPlaceColor')}
-                        // Maybe add mouse up event for history
+                            onChange={handleColorChange('defaultPlaceColor')}
+                            onBlur={handleColorBlur('defaultPlaceColor')}
                         />
                     </div>
                     <div>
@@ -357,7 +369,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
                             value={transitionColor}
                             onChange={handleInputChange('transitionColor')}
-                        // Maybe add mouse up event for history
+                            onBlur={handleColorBlur('transitionColor')}
                         />
                     </div>
                     <div>
@@ -366,8 +378,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='color'
                             className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
                             value={transitionFillColor}
-                            onChange={handleInputChange('transitionFillColor')}
-                        // Maybe add mouse up event for history
+                            onChange={handleColorChange('transitionFillColor')}
+                            onBlur={handleColorBlur('transitionFillColor')}
                         />
                     </div>
                     <div>
@@ -425,8 +437,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='color'
                             className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
                             value={arcDefaultColor}
-                            onChange={handleInputChange('arcDefaultColor')}
-                        // Maybe add mouse up event for history
+                            onChange={handleColorChange('arcDefaultColor')}
+                            onBlur={handleColorBlur('arcDefaultColor')}
                         />
                     </div>
                 </div>

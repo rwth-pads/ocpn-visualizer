@@ -2,6 +2,7 @@
 class OCPNConfig {
 
     constructor(
+        includedObjectTypes = new Set(),
         sources = [],
         sinks = [],
         objectCentrality = {},
@@ -30,6 +31,7 @@ class OCPNConfig {
         arrowHeadSize = 5,
         arcDefaultColor = "#000000",
     ) {
+        this.includedObjectTypes = includedObjectTypes;
         // Cycle Breaking
         this.sources = sources; // The ids of user selected sources.
         this.sinks = sinks; // The ids of user selected sinks.
