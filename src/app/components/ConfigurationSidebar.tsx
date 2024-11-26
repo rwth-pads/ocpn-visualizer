@@ -24,6 +24,19 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         userConfig[attribute] = value;
     }
 
+    const [configLog, setConfigLog] = useState([{ config: { ...userConfig }, description: 'Initial configuration' }]);
+
+    const addLogEntry = (attribute: keyof OCPNConfig) => {
+        const description = `Changed ${attribute} to ${userConfig[attribute]}`;
+        setConfigLog([...configLog, { config: { ...userConfig }, description }]);
+    }
+
+    const restoreConfig = (config: OCPNConfig) => {
+        Object.keys(config).forEach((key) => {
+            setUserConfig(config[key as keyof OCPNConfig], key as keyof OCPNConfig);
+        });
+    }
+
     const [flowDirection, setFlowDirection] = useState(userConfig.direction ?? 'TB');
     const handleFlowDirectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
@@ -434,6 +447,20 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             value={arcDefaultColor}
                             onChange={handleArcDefaultColorChange}
                         />
+                    </div>
+                </div>
+            </ConfigurationCategory>
+            <ConfigurationCategory title="Configuration Log" darkMode={darkMode} categoryIndex={3}>
+                <div style={{ paddingLeft: '4%' }}>
+                    <div>
+                        <p>Configuration Log</p>
+                        <p>Log of all configuration changes made during the session.</p>
+                        {configLog.map((logEntry, index) => (
+                            <div key={index}>
+                                <p>{logEntry.description}</p>
+                                <button onClick={() => restoreConfig(logEntry.config)}>Restore</button>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </ConfigurationCategory>
