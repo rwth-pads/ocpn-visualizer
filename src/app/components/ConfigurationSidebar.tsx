@@ -20,169 +20,136 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         <K extends keyof OCPNConfig>(value: OCPNConfig[K], attribute: K): void;
     }
 
+    const [configHistory, setConfigHistory] = useState([{ config: { ...userConfig }, description: 'Initial configuration' }]);
+    const [currentHistoryIndex, setCurrentHistoryIndex] = useState(0);
+    const clearHistory = () => {
+        setConfigHistory([{ config: { ...userConfig }, description: 'Initial configuration' }]);
+        setCurrentHistoryIndex(0);
+    }
+
+    const addHistoryEntry = (attribute: keyof OCPNConfig) => {
+        const description = `Changed ${attribute} to ${userConfig[attribute]}`;
+        const newHistory = [...configHistory.slice(0, currentHistoryIndex + 1), { config: { ...userConfig }, description }];
+        setConfigHistory(newHistory);
+        setCurrentHistoryIndex(newHistory.length - 1);
+    }
+
     const setUserConfig: SetUserConfig = (value, attribute) => {
         userConfig[attribute] = value;
+        addHistoryEntry(attribute);
     }
 
-    const [configLog, setConfigLog] = useState([{ config: { ...userConfig }, description: 'Initial configuration' }]);
-
-    const addLogEntry = (attribute: keyof OCPNConfig) => {
-        const description = `Changed ${attribute} to ${userConfig[attribute]}`;
-        setConfigLog([...configLog, { config: { ...userConfig }, description }]);
-    }
-
-    const restoreConfig = (config: OCPNConfig) => {
+    const restoreConfig = (config: OCPNConfig, index: number) => {
         Object.keys(config).forEach((key) => {
-            setUserConfig(config[key as keyof OCPNConfig], key as keyof OCPNConfig);
+            handleConfigChange(key as keyof OCPNConfig, config[key as keyof OCPNConfig], false);
         });
+        setCurrentHistoryIndex(index);
     }
+
+    const handleConfigChange = (attribute: keyof OCPNConfig, value: any, change = true) => {
+        switch (attribute) {
+            case 'direction':
+                setFlowDirection(value);
+                break;
+            case 'objectAttraction':
+                setObjectAttraction(value);
+                break;
+            case 'objectAttractionRangeMin':
+                setObjectAttractionRangeMin(value);
+                break;
+            case 'objectAttractionRangeMax':
+                setObjectAttractionRangeMax(value);
+                break;
+            case 'maxBarycenterIterations':
+                setMaxBarycenterIterations(value);
+                break;
+            case 'combineArcs':
+                setCombineArcs(value);
+                break;
+            case 'placeRadius':
+                setPlaceRadius(value);
+                break;
+            case 'transitionCustomWidth':
+                setTransitionCustomWidth(value);
+                break;
+            case 'transitionWidth':
+                setTransitionWidth(value);
+                break;
+            case 'transitionHeight':
+                setTransitionHeight(value);
+                break;
+            case 'dummySize':
+                setDummySize(value);
+                break;
+            case 'layerSep':
+                setLayerSep(value);
+                break;
+            case 'vertexSep':
+                setVertexSep(value);
+                break;
+            case 'defaultPlaceColor':
+                setDefaultPlaceColor(value);
+                break;
+            case 'transitionColor':
+                setTransitionColor(value);
+                break;
+            case 'transitionFillColor':
+                setTransitionFillColor(value);
+                break;
+            case 'transitionBorderSize':
+                setTransitionBorderSize(value);
+                break;
+            case 'indicateArcWeight':
+                setIndicateArcWeight(value);
+                break;
+            case 'arcSize':
+                setArcSize(value);
+                break;
+            case 'arrowHeadSize':
+                setArrowHeadSize(value);
+                break;
+            case 'arcDefaultColor':
+                setArcDefaultColor(value);
+                break;
+            default:
+                break;
+        }
+        if (change) {
+            setUserConfig(value, attribute);
+        }
+    };
+
+    const handleInputChange = (attribute: keyof OCPNConfig, change = false) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.type === 'number' || e.target.type === 'range' ? parseFloat(e.target.value) : e.target.value;
+        handleConfigChange(attribute, value, change);
+    };
+
+    const handleMouseUp = (attribute: keyof OCPNConfig) => (e: React.MouseEvent<HTMLInputElement>) => {
+        const value = parseFloat((e.target as HTMLInputElement).value);
+        handleConfigChange(attribute, value);
+    };
 
     const [flowDirection, setFlowDirection] = useState(userConfig.direction ?? 'TB');
-    const handleFlowDirectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const value = e.target.value;
-        setFlowDirection(value);
-        setUserConfig(value, 'direction');
-    };
-
     const [objectAttraction, setObjectAttraction] = useState(userConfig.objectAttraction ?? 0.1);
-    const handleObjectAttractionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseFloat(e.target.value);
-        setObjectAttraction(value);
-        setUserConfig(value, 'objectAttraction');
-    };
-
     const [objectAttractionRangeMin, setObjectAttractionRangeMin] = useState(userConfig.objectAttractionRangeMin ?? 1);
-    const handleObjectAttractionRangeMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(e.target.value);
-        setObjectAttractionRangeMin(value);
-        setUserConfig(value, 'objectAttractionRangeMin');
-    };
-
     const [objectAttractionRangeMax, setObjectAttractionRangeMax] = useState(userConfig.objectAttractionRangeMax ?? 2);
-    const handleObjectAttractionRangeMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(e.target.value);
-        setObjectAttractionRangeMax(value);
-        setUserConfig(value, 'objectAttractionRangeMax');
-    };
-
     const [maxBarycenterIterations, setMaxBarycenterIterations] = useState(userConfig.maxBarycenterIterations ?? 4);
-    const handleMaxBarycenterIterationsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(e.target.value);
-        setMaxBarycenterIterations(value);
-        setUserConfig(value, 'maxBarycenterIterations');
-    };
-
     const [combineArcs, setCombineArcs] = useState(userConfig.combineArcs ?? false);
-    const handleCombineArcsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.checked;
-        setCombineArcs(value);
-        setUserConfig(value, 'combineArcs');
-    }
-
     const [placeRadius, setPlaceRadius] = useState(userConfig.placeRadius ?? 5);
-    const handlePlaceRadiusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(e.target.value);
-        setPlaceRadius(value);
-        setUserConfig(value, 'placeRadius');
-    }
-
     const [transitionCustomWidth, setTransitionCustomWidth] = useState(userConfig.transitionCustomWidth ?? false);
-    const handleTransitionCustomWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.checked;
-        setTransitionCustomWidth(value);
-        setUserConfig(value, 'transitionCustomWidth');
-    }
-
     const [transitionWidth, setTransitionWidth] = useState(userConfig.transitionWidth ?? 20);
-    const handleTransitionWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(e.target.value);
-        setTransitionWidth(value);
-        setUserConfig(value, 'transitionWidth');
-    }
-
     const [transitionHeight, setTransitionHeight] = useState(userConfig.transitionHeight ?? 10);
-    const handleTransitionHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(e.target.value);
-        setTransitionHeight(value);
-        setUserConfig(value, 'transitionHeight');
-    }
-
     const [dummySize, setDummySize] = useState(userConfig.dummySize ?? 5);
-    const handleDummySizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(e.target.value);
-        setDummySize(value);
-        setUserConfig(value, 'dummySize');
-    }
-
     const [layerSep, setLayerSep] = useState(userConfig.layerSep ?? 10);
-    const handleLayerSepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(e.target.value);
-        setLayerSep(value);
-        setUserConfig(value, 'layerSep');
-    }
-
     const [vertexSep, setVertexSep] = useState(userConfig.vertexSep ?? 10);
-    const handleVertexSepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(e.target.value);
-        setVertexSep(value);
-        setUserConfig(value, 'vertexSep');
-    }
-
     const [defaultPlaceColor, setDefaultPlaceColor] = useState(userConfig.defaultPlaceColor ?? '#000000');
-    const handleDefaultPlaceColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setDefaultPlaceColor(value);
-        setUserConfig(value, 'defaultPlaceColor');
-    }
-
     const [transitionColor, setTransitionColor] = useState(userConfig.transitionColor ?? '#000000');
-    const handleTransitionColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setTransitionColor(value);
-        setUserConfig(value, 'transitionColor');
-    }
-
     const [transitionFillColor, setTransitionFillColor] = useState(userConfig.transitionFillColor ?? '#ffffff');
-    const handleTransitionFillColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setTransitionFillColor(value);
-        setUserConfig(value, 'transitionFillColor');
-    }
-
     const [transitionBorderSize, setTransitionBorderSize] = useState(userConfig.transitionBorderSize ?? 1);
-    const handleTransitionBorderSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseFloat(e.target.value);
-        setTransitionBorderSize(value);
-        setUserConfig(value, 'transitionBorderSize');
-    }
-
     const [indicateArcWeight, setIndicateArcWeight] = useState(userConfig.indicateArcWeight ?? false);
-    const handleIndicateArcWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.checked;
-        setIndicateArcWeight(value);
-        setUserConfig(value, 'indicateArcWeight');
-    }
-
     const [arcSize, setArcSize] = useState(userConfig.arcSize ?? 1);
-    const handleArcSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseFloat(e.target.value);
-        setArcSize(value);
-        setUserConfig(value, 'arcSize');
-    }
-
     const [arrowHeadSize, setArrowHeadSize] = useState(userConfig.arrowHeadSize ?? 5);
-    const handleArrowHeadSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseFloat(e.target.value);
-        setArrowHeadSize(value);
-        setUserConfig(value, 'arrowHeadSize');
-    }
-
     const [arcDefaultColor, setArcDefaultColor] = useState(userConfig.arcDefaultColor ?? '#000000');
-    const handleArcDefaultColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setArcDefaultColor(value);
-        setUserConfig(value, 'arcDefaultColor');
-    }
 
     return (
         <div className={sidebarClass}>
@@ -215,7 +182,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             id="flow-direction"
                             className={`custom-configuration-select${darkMode ? ' dark' : ' light'}`}
                             value={flowDirection}
-                            onChange={handleFlowDirectionChange}
+                            onChange={handleInputChange('direction', true)}
                         >
                             <option value="TB">Top to Bottom</option>
                             <option value="LR">Left to Right</option>
@@ -232,7 +199,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             max={0.5}
                             value={objectAttraction}
                             step={0.05}
-                            onChange={handleObjectAttractionChange}
+                            onChange={handleInputChange('objectAttraction')}
+                            onMouseUp={handleMouseUp('objectAttraction')}
                         />
                     </div>
                     <div>
@@ -243,7 +211,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             min={1}
                             max={objectAttractionRangeMax}
                             value={objectAttractionRangeMin}
-                            onChange={handleObjectAttractionRangeMinChange}
+                            onChange={handleInputChange('objectAttractionRangeMin', true)}
                         />
                     </div>
                     <div>
@@ -254,7 +222,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             min={objectAttractionRangeMin}
                             max={4} // TODO: get the number of layers from the OCPNLayout depending on the Petri Net.
                             value={objectAttractionRangeMax}
-                            onChange={handleObjectAttractionRangeMaxChange}
+                            onChange={handleInputChange('objectAttractionRangeMax', true)}
                         />
                     </div>
                     <div>
@@ -265,7 +233,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             min={4}
                             max={100} // TODO: check what fits
                             value={maxBarycenterIterations}
-                            onChange={handleMaxBarycenterIterationsChange}
+                            onChange={handleInputChange('maxBarycenterIterations', true)}
                         />
                     </div>
                     <div>
@@ -274,7 +242,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='checkbox'
                             className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
                             checked={combineArcs}
-                            onChange={handleCombineArcsChange}
+                            onChange={handleInputChange('combineArcs', true)}
                         />
                     </div>
                 </div>
@@ -290,7 +258,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             max={20}
                             value={placeRadius}
                             step={1}
-                            onChange={handlePlaceRadiusChange}
+                            onChange={handleInputChange('placeRadius')}
+                            onMouseUp={handleMouseUp('placeRadius')}
                         />
                     </div>
                     <div>
@@ -299,7 +268,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='checkbox'
                             className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
                             checked={transitionCustomWidth}
-                            onChange={handleTransitionCustomWidthChange}
+                            onChange={handleInputChange('transitionCustomWidth', true)}
                         />
                     </div>
                     <div>
@@ -311,7 +280,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             max={50}
                             value={transitionWidth}
                             step={1}
-                            onChange={handleTransitionWidthChange}
+                            onChange={handleInputChange('transitionWidth')}
+                            onMouseUp={handleMouseUp('transitionWidth')}
                             disabled={transitionCustomWidth}
                         />
                     </div>
@@ -324,7 +294,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             max={20}
                             value={transitionHeight}
                             step={1}
-                            onChange={handleTransitionHeightChange}
+                            onChange={handleInputChange('transitionHeight')}
+                            onMouseUp={handleMouseUp('transitionHeight')}
                         />
                     </div>
                     <div>
@@ -336,7 +307,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             max={10}
                             value={dummySize}
                             step={1}
-                            onChange={handleDummySizeChange}
+                            onChange={handleInputChange('dummySize')}
+                            onMouseUp={handleMouseUp('dummySize')}
                         />
                     </div>
                     <div>
@@ -348,7 +320,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             max={40}
                             value={layerSep}
                             step={1}
-                            onChange={handleLayerSepChange}
+                            onChange={handleInputChange('layerSep')}
+                            onMouseUp={handleMouseUp('layerSep')}
                         />
                     </div>
                     <div>
@@ -360,7 +333,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             max={20}
                             value={vertexSep}
                             step={1}
-                            onChange={handleVertexSepChange}
+                            onChange={handleInputChange('vertexSep')}
+                            onMouseUp={handleMouseUp('vertexSep')}
                         />
                     </div>
                     <div>
@@ -369,7 +343,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='color'
                             className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
                             value={defaultPlaceColor}
-                            onChange={handleDefaultPlaceColorChange}
+                            onChange={handleInputChange('defaultPlaceColor')}
+                        // Maybe add mouse up event for history
                         />
                     </div>
                     <div>
@@ -381,7 +356,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='color'
                             className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
                             value={transitionColor}
-                            onChange={handleTransitionColorChange}
+                            onChange={handleInputChange('transitionColor')}
+                        // Maybe add mouse up event for history
                         />
                     </div>
                     <div>
@@ -390,7 +366,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='color'
                             className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
                             value={transitionFillColor}
-                            onChange={handleTransitionFillColorChange}
+                            onChange={handleInputChange('transitionFillColor')}
+                        // Maybe add mouse up event for history
                         />
                     </div>
                     <div>
@@ -402,7 +379,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             max={2}
                             value={transitionBorderSize}
                             step={0.05}
-                            onChange={handleTransitionBorderSizeChange}
+                            onChange={handleInputChange('transitionBorderSize')}
+                            onMouseUp={handleMouseUp('transitionBorderSize')}
                         />
                     </div>
                     {/* checkbox, slider, slider, color picker */}
@@ -412,7 +390,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='checkbox'
                             className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
                             checked={indicateArcWeight}
-                            onChange={handleIndicateArcWeightChange}
+                            onChange={handleInputChange('indicateArcWeight', true)}
                         />
                     </div>
                     <div>
@@ -424,7 +402,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             max={2}
                             step={0.05}
                             value={arcSize}
-                            onChange={handleArcSizeChange}
+                            onChange={handleInputChange('arcSize')}
+                            onMouseUp={handleMouseUp('arcSize')}
                         />
                     </div>
                     <div>
@@ -436,7 +415,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             max={20}
                             step={1}
                             value={arrowHeadSize}
-                            onChange={handleArrowHeadSizeChange}
+                            onChange={handleInputChange('arrowHeadSize')}
+                            onMouseUp={handleMouseUp('arrowHeadSize')}
                         />
                     </div>
                     <div> {/* TODO: only show when OCPN imported and ocpn.objectTypes empty. */}
@@ -445,20 +425,19 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='color'
                             className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
                             value={arcDefaultColor}
-                            onChange={handleArcDefaultColorChange}
+                            onChange={handleInputChange('arcDefaultColor')}
+                            // Maybe add mouse up event for history
                         />
                     </div>
                 </div>
             </ConfigurationCategory>
-            <ConfigurationCategory title="Configuration Log" darkMode={darkMode} categoryIndex={3}>
+            <ConfigurationCategory title="History" darkMode={darkMode} categoryIndex={3}>
                 <div style={{ paddingLeft: '4%' }}>
                     <div>
-                        <p>Configuration Log</p>
-                        <p>Log of all configuration changes made during the session.</p>
-                        {configLog.map((logEntry, index) => (
-                            <div key={index}>
-                                <p>{logEntry.description}</p>
-                                <button onClick={() => restoreConfig(logEntry.config)}>Restore</button>
+                        <button onClick={clearHistory}>Clear History</button>
+                        {configHistory.map((logEntry, index) => (
+                            <div key={index} style={{ color: index === currentHistoryIndex ? 'red' : 'inherit' }}>
+                                <button onClick={() => restoreConfig(logEntry.config, index)}>{index}. {logEntry.description}</button>
                             </div>
                         ))}
                     </div>
