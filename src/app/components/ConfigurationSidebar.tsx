@@ -16,6 +16,28 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
     const mode = darkMode ? 'dark' : 'light';
     const sidebarClass = isOpen ? "sidebar open " + mode : "sidebar " + mode;
 
+    const [flowDirection, setFlowDirection] = useState(userConfig.direction ?? 'TB');
+    const [objectAttraction, setObjectAttraction] = useState(userConfig.objectAttraction ?? 0.1);
+    const [objectAttractionRangeMin, setObjectAttractionRangeMin] = useState(userConfig.objectAttractionRangeMin ?? 1);
+    const [objectAttractionRangeMax, setObjectAttractionRangeMax] = useState(userConfig.objectAttractionRangeMax ?? 2);
+    const [maxBarycenterIterations, setMaxBarycenterIterations] = useState(userConfig.maxBarycenterIterations ?? 4);
+    const [combineArcs, setCombineArcs] = useState(userConfig.combineArcs ?? false);
+    const [placeRadius, setPlaceRadius] = useState(userConfig.placeRadius ?? 5);
+    const [transitionCustomWidth, setTransitionCustomWidth] = useState(userConfig.transitionCustomWidth ?? false);
+    const [transitionWidth, setTransitionWidth] = useState(userConfig.transitionWidth ?? 20);
+    const [transitionHeight, setTransitionHeight] = useState(userConfig.transitionHeight ?? 10);
+    const [dummySize, setDummySize] = useState(userConfig.dummySize ?? 5);
+    const [layerSep, setLayerSep] = useState(userConfig.layerSep ?? 10);
+    const [vertexSep, setVertexSep] = useState(userConfig.vertexSep ?? 10);
+    const [defaultPlaceColor, setDefaultPlaceColor] = useState(userConfig.defaultPlaceColor ?? '#000000');
+    const [transitionColor, setTransitionColor] = useState(userConfig.transitionColor ?? '#000000');
+    const [transitionFillColor, setTransitionFillColor] = useState(userConfig.transitionFillColor ?? '#ffffff');
+    const [transitionBorderSize, setTransitionBorderSize] = useState(userConfig.transitionBorderSize ?? 1);
+    const [indicateArcWeight, setIndicateArcWeight] = useState(userConfig.indicateArcWeight ?? false);
+    const [arcSize, setArcSize] = useState(userConfig.arcSize ?? 1);
+    const [arrowHeadSize, setArrowHeadSize] = useState(userConfig.arrowHeadSize ?? 5);
+    const [arcDefaultColor, setArcDefaultColor] = useState(userConfig.arcDefaultColor ?? '#000000');
+
     interface SetUserConfig {
         <K extends keyof OCPNConfig>(value: OCPNConfig[K], attribute: K): void;
     }
@@ -128,28 +150,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         const value = parseFloat((e.target as HTMLInputElement).value);
         handleConfigChange(attribute, value);
     };
-
-    const [flowDirection, setFlowDirection] = useState(userConfig.direction ?? 'TB');
-    const [objectAttraction, setObjectAttraction] = useState(userConfig.objectAttraction ?? 0.1);
-    const [objectAttractionRangeMin, setObjectAttractionRangeMin] = useState(userConfig.objectAttractionRangeMin ?? 1);
-    const [objectAttractionRangeMax, setObjectAttractionRangeMax] = useState(userConfig.objectAttractionRangeMax ?? 2);
-    const [maxBarycenterIterations, setMaxBarycenterIterations] = useState(userConfig.maxBarycenterIterations ?? 4);
-    const [combineArcs, setCombineArcs] = useState(userConfig.combineArcs ?? false);
-    const [placeRadius, setPlaceRadius] = useState(userConfig.placeRadius ?? 5);
-    const [transitionCustomWidth, setTransitionCustomWidth] = useState(userConfig.transitionCustomWidth ?? false);
-    const [transitionWidth, setTransitionWidth] = useState(userConfig.transitionWidth ?? 20);
-    const [transitionHeight, setTransitionHeight] = useState(userConfig.transitionHeight ?? 10);
-    const [dummySize, setDummySize] = useState(userConfig.dummySize ?? 5);
-    const [layerSep, setLayerSep] = useState(userConfig.layerSep ?? 10);
-    const [vertexSep, setVertexSep] = useState(userConfig.vertexSep ?? 10);
-    const [defaultPlaceColor, setDefaultPlaceColor] = useState(userConfig.defaultPlaceColor ?? '#000000');
-    const [transitionColor, setTransitionColor] = useState(userConfig.transitionColor ?? '#000000');
-    const [transitionFillColor, setTransitionFillColor] = useState(userConfig.transitionFillColor ?? '#ffffff');
-    const [transitionBorderSize, setTransitionBorderSize] = useState(userConfig.transitionBorderSize ?? 1);
-    const [indicateArcWeight, setIndicateArcWeight] = useState(userConfig.indicateArcWeight ?? false);
-    const [arcSize, setArcSize] = useState(userConfig.arcSize ?? 1);
-    const [arrowHeadSize, setArrowHeadSize] = useState(userConfig.arrowHeadSize ?? 5);
-    const [arcDefaultColor, setArcDefaultColor] = useState(userConfig.arcDefaultColor ?? '#000000');
 
     return (
         <div className={sidebarClass}>
@@ -426,7 +426,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
                             value={arcDefaultColor}
                             onChange={handleInputChange('arcDefaultColor')}
-                            // Maybe add mouse up event for history
+                        // Maybe add mouse up event for history
                         />
                     </div>
                 </div>
