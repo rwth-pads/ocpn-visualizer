@@ -50,7 +50,7 @@
         {
             "source": "o1",
             "target": "t1",
-            "weight": 1,
+            "weight": 2,
             "variable": false,
             "properties": {}
         },
@@ -99,7 +99,7 @@
         {
             "source": "t2",
             "target": "i1",
-            "weight": 1,
+            "weight": 2,
             "variable": false,
             "properties": {}
         }

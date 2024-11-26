@@ -15,6 +15,7 @@ import OCPNConfig from '../classes/OCPNConfig';
  * @returns OCPNLayout The layout of the Object Centric Petri Net.
  */
 async function sugiyama(ocpn, config) {
+    console.log("Sugiyama layouting...");
     if (!(ocpn instanceof ObjectCentricPetriNet)) {
         return undefined;
     }
@@ -22,24 +23,24 @@ async function sugiyama(ocpn, config) {
         return undefined;
     }
     ocpn.layout = new OCPNLayout(ocpn);
-    console.log("Sugiyama input: ", ocpn);
+    // console.log("Sugiyama input: ", ocpn);
     // Cycle Breaking.
-    console.log("Reversing cycles...");
+    console.log("\tReversing cycles...");
     reverseCycles(ocpn, config);
     // Layer Assignment.
-    console.log("Assigning layers...");
+    console.log("\tAssigning layers...");
     await assignLayers(ocpn);
     // Dummy Vertex Insertion.
-    console.log("Inserting dummy vertices...");
+    console.log("\tInserting dummy vertices...");
     insertDummyVertices(ocpn);
     // Vertex Ordering.
-    console.log("Ordering vertices...");
+    console.log("\tOrdering vertices...");
     orderVertices(ocpn, config);
     // Vertex Positioning.
-    console.log("Positioning vertices...");
+    console.log("\tPositioning vertices...");
     positionVertices(ocpn, config);
     // Route edges.
-    console.log("Routing arcs...");
+    console.log("\tRouting arcs...");
     routeArcs(ocpn);
     // Return the OCPN Layout.
     return ocpn.layout;

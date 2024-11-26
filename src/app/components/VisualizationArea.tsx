@@ -10,10 +10,11 @@ const COLORS_ARRAY = ['#99cefd', '#f5a800', '#002e57', 'red', 'green', 'purple',
 
 interface VisualizationAreaProps {
     selectedOCPN: ObjectCentricPetriNet | null;
+    userConfig: OCPNConfig;
     darkMode: boolean;
 }
 
-const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, darkMode }) => {
+const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, userConfig, darkMode }) => {
     const svgRef = useRef<SVGSVGElement>(null!); // Initialize as not null
     const padding = 20; // Define padding value
     const previousOCPNRef = useRef<ObjectCentricPetriNet | null>(null);
@@ -30,8 +31,6 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
         const svg = d3.select(svgRef);
         const g = svg.append('g');
 
-        // Define arrowhead marker. TODO: change color based on object type
-        // TODO: arrow should not go into the place or transition.
         svg.append('defs').append('marker')
             .attr('id', 'arrowhead')
             .attr('viewBox', '0 0 10 10')
@@ -47,10 +46,10 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
         for (const arcId in layout.arcs) {
             const arc = layout.arcs[arcId];
             var path = getArcPath(arcId, layout, config);
-            console.log(`Source: ${arc.source}, Target: ${arc.target}`);
-            console.log(`Source: ${layout.vertices[arc.source].x}, ${layout.vertices[arc.source].y}`);
-            console.log(`Target: ${layout.vertices[arc.target].x}, ${layout.vertices[arc.target].y}`);
-            console.log("\t", path);
+            // console.log(`Source: ${arc.source}, Target: ${arc.target}`);
+            // console.log(`Source: ${layout.vertices[arc.source].x}, ${layout.vertices[arc.source].y}`);
+            // console.log(`Target: ${layout.vertices[arc.target].x}, ${layout.vertices[arc.target].y}`);
+            // console.log("\t", path);
             var ot = arc.objectType;
             var color = objectTypeColorMap.get(ot) || config.arcDefaultColor;
             g.append('path')
@@ -59,7 +58,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
                 .attr('fill', 'none')
                 .attr('id', arcId)
                 .attr('class', 'ocpnarc')
-                .attr('stroke-width', config.arcSize)
+                .attr('stroke-width', config.arcSize * (arc.weight ?? 1))
                 .attr('marker-end', arc.reversed ? null : 'url(#arrowhead)')
                 .attr('marker-start', arc.reversed ? 'url(#arrowhead)' : null); // TODO: set fill for arrowhead but not for the path
         }
@@ -105,11 +104,6 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
                     .text(vertex.label);
             }
         }
-        for (const layer in layout.layering) {
-            // append vertical lines to seperate layers
-
-
-        }
 
         // Calculate the bounding box of the layout
         const node = g.node();
@@ -127,79 +121,6 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
         // Apply transformations
         g.attr('transform', `translate(${translateX}, ${translateY}) scale(${scale})`);
         // TODO: d3 zoom and pan.
-    }
-
-    useEffect(() => {
-        const updateVisualization = async () => {
-            // TODO: layout is recomputed for the same layout if window size changes so much that the visualization area is closed and reopened.
-            if (selectedOCPN && selectedOCPN !== previousOCPNRef.current) {
-                // Clear the existing SVG content
-                d3.select(svgRef.current!).selectAll('*').remove();
-                const ocpnConfig = getUserConfig(); // Initialize with the user selected values.
-                console.log(ocpnConfig);
-                const ocpnLayout: OCPNLayout = await sugiyama(selectedOCPN, ocpnConfig);
-                if (!ocpnLayout) return;
-                // Map the OCPN to a layout
-                console.log(ocpnLayout);
-                mapOCPNToLayout(ocpnLayout, ocpnConfig, svgRef.current!);
-                previousOCPNRef.current = selectedOCPN;
-            }
-        }
-        updateVisualization();
-    }, [selectedOCPN]);
-
-    // TODO: Get the actual values from the user.
-    function getUserConfig(): OCPNConfig {
-        let sources: string[] = [];
-        let sinks: string[] = [];
-        let objectCentrality = {};
-        let maxBarycenterIterations = 4;
-        let objectAttraction = 0.1;
-        let objectAttractionRangeMin = 1;
-        let objectAttractionRangeMax = 2;
-        let direction = "TB";
-        let placeRadius = 5;
-        let transitionWidth = 30;
-        let transitionHeight = 5;
-        let dummySize = 2;
-        let layerSep = 10;
-        let vertexSep = 2; // For now bigger than any other size declaration to avoid overlapping. TODO
-        let borderPaddingX = 10;
-        let borderPaddingY = 0;
-        let typeColorMapping = {};
-        let defaultPlaceColor = "#0000000";
-        let transitionColor = "#000000";
-        let transitionFillColor = "#ffffff";
-        let transitionBorderSize = 0.3;
-        let arcSize = 0.5;
-        let arrowHeadSize = 5;
-        let arcDefaultColor = "#000000";
-        return new OCPNConfig(
-            sources,
-            sinks,
-            objectCentrality,
-            maxBarycenterIterations,
-            objectAttraction,
-            objectAttractionRangeMin,
-            objectAttractionRangeMax,
-            direction,
-            placeRadius,
-            transitionWidth,
-            transitionHeight,
-            dummySize,
-            layerSep,
-            vertexSep,
-            borderPaddingX,
-            borderPaddingY,
-            typeColorMapping,
-            defaultPlaceColor,
-            transitionColor,
-            transitionFillColor,
-            transitionBorderSize,
-            arcSize,
-            arrowHeadSize,
-            arcDefaultColor
-        );
     }
 
     function getArcPath(arcId: string, layout: OCPNLayout, config: OCPNConfig): string {
@@ -234,6 +155,25 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, dar
         x: number;
         y: number;
     }
+
+    useEffect(() => {
+        const updateVisualization = async () => {
+            // TODO: layout is recomputed for the same layout if window size changes so much that the visualization area is closed and reopened.
+            if (selectedOCPN && selectedOCPN !== previousOCPNRef.current) {
+                // Clear the existing SVG content
+                d3.select(svgRef.current!).selectAll('*').remove();
+
+                const ocpnLayout: OCPNLayout = await sugiyama(selectedOCPN, userConfig);
+
+                if (!ocpnLayout) return;
+                // Map the OCPN to a layout
+                // console.log(ocpnLayout);
+                mapOCPNToLayout(ocpnLayout, userConfig, svgRef.current!);
+                previousOCPNRef.current = selectedOCPN;
+            }
+        }
+        updateVisualization();
+    }, [selectedOCPN, userConfig]);
 
     return (
         <Box

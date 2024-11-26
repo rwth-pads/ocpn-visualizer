@@ -82,10 +82,10 @@ function upDownBarycenterBilayerSweep(ocpn, config) {
     var sweepCounter = 1;
     while (true) {
         layering = singleUpDownSweep(ocpn, layering, config); // Phase 1
-        // console.log("UpDown ", layering);
+        console.log("UpDown ", layering);
         layering = adjustEqualBarycenters(ocpn, layering) // Phase 2
         var currentScore = computeLayeringScore(ocpn, layering, config);
-        // console.log(`Sweep ${sweepCounter} score: ${currentScore}\nLayering:`);
+        console.log(`Sweep ${sweepCounter} score: ${currentScore}\nLayering:`);
         // console.log(layering);
         // Check if the vertex order has improved.
         if (currentScore < bestScore) {

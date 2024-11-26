@@ -11,7 +11,7 @@
 }
 
 .sidebar.open {
-    left: 30vw;
+    left: 0;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
 }
 
@@ -93,3 +93,28 @@
 .sidebar-category-content.dark {}
 
 .sidebar-category-content.light {}
+
+/* The following classes are used to style the configuration options. */
+.custom-configuration-select {
+    padding: 2%;
+    border-radius: 7px;
+    cursor: pointer;
+}
+.custom-configuration-select.dark {
+    color: white;
+    background-color: rgb(97, 96, 96);
+}
+.custom-configuration-select.light {
+    color: rgb(34, 34, 110);
+    background-color: aliceblue;
+}
+.custom-configuration-select.dark:hover {}
+.custom-configuration-select.light:hover {}
+
+.custom-configuration-label {
+    padding-right: 2%;
+}
+
+.custom-configuration-slider {
+    padding: 2% 0;
+}

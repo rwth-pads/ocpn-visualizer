@@ -11,8 +11,8 @@ class OCPNConfig {
         objectAttractionRangeMax = 2,
         direction = "TB",
         placeRadius = 5,
-        transitionWidth = 20,
-        transitionHeight = 10,
+        transitionWidth = 30,
+        transitionHeight = 5,
         dummySize = 2,
         layerSep = 10,
         vertexSep = 5, // For now bigger than any other size declaration to avoid overlapping. TODO

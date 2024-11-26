@@ -8,9 +8,9 @@ import Header from './components/Header';
 import VisualizationArea from './components/VisualizationArea';
 import { SelectChangeEvent } from '@mui/material/Select';
 import ImportDialog from './components/ImportDialog';
-import ObjectCentricPetriNet from './utils/classes/ObjectCentricPetriNet';
 import ConfigurationSidebar from './components/ConfigurationSidebar';
-import { dark } from '@mui/material/styles/createPalette';
+import ObjectCentricPetriNet from './utils/classes/ObjectCentricPetriNet';
+import OCPNConfig from './utils/classes/OCPNConfig';
 
 const Home = () => {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -20,6 +20,7 @@ const Home = () => {
     const [importedObjects, setImportedObjects] = useState<ObjectCentricPetriNet[]>([]);
     const [importError, setImportError] = useState<string | null>(null);
     const [selectedOCPN, setSelectedOCPN] = useState<number | null>(null);
+    const [userConfig, setUserConfig] = useState<OCPNConfig>(new OCPNConfig());
 
     useEffect(() => {
         setDarkMode(prefersDarkMode);
@@ -123,8 +124,15 @@ const Home = () => {
                         left: 0,
                     }}
                 >
-                    <ConfigurationSidebar isOpen={menuOpen} darkMode={darkMode} />   
-                    <VisualizationArea selectedOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null} darkMode={darkMode} />
+                    <ConfigurationSidebar
+                        isOpen={menuOpen}
+                        currentOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
+                        userConfig={userConfig}
+                        darkMode={darkMode} />
+                    <VisualizationArea
+                        selectedOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
+                        userConfig={userConfig}
+                        darkMode={darkMode} />
                 </Box>
             </Box>
             <ImportDialog

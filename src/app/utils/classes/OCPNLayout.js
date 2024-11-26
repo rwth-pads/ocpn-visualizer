@@ -40,6 +40,7 @@ class OCPNLayout {
                 source: arc.source.id, // It holds source.layer < target.layer due to setArcDirection().
                 target: arc.target.id,
                 reversed: false,
+                weight: arc.weight,
                 path: [], // The path will contain the ids of the dummy vertices.
                 minLayer: -1,
                 maxLayer: -1,
