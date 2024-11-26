@@ -58,7 +58,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                 .attr('fill', 'none')
                 .attr('id', arcId)
                 .attr('class', 'ocpnarc')
-                .attr('stroke-width', config.arcSize * (arc.weight ?? 1))
+                .attr('stroke-width', config.arcSize * (config.indicateArcWeight ? (arc.weight ?? 1) : 1))
                 .attr('marker-end', arc.reversed ? null : 'url(#arrowhead)')
                 .attr('marker-start', arc.reversed ? 'url(#arrowhead)' : null); // TODO: set fill for arrowhead but not for the path
         }

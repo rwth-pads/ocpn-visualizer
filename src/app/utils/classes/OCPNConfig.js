@@ -11,6 +11,7 @@ class OCPNConfig {
         objectAttractionRangeMax = 2,
         direction = "TB",
         placeRadius = 5,
+        customTransitionWidth = false,
         transitionWidth = 30,
         transitionHeight = 5,
         dummySize = 2,
@@ -23,7 +24,9 @@ class OCPNConfig {
         transitionColor = "#000000",
         transitionFillColor = "#ffffff",
         transitionBorderSize = 0.3,
+        combineArcs = false,
         arcSize = 0.2,
+        indicateArcWeight = false,
         arrowHeadSize = 5,
         arcDefaultColor = "#000000",
     ) {
@@ -39,6 +42,7 @@ class OCPNConfig {
         // Vertex Positioning
         this.direction = direction; // TODO: add LR
         this.placeRadius = placeRadius;
+        this.transitionCustomWidth = customTransitionWidth;
         this.transitionWidth = transitionWidth;
         this.transitionHeight = transitionHeight;
         this.dummySize = dummySize;
@@ -52,7 +56,9 @@ class OCPNConfig {
         this.transitionColor = transitionColor;
         this.transitionFillColor = transitionFillColor;
         this.transitionBorderSize = transitionBorderSize;
+        this.combineArcs = combineArcs;
         this.arcSize = arcSize;
+        this.indicateArcWeight = indicateArcWeight;
         this.arrowHeadSize = arrowHeadSize;
         this.arcDefaultColor = arcDefaultColor;
     }
