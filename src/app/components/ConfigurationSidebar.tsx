@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import ConfigurationCategory from './ConfigurationCategory';
 import './ConfigurationSidebar.css';
-import './CustomMultiSelect.css';
 
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
 import OCPNConfig from '../utils/classes/OCPNConfig';
