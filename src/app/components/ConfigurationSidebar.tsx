@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ConfigurationCategory from './ConfigurationCategory';
+import CustomMultiSelect from './CustomMultiSelect';
 import './ConfigurationSidebar.css';
 
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
@@ -168,7 +169,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     {(currentOCPN !== null) ? (
                         <>
                             {/* multi select */}
-                            <div>included object types</div>
+                            <CustomMultiSelect darkMode={darkMode} />
                             {/* one select for object types + transition, one select which vertex -> highlict hovered vertex */}
                             <div>Sources and sinks</div>
                             <div>Indicate sources, sinks with custom styling checkbox</div>
