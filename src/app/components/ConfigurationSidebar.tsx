@@ -166,7 +166,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         <div className={sidebarClass}>
             <ConfigurationCategory title="Object Configurations" darkMode={darkMode} categoryIndex={0}>
                 <div style={{ paddingLeft: '4%' }}>
-                    {(currentOCPN !== null) ? (
+                    {(true || currentOCPN !== null) ? (
                         <>
                             {/* multi select */}
                             <CustomMultiSelect darkMode={darkMode} />

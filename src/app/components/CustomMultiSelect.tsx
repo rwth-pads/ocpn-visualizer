@@ -70,7 +70,7 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode }) => {
                             <span className={`placeholder${mode}`}>Select object types</span>
                         ) : (
                             <>
-                                {selectedOptions.slice(0, 2).map((option, index) => (
+                                {selectedOptions.slice(0, 3).map((option, index) => (
                                     <span key={index} className={`custom-tag${mode}`}>
                                         {option}
                                         <span
@@ -84,8 +84,8 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode }) => {
                                         </span>
                                     </span>
                                 ))}
-                                {selectedOptions.length > 2 && (
-                                    <span className={`custom-tag${mode}`}>+{selectedOptions.length - 2} more</span>
+                                {selectedOptions.length > 3 && (
+                                    <span className={`custom-tag${mode}`}>+{selectedOptions.length - 3} more</span>
                                 )}
                             </>
                         )}
@@ -105,7 +105,7 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode }) => {
                                 onChange={handleSearchChange}
                             />
                             <button type="button" className={`custom-clear-search-tags${mode}`} onClick={handleClearSearch}>
-                                <i className={`fa fa-close${mode}`}></i>
+                                <span className={`custom-clear-search-tags-cross`}>&times;</span>
                             </button>
                         </div>
                         <div
@@ -130,7 +130,7 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode }) => {
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 };
 
