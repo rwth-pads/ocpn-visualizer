@@ -6,7 +6,7 @@
     height: 100%;
     transition: left 0.3s ease-in-out;
     z-index: 1;
-    overflow: auto;
+    overflow: hidden;
 }
 
 @media (max-width: 768px) {
@@ -89,12 +89,13 @@
 
 .sidebar-category-content {
     max-height: 0;
-    overflow: hidden;
     width: 100%;
-    transition: max-height 0.3s ease-in-out;
+    overflow: hidden;
 }
 
-
+.sidebar-category-content.open {
+    overflow: visible;
+}
 
 .sidebar-category-content.dark {}
 
