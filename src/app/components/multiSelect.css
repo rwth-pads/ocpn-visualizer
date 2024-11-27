@@ -14,14 +14,23 @@
 }
 
 .custom-select-box {
-    background-color: #ffffff;
-    border: 1px solid #ced4da;
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 100%;
     padding: 3% 10px;
+    border-radius: 5px;
     cursor: pointer;
+}
+.custom-select-box.dark {
+    color: #fff;
+    background-color: #050505;
+    border: 1px solid #ced4da;
+}
+.custom-select-box.light {
+    color: #fff;
+    background-color: #f2f2f2;
+    border: 1px solid #ced4da;
 }
 .custom-selected-options {
     display: flex;
@@ -60,11 +69,21 @@
     border: 1px solid #ced4da;
     border-top: none;
     z-index: 2;
-    overflow: visible;
+    overflow-y: scroll;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 .open .custom-select-options {
     display: block;
+}
+.custom-select-options.dark {
+    color: #fff;
+    background-color: #050505;
+    border: 1px solid #ced4da;
+}
+.custom-select-options.light {
+    color: #000;
+    background-color: #f2f2f2;
+    border: 1px solid #ced4da;
 }
 .custom-option-search-tags {
     background-color: #ffffff;

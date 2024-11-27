@@ -5,7 +5,14 @@ const defaultOptions = [
     'Item',
     'Order',
     'Customer',
-    'Product'
+    'Product',
+    'Category',
+    'Supplier',
+    'Employee',
+    'Shipper',
+    'Territory',
+    'Region',
+    'CustomerDemographic',
 ];
 
 interface CustomMultiSelectProps {

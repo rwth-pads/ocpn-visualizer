@@ -9,7 +9,7 @@
     overflow: hidden;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .sidebar {
         width: 100vw;
         left: -100vw;
@@ -49,8 +49,6 @@
 .sidebar.light::-webkit-scrollbar-thumb {
     background-color: #033561;
 }
-
-
 
 .sidebar-category.not-first {
     margin: 2% 0;
