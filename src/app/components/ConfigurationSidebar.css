@@ -6,7 +6,10 @@
     height: 100%;
     transition: left 0.3s ease-in-out;
     z-index: 1;
-    overflow: hidden;
+    overflow: auto;
+}
+.sidebar > * {
+    user-select: none;
 }
 
 @media (max-width: 900px) {

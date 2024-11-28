@@ -98,7 +98,7 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode }) => {
                         )}
                     </div>
                     <div className={`custom-select-arrow-box${mode}`}>
-                        <span className={`custom-select-arrow${mode}`}>&gt;</span>
+                        <span className={`custom-select-arrow${mode}`}>{isOpen ? '⯅' : '⯆'}</span>
                     </div>
                 </div>
                 {isOpen && (
@@ -109,10 +109,11 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode }) => {
                                 className={`custom-search-tags${mode}`}
                                 placeholder="Search object types..."
                                 value={searchTerm}
+                                spellCheck={false}
                                 onChange={handleSearchChange}
                             />
                             <button type="button" className={`custom-clear-search-tags${mode}`} onClick={handleClearSearch}>
-                                <span className={`custom-clear-search-tags-cross`}>&times;</span>
+                                <span className={`custom-clear-search-tags-cross${mode}`}>&times;</span>
                             </button>
                         </div>
                         <div
@@ -130,6 +131,15 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode }) => {
                                     className={`custom-option${mode} ${selectedOptions.includes(option) ? 'active' : ''}`}
                                     onClick={() => handleOptionToggle(option)}
                                 >
+                                    <input
+                                        type="checkbox"
+                                        className={`custom-option-checkbox${mode}`}
+                                        checked={selectedOptions.includes(option)} />
+                                    <span className={`custom-checkbox-span${mode}`}>
+                                        <span className={`custom-checkbox-tick${mode}`}>
+                                        {selectedOptions.includes(option) ? '✔' : ''}
+                                        </span>
+                                    </span>
                                     {option}
                                 </div>
                             ))
