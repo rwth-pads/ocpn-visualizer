@@ -12,6 +12,8 @@ import ConfigurationSidebar from './components/ConfigurationSidebar';
 import ObjectCentricPetriNet from './utils/classes/ObjectCentricPetriNet';
 import OCPNConfig from './utils/classes/OCPNConfig';
 
+import './components/ConfigurationSidebar.css';
+
 const Home = () => {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const [darkMode, setDarkMode] = useState(prefersDarkMode);
@@ -25,6 +27,11 @@ const Home = () => {
     useEffect(() => {
         setDarkMode(prefersDarkMode);
     }, [prefersDarkMode]);
+
+    // Only for debugging purposes.
+    useEffect(() => {
+        console.log(userConfig.includedObjectTypes);
+    }, [userConfig.includedObjectTypes]);
 
     const handleToggleDarkMode = () => {
         setDarkMode(!darkMode);
@@ -62,6 +69,10 @@ const Home = () => {
                         setImportedObjects(prev => {
                             const newImportedObjects = [...prev, ocpn];
                             setSelectedOCPN(newImportedObjects.length - 1); // Set the newly imported OCPN as selected
+                            let currentConfig = userConfig;
+                            currentConfig.includedObjectTypes = Array.from(ocpn.objectTypes);
+                            setUserConfig(currentConfig);
+                            // console.log(userConfig.includedObjectTypes);
                             return newImportedObjects;
                         });
                         handleImportClose();
@@ -94,11 +105,8 @@ const Home = () => {
     const handleSelectChange = (event: SelectChangeEvent<number | "default">) => {
         const value = event.target.value;
         setSelectedOCPN(value === "default" ? null : value as number);
+        userConfig.includedObjectTypes = Array.from(importedObjects[value as number].objectTypes);
     };
-
-    const handleListItemClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => {
-        setSelectedOCPN(index);
-    }
 
     return (
         <CustomThemeProvider darkMode={darkMode}>
@@ -129,6 +137,11 @@ const Home = () => {
                         currentOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
                         userConfig={userConfig}
                         darkMode={darkMode} />
+
+                    <button
+                        className={`apply-sugiyama-button${darkMode ? ' dark' : ' light'}${menuOpen ? ' open' : ''}`}
+                        onClick={() => {console.log("Apply Sugiyama", userConfig.includedObjectTypes)}}
+                        >⯈</button>
                     <VisualizationArea
                         selectedOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
                         userConfig={userConfig}

@@ -43,10 +43,10 @@ class ObjectCentricPetriNet {
      * @param {*} transitions The set of transitions in the Petri net.
      * @param {*} dummyNodes The set of dummy nodes in the Petri net.
      * @param {*} arcs The set of arcs in the Petri net.
-     * @param {Set} objectTypes The Petri nets of projected object types within the Petri net.
+     * @param {*} objectTypes The Petri nets of projected object types within the Petri net.
      * @param {Object} properties Additional properties of the Petri net.
      */
-    constructor(name = "", places = [], transitions = [], dummyNodes = [], arcs = [], objectTypes = new Set(), properties = {}) {
+    constructor(name = "", places = [], transitions = [], dummyNodes = [], arcs = [], objectTypes = [], properties = {}) {
         this.name = name;
         this.places = places;
         this.transitions = transitions;
@@ -172,7 +172,7 @@ class ObjectCentricPetriNet {
         }
 
         // Get the object types of the places.
-        const objectTypes = new Set(places.map(place => place.objectType));
+        const objectTypes = [...new Set(places.map(place => place.objectType))];
 
         // Return the ObjectCentricPetriNet instance.
         return new ObjectCentricPetriNet(
@@ -233,7 +233,7 @@ class ObjectCentricPetriNet {
         }
 
         // Get the object types of the OCPN.
-        const objectTypes = new Set(places.map(place => place.objectType));
+        const objectTypes = [...new Set(places.map(place => place.objectType))];
 
         // Return the ObjectCentricPetriNet instance.
         return new ObjectCentricPetriNet(
@@ -243,7 +243,7 @@ class ObjectCentricPetriNet {
             [], // Dummy nodes will be added within the Sugiyama layout algorithm.
             arcs,
             objectTypes,
-            properties
+            properties,
         );
     }
 
@@ -283,11 +283,11 @@ class ObjectCentricPetriNet {
             a1.weight === a2.weight;
 
         if (!compareSets(this.places, other.places, comparePlaces)) return false;
-        console.log("Places are equal");
+        // console.log("Places are equal");
         if (!compareSets(this.transitions, other.transitions, compareTransitions)) return false;
-        console.log("Transitions are equal");
+        // console.log("Transitions are equal");
         if (!compareSets(this.arcs, other.arcs, compareArcs)) return false;
-        console.log("Arcs are equal");
+        // console.log("Arcs are equal");
         return true;
     }
 

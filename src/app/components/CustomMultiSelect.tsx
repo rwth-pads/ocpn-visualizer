@@ -1,33 +1,28 @@
 import React, { useState, useEffect } from 'react';
+import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
+import OCPNConfig from '../utils/classes/OCPNConfig';
 import './multiSelect.css';
-
-const defaultOptions = [
-    'Item',
-    'Order',
-    'Customer',
-    'Product',
-    'Category',
-    'Supplier',
-    'Employee',
-    'Shipper',
-    'Territory',
-    'Region',
-    'CustomerDemographic',
-];
 
 interface CustomMultiSelectProps {
     darkMode: boolean;
+    currentOCPN: ObjectCentricPetriNet;
+    userConfig: OCPNConfig;
 }
 
-const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode }) => {
+const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode, currentOCPN, userConfig}) => {
     const mode = darkMode ? ' dark' : ' light';
+    const VISIBLEOBJECTTYPES = 2;
 
-    const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+    const [selectedObjectTypes, setObjectTypes] = useState(userConfig.includedObjectTypes);
     const [searchTerm, setSearchTerm] = useState('');
     const [isOpen, setIsOpen] = useState(false);
 
+    useEffect(() => {
+        userConfig.includedObjectTypes = selectedObjectTypes;
+    }, [selectedObjectTypes]);
+
     const handleOptionToggle = (option: string) => {
-        setSelectedOptions((prevSelected) =>
+        setObjectTypes((prevSelected) =>
             prevSelected.includes(option)
                 ? prevSelected.filter((item) => item !== option)
                 : [...prevSelected, option]
@@ -35,10 +30,10 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode }) => {
     };
 
     const handleSelectAllToggle = () => {
-        if (selectedOptions.length === defaultOptions.length) {
-            setSelectedOptions([]);
+        if (selectedObjectTypes.length === currentOCPN?.objectTypes.length) {
+            setObjectTypes([]);
         } else {
-            setSelectedOptions(defaultOptions);
+            setObjectTypes(currentOCPN?.objectTypes ?? []);
         }
     };
 
@@ -50,9 +45,13 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode }) => {
         setSearchTerm('');
     };
 
-    const filteredOptions = defaultOptions.filter((option) =>
+    const filteredOptions = (currentOCPN?.objectTypes ?? []).filter((option: string) =>
         option.toLowerCase().includes(searchTerm)
     );
+
+    useEffect(() => {
+        setObjectTypes(currentOCPN?.objectTypes ?? []);
+    }, [currentOCPN]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -73,11 +72,11 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode }) => {
                 <div className={`custom-select-box${mode}`} onClick={() => setIsOpen(!isOpen)}>
                     <input type="text" className={`custom-select-tags-input${mode}`} name="tags" hidden />
                     <div className={`custom-selected-options${mode}`}>
-                        {selectedOptions.length === 0 ? (
+                        {selectedObjectTypes.length === 0 ? (
                             <span className={`placeholder${mode}`}>Select object types</span>
                         ) : (
                             <>
-                                {selectedOptions.slice(0, 3).map((option, index) => (
+                                {selectedObjectTypes.slice(0, VISIBLEOBJECTTYPES).map((option, index) => (
                                     <span key={index} className={`custom-tag${mode}`}>
                                         {option}
                                         <span
@@ -91,8 +90,8 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode }) => {
                                         </span>
                                     </span>
                                 ))}
-                                {selectedOptions.length > 3 && (
-                                    <span className={`custom-tag${mode}`}>+{selectedOptions.length - 3} more</span>
+                                {selectedObjectTypes.length > VISIBLEOBJECTTYPES && (
+                                    <span className={`custom-tag${mode}`}>+{selectedObjectTypes.length - VISIBLEOBJECTTYPES} more</span>
                                 )}
                             </>
                         )}
@@ -117,7 +116,7 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode }) => {
                             </button>
                         </div>
                         <div
-                            className={`custom-option all-tags${mode} ${selectedOptions.length === defaultOptions.length ? 'active' : ''}`}
+                            className={`custom-option all-tags${mode} ${selectedObjectTypes.length === currentOCPN.objectTypes.length ? 'active' : ''}`}
                             onClick={handleSelectAllToggle}
                         >
                             Select all
@@ -125,19 +124,20 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode }) => {
                         {filteredOptions.length === 0 ? (
                             <div className={`custom-select-no-result-message${mode}`}>No matching object types</div>
                         ) : (
-                            filteredOptions.map((option, index) => (
+                            filteredOptions.map((option: string, index: number) => (
                                 <div
                                     key={index}
-                                    className={`custom-option${mode} ${selectedOptions.includes(option) ? 'active' : ''}`}
+                                    className={`custom-option${mode} ${selectedObjectTypes.includes(option) ? 'active' : ''}`}
                                     onClick={() => handleOptionToggle(option)}
                                 >
                                     <input
                                         type="checkbox"
                                         className={`custom-option-checkbox${mode}`}
-                                        checked={selectedOptions.includes(option)} />
+                                        checked={selectedObjectTypes.includes(option)}
+                                        onChange={() => {}} />
                                     <span className={`custom-checkbox-span${mode}`}>
                                         <span className={`custom-checkbox-tick${mode}`}>
-                                        {selectedOptions.includes(option) ? '✔' : ''}
+                                            {selectedObjectTypes.includes(option) ? '✔' : ''}
                                         </span>
                                     </span>
                                     {option}

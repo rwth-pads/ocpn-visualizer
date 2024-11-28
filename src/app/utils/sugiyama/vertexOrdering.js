@@ -32,7 +32,7 @@ function orderVertices(ocpn, config) {
  * Adjusts the initial order of the vertices within the layering according to the user defined object centrality. 
  */
 function adjustLayeringOrderByObjectCentrality(ocpn, config) {
-    console.log("Adjusting layering order by object centrality...");
+    // console.log("Adjusting layering order by object centrality...");
     const objectCentrality = config.objectCentrality;
     // Iterate over the layers of the OCPN.
     for (let i = 0; i < ocpn.layout.layering.length; i++) {
@@ -82,10 +82,10 @@ function upDownBarycenterBilayerSweep(ocpn, config) {
     var sweepCounter = 1;
     while (true) {
         layering = singleUpDownSweep(ocpn, layering, config); // Phase 1
-        console.log("UpDown ", layering);
+        // console.log("UpDown ", layering);
         layering = adjustEqualBarycenters(ocpn, layering) // Phase 2
         var currentScore = computeLayeringScore(ocpn, layering, config);
-        console.log(`Sweep ${sweepCounter} score: ${currentScore}\nLayering:`);
+        // console.log(`Sweep ${sweepCounter} score: ${currentScore}\nLayering:`);
         // console.log(layering);
         // Check if the vertex order has improved.
         if (currentScore < bestScore) {

@@ -22,25 +22,26 @@ async function sugiyama(ocpn, config) {
     if (!(config instanceof OCPNConfig)) {
         return undefined;
     }
+    console.log("Check included object types: ", config.includedObjectTypes);
     ocpn.layout = new OCPNLayout(ocpn);
     // console.log("Sugiyama input: ", ocpn);
     // Cycle Breaking.
-    console.log("\tReversing cycles...");
+    // console.log("\tReversing cycles...");
     reverseCycles(ocpn, config);
     // Layer Assignment.
-    console.log("\tAssigning layers...");
+    // console.log("\tAssigning layers...");
     await assignLayers(ocpn);
     // Dummy Vertex Insertion.
-    console.log("\tInserting dummy vertices...");
+    // console.log("\tInserting dummy vertices...");
     insertDummyVertices(ocpn);
     // Vertex Ordering.
-    console.log("\tOrdering vertices...");
+    // console.log("\tOrdering vertices...");
     orderVertices(ocpn, config);
     // Vertex Positioning.
-    console.log("\tPositioning vertices...");
+    // console.log("\tPositioning vertices...");
     positionVertices(ocpn, config);
     // Route edges.
-    console.log("\tRouting arcs...");
+    // console.log("\tRouting arcs...");
     routeArcs(ocpn);
     // Return the OCPN Layout.
     return ocpn.layout;

@@ -1,3 +1,24 @@
+.apply-sugiyama-button {
+    position: absolute;
+    top: 2.5vh;
+    left: 2vw;
+    width: 30px;
+    height: 30px;
+    border-radius: 30%;
+    color: #fff;
+    background-color: green;
+    transition: left 0.3s ease-in-out, background-color 0.1s ease-in-out;
+    box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, 0.5);
+}
+.apply-sugiyama-button:hover {
+    background-color: rgb(1, 158, 1);
+}
+.apply-sugiyama-button:active {
+    background-color: #276100;
+}
+.apply-sugiyama-button.open {
+    left: 41vw;
+}
 .sidebar {
     position: absolute;
     top: 0;
@@ -16,6 +37,9 @@
     .sidebar {
         width: 100vw;
         left: -100vw;
+    }
+    .apply-sugiyama-button {
+        left: 2vw;
     }
 }
 

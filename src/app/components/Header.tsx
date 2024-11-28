@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 import { SelectChangeEvent } from '@mui/material/Select';
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
+import OCPNConfig from '../utils/classes/OCPNConfig';
 
 const ITEM_HEIGHT = 48;
 

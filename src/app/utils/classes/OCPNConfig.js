@@ -2,7 +2,7 @@
 class OCPNConfig {
 
     constructor(
-        includedObjectTypes = new Set(),
+        includedObjectTypes = [],
         sources = [],
         sinks = [],
         objectCentrality = {},

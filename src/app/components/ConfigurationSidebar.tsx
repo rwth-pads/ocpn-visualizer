@@ -166,10 +166,13 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         <div className={sidebarClass}>
             <ConfigurationCategory title="Object Configurations" darkMode={darkMode} categoryIndex={0}>
                 <div style={{ paddingLeft: '4%' }}>
-                    {(true || currentOCPN !== null) ? (
+                    {(currentOCPN !== null) ? (
                         <>
                             {/* multi select */}
-                            <CustomMultiSelect darkMode={darkMode} />
+                            <CustomMultiSelect 
+                                darkMode={darkMode}
+                                currentOCPN={currentOCPN} 
+                                userConfig={userConfig} />
                             {/* one select for object types + transition, one select which vertex -> highlict hovered vertex */}
                             <div>Sources and sinks</div>
                             <div>Indicate sources, sinks with custom styling checkbox</div>
