@@ -9,9 +9,11 @@ interface CustomMultiSelectProps {
     userConfig: OCPNConfig;
 }
 
-const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode, currentOCPN, userConfig}) => {
+const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode, currentOCPN, userConfig }) => {
     const mode = darkMode ? ' dark' : ' light';
     const VISIBLEOBJECTTYPES = 2;
+    const MIN_FOR_SEARCH = 2;
+    const searchNeeded = currentOCPN.objectTypes.length > MIN_FOR_SEARCH;
 
     const [selectedObjectTypes, setObjectTypes] = useState(userConfig.includedObjectTypes);
     const [searchTerm, setSearchTerm] = useState('');
@@ -102,19 +104,21 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode, current
                 </div>
                 {isOpen && (
                     <div className={`custom-select-options${mode}`}>
-                        <div className={`custom-option-search-tags${mode}`}>
-                            <input
-                                type="text"
-                                className={`custom-search-tags${mode}`}
-                                placeholder="Search object types..."
-                                value={searchTerm}
-                                spellCheck={false}
-                                onChange={handleSearchChange}
-                            />
-                            <button type="button" className={`custom-clear-search-tags${mode}`} onClick={handleClearSearch}>
-                                <span className={`custom-clear-search-tags-cross${mode}`}>&times;</span>
-                            </button>
-                        </div>
+                        {searchNeeded && (
+                            <div className={`custom-option-search-tags${mode}`}>
+                                <input
+                                    type="text"
+                                    className={`custom-search-tags${mode}`}
+                                    placeholder="Search object types..."
+                                    value={searchTerm}
+                                    spellCheck={false}
+                                    onChange={handleSearchChange}
+                                />
+                                <button type="button" className={`custom-clear-search-tags${mode}`} onClick={handleClearSearch}>
+                                    <span className={`custom-clear-search-tags-cross${mode}`}>&times;</span>
+                                </button>
+                            </div>
+                        )}
                         <div
                             className={`custom-option all-tags${mode} ${selectedObjectTypes.length === currentOCPN.objectTypes.length ? 'active' : ''}`}
                             onClick={handleSelectAllToggle}
@@ -134,7 +138,7 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode, current
                                         type="checkbox"
                                         className={`custom-option-checkbox${mode}`}
                                         checked={selectedObjectTypes.includes(option)}
-                                        onChange={() => {}} />
+                                        onChange={() => { }} />
                                     <span className={`custom-checkbox-span${mode}`}>
                                         <span className={`custom-checkbox-tick${mode}`}>
                                             {selectedObjectTypes.includes(option) ? '✔' : ''}

@@ -138,7 +138,7 @@ const Home = () => {
                         userConfig={userConfig}
                         darkMode={darkMode} />
 
-                    <button
+                    <button // Todo make this a component and use useEffect on userConfig to set visibility.
                         className={`apply-sugiyama-button${darkMode ? ' dark' : ' light'}${menuOpen ? ' open' : ''}`}
                         onClick={() => {console.log("Apply Sugiyama", userConfig.includedObjectTypes)}}
                         >⯈</button>
