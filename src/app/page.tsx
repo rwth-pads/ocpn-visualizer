@@ -11,9 +11,12 @@ import ImportDialog from './components/ImportDialog';
 import ConfigurationSidebar from './components/ConfigurationSidebar';
 import ObjectCentricPetriNet from './utils/classes/ObjectCentricPetriNet';
 import OCPNConfig from './utils/classes/OCPNConfig';
-import ApplaySugiyamaButton from './components/ApplySugiyamaButton';
+import ApplySugiyamaButton from './components/ApplySugiyamaButton';
+import { visualizeOCPN } from './utils/lib/visualizationUtils';
+import * as d3 from 'd3';
 
 import './components/ConfigurationSidebar.css';
+import sugiyama from './utils/sugiyama/sugiyama';
 
 const Home = () => {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -25,20 +28,22 @@ const Home = () => {
     const [selectedOCPN, setSelectedOCPN] = useState<number | null>(null);
     const [userConfig, setUserConfig] = useState<OCPNConfig>(new OCPNConfig());
     const [changed, setChanged] = useState(false);
+    const [isImporting, setIsImporting] = useState(false);
 
-    const svgRef = useRef<SVGSVGElement>(null!); // Initialize as not null
+    const svgRef = useRef<SVGSVGElement | null>(null);
     const previousOCPNRef = useRef<ObjectCentricPetriNet | null>(null);
 
-    
+
 
     useEffect(() => {
         setDarkMode(prefersDarkMode);
     }, [prefersDarkMode]);
 
-    // Only for debugging purposes.
     useEffect(() => {
-        console.log(userConfig.includedObjectTypes);
-    }, [userConfig.includedObjectTypes]);
+        if (selectedOCPN !== null) {
+            applyConfigChanges();
+        }
+    }, [selectedOCPN]);
 
     const handleToggleDarkMode = () => {
         setDarkMode(!darkMode);
@@ -58,14 +63,43 @@ const Home = () => {
     };
 
     const applyConfigChanges = () => {
-        console.log("Apply Sugiyama", userConfig.includedObjectTypes);
-        // rerun visualization with new config
-        
+        console.log("Applying Config Changes");
+        handleVisualizationUpdate(null);
         setChanged(false);
+    }
+
+    const handleVisualizationUpdate = async (ocpn: ObjectCentricPetriNet | null) => {
+        let thisOCPN = null;
+        console.log("SVG Ref: ", svgRef.current);
+        if (selectedOCPN !== null) {
+            thisOCPN = importedObjects[selectedOCPN];
+        } else {
+            thisOCPN = ocpn;
+        }
+        if (thisOCPN) {
+            d3.select(svgRef.current).selectAll('*').remove();
+            const ocpnLayout = await sugiyama(thisOCPN, userConfig);
+            console.log("OCPN Layout: ", ocpnLayout);
+            if (!ocpnLayout) {
+                return;
+            }
+            if (svgRef.current) {
+                console.log("SVG exists");
+                visualizeOCPN(ocpnLayout, userConfig, svgRef.current);
+            } else {
+                console.log("SVG does not exist");
+            }
+            previousOCPNRef.current = thisOCPN;
+        } else {
+            console.log("No OCPN to visualize");
+        }
     }
 
     // TODO: allow for importing multiple OCPNs. Currently only supports importing one OCPN at a time
     const handleFileImport = async (file: File) => {
+        if (isImporting) return;
+        setIsImporting(true);
+
         const reader = new FileReader();
         reader.onload = async (e: ProgressEvent<FileReader>) => {
             const content = e.target?.result;
@@ -82,20 +116,22 @@ const Home = () => {
                     } else {
                         setImportedObjects(prev => {
                             const newImportedObjects = [...prev, ocpn];
-                            setSelectedOCPN(newImportedObjects.length - 1); // Set the newly imported OCPN as selected
+                            setSelectedOCPN(newImportedObjects.length - 1);
                             let currentConfig = userConfig;
                             currentConfig.includedObjectTypes = Array.from(ocpn.objectTypes);
                             setUserConfig(currentConfig);
-                            // console.log(userConfig.includedObjectTypes);
+                            console.log(currentConfig);
+                            handleImportClose();
                             return newImportedObjects;
                         });
-                        handleImportClose();
                     }
                 } else {
                     setImportError(`Unsupported file type: ${file.name}`);
                 }
             } catch (error) {
                 setImportError(`Error importing file: ${error}`);
+            } finally {
+                setIsImporting(false);
             }
         }
         reader.readAsText(file);
@@ -152,7 +188,7 @@ const Home = () => {
                         userConfig={userConfig}
                         setChange={setChanged}
                         darkMode={darkMode} />
-                    <ApplaySugiyamaButton
+                    <ApplySugiyamaButton
                         darkMode={darkMode}
                         menuOpen={menuOpen}
                         userConfig={userConfig}
@@ -162,8 +198,7 @@ const Home = () => {
                         selectedOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
                         userConfig={userConfig}
                         darkMode={darkMode}
-                        svgRef={svgRef}
-                        previousOCPNRef={previousOCPNRef} />
+                        svgRef={svgRef} />
                 </Box>
             </Box>
             <ImportDialog

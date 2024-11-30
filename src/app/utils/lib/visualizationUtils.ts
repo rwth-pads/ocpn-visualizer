@@ -2,11 +2,10 @@ import * as d3 from 'd3';
 import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 import OCPNLayout from '../classes/OCPNLayout';
 import OCPNConfig from '../classes/OCPNConfig';
-import sugiyama from '../sugiyama/sugiyama.js';
 
 const COLORS_ARRAY = ['#99cefd', '#f5a800', '#002e57', 'red', 'green', 'purple', 'orange', 'yellow', 'pink', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'navy', 'olive', 'silver', 'aqua', 'fuchsia', 'gray', 'black'];
 
-export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgRef: SVGSVGElement) {
+export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgRef: SVGSVGElement | null) {
     // Create objectType -> color mapping
     const objectTypeColorMap: Map<string, string> = new Map();
     let colorIndex = 0;
@@ -108,6 +107,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
     // Apply transformations
     g.attr('transform', `translate(${translateX}, ${translateY}) scale(${scale})`);
     // TODO: d3 zoom and pan.
+    return svg;
 }
 
 function getArcPath(arcId: string, layout: OCPNLayout, config: OCPNConfig): string {
