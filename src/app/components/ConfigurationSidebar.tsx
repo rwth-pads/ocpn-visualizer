@@ -170,6 +170,22 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         handleConfigChange(attribute, value, true);
     };
 
+    const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const objectType = e.target.value;
+        const color = userConfig.typeColorMapping.get(objectType) || '#000000';
+        setCurrentTypeKey(objectType);
+        setCurrentTypeColor(color);
+    }
+
+    const handleColorMappingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const color = e.target.value;
+        setCurrentTypeColor(color);
+        userConfig.typeColorMapping.set(currentTypeKey, color);
+        setChange(true);
+    }
+    console.log("Sidebar Init, ", userConfig);
+    const [currentTypeKey, setCurrentTypeKey] = useState(userConfig.includedObjectTypes[0]);
+    const [currentTypeColor, setCurrentTypeColor] = useState(userConfig.typeColorMapping.get(currentTypeKey));
     return (
         <div className={sidebarClass}>
             <ConfigurationCategory title="Object Configurations" darkMode={darkMode} categoryIndex={0}>
@@ -196,8 +212,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             <ConfigOption label="Type to color mapping" darkMode={darkMode}>
                                 <select
                                     className={`custom-configuration-select${darkMode ? ' dark' : ' light'}`}
-                                    value={''}
-                                    onChange={() => { }}
+                                    value={currentTypeKey ?? userConfig.includedObjectTypes[0]}
+                                    onChange={handleTypeChange}
                                 >
                                     {currentOCPN.objectTypes.map((objectType: string) => (
                                         <option key={objectType} value={objectType}>{objectType}</option>
@@ -206,8 +222,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                                 <input
                                     type='color'
                                     className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
-                                    value='#000000'
-                                    onChange={() => { }}
+                                    value={currentTypeColor ?? userConfig.typeColorMapping.get(userConfig.includedObjectTypes[0])}
+                                    onChange={handleColorMappingChange}
                                 />
                             </ConfigOption>
                         </>

@@ -18,6 +18,8 @@ import * as d3 from 'd3';
 import './components/ConfigurationSidebar.css';
 import sugiyama from './utils/sugiyama/sugiyama';
 
+const COLORS_ARRAY = ['#99cefd', '#f5a800', '#002e57', 'red', 'green', 'purple', 'orange', 'yellow', 'pink', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'navy', 'olive', 'silver', 'aqua', 'fuchsia', 'gray', 'black'];
+
 const Home = () => {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const [darkMode, setDarkMode] = useState(prefersDarkMode);
@@ -70,14 +72,12 @@ const Home = () => {
 
     const handleVisualizationUpdate = async (ocpn: ObjectCentricPetriNet | null) => {
         let thisOCPN = null;
-        console.log("SVG Ref: ", svgRef.current);
         if (selectedOCPN !== null) {
             thisOCPN = importedObjects[selectedOCPN];
         } else {
             thisOCPN = ocpn;
         }
         if (thisOCPN) {
-            d3.select(svgRef.current).selectAll('*').remove();
             const ocpnLayout = await sugiyama(thisOCPN, userConfig);
             console.log("OCPN Layout: ", ocpnLayout);
             if (!ocpnLayout) {
@@ -85,6 +85,7 @@ const Home = () => {
             }
             if (svgRef.current) {
                 console.log("SVG exists");
+                d3.select(svgRef.current).selectAll('*').remove();
                 visualizeOCPN(ocpnLayout, userConfig, svgRef.current);
             } else {
                 console.log("SVG does not exist");
@@ -119,6 +120,11 @@ const Home = () => {
                             setSelectedOCPN(newImportedObjects.length - 1);
                             let currentConfig = userConfig;
                             currentConfig.includedObjectTypes = Array.from(ocpn.objectTypes);
+                            currentConfig.typeColorMapping = new Map<string, string>();
+                            // console.log("Color Mapping, ", currentConfig.typeColorMapping);
+                            currentConfig.includedObjectTypes.forEach((ot, index) => {
+                                currentConfig.typeColorMapping.set(ot, COLORS_ARRAY[index % COLORS_ARRAY.length]);
+                            });
                             setUserConfig(currentConfig);
                             console.log(currentConfig);
                             handleImportClose();

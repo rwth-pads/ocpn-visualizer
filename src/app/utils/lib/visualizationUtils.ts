@@ -6,13 +6,6 @@ import OCPNConfig from '../classes/OCPNConfig';
 const COLORS_ARRAY = ['#99cefd', '#f5a800', '#002e57', 'red', 'green', 'purple', 'orange', 'yellow', 'pink', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'navy', 'olive', 'silver', 'aqua', 'fuchsia', 'gray', 'black'];
 
 export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgRef: SVGSVGElement | null) {
-    // Create objectType -> color mapping
-    const objectTypeColorMap: Map<string, string> = new Map();
-    let colorIndex = 0;
-    for (const objectType of layout.objectTypes) {
-        objectTypeColorMap.set(objectType, COLORS_ARRAY[colorIndex]);
-        colorIndex = (colorIndex + 1) % COLORS_ARRAY.length;
-    }
 
     const svg = d3.select(svgRef);
     const g = svg.append('g');
@@ -37,7 +30,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
         // console.log(`Target: ${layout.vertices[arc.target].x}, ${layout.vertices[arc.target].y}`);
         // console.log("\t", path);
         var ot = arc.objectType;
-        var color = objectTypeColorMap.get(ot) || config.arcDefaultColor;
+        var color = config.typeColorMapping.get(ot) || config.arcDefaultColor;
         g.append('path')
             .attr('d', path)
             .attr('stroke', color)
@@ -54,7 +47,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
         if (vertex.type === OCPNLayout.PLACE_TYPE) {
             // TODO: if checkbox 'indicate sources and sinks' is checked, then add a source/sink indicator
             // otherwise, just draw a circle with fill color.
-            const fill = objectTypeColorMap.get(vertex.objectType) || config.defaultPlaceColor;
+            const fill = config.typeColorMapping.get(vertex.objectType) || config.defaultPlaceColor;
             g.append('circle')
                 .attr('cx', vertex.x)
                 .attr('cy', vertex.y)

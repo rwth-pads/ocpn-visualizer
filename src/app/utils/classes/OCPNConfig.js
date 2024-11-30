@@ -21,7 +21,7 @@ class OCPNConfig {
         vertexSep = 5, // For now bigger than any other size declaration to avoid overlapping. TODO
         borderPaddingX = 10,
         borderPaddingY = 10,
-        typeColorMapping = {},
+        typeColorMapping = new Map(),
         defaultPlaceColor = "#000000",
         transitionColor = "#000000",
         transitionFillColor = "#ffffff",
