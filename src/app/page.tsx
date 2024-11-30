@@ -11,6 +11,7 @@ import ImportDialog from './components/ImportDialog';
 import ConfigurationSidebar from './components/ConfigurationSidebar';
 import ObjectCentricPetriNet from './utils/classes/ObjectCentricPetriNet';
 import OCPNConfig from './utils/classes/OCPNConfig';
+import ApplaySugiyamaButton from './components/ApplySugiyamaButton';
 
 import './components/ConfigurationSidebar.css';
 
@@ -23,6 +24,7 @@ const Home = () => {
     const [importError, setImportError] = useState<string | null>(null);
     const [selectedOCPN, setSelectedOCPN] = useState<number | null>(null);
     const [userConfig, setUserConfig] = useState<OCPNConfig>(new OCPNConfig());
+    const [changed, setChanged] = useState(false);
 
     useEffect(() => {
         setDarkMode(prefersDarkMode);
@@ -49,6 +51,12 @@ const Home = () => {
         setImportDialogOpen(false);
         setImportError(null);
     };
+
+    const applyConfigChanges = () => {
+        console.log("Apply Sugiyama", userConfig.includedObjectTypes);
+        // rerun visualization with new config
+        setChanged(false);
+    }
 
     // TODO: allow for importing multiple OCPNs. Currently only supports importing one OCPN at a time
     const handleFileImport = async (file: File) => {
@@ -136,12 +144,14 @@ const Home = () => {
                         isOpen={menuOpen}
                         currentOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
                         userConfig={userConfig}
+                        setChange={setChanged}
                         darkMode={darkMode} />
-
-                    <button // Todo make this a component and use useEffect on userConfig to set visibility.
-                        className={`apply-sugiyama-button${darkMode ? ' dark' : ' light'}${menuOpen ? ' open' : ''}`}
-                        onClick={() => {console.log("Apply Sugiyama", userConfig.includedObjectTypes)}}
-                        >⯈</button>
+                    <ApplaySugiyamaButton
+                        darkMode={darkMode}
+                        menuOpen={menuOpen}
+                        userConfig={userConfig}
+                        changed={changed}
+                        onClick={applyConfigChanges} />
                     <VisualizationArea
                         selectedOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
                         userConfig={userConfig}

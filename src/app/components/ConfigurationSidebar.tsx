@@ -10,10 +10,11 @@ interface ConfigurationSidebarProps {
     isOpen: boolean;
     currentOCPN: ObjectCentricPetriNet | null;
     userConfig: OCPNConfig;
+    setChange: (change: boolean) => void;
     darkMode: boolean;
 }
 
-const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, currentOCPN, userConfig, darkMode }) => {
+const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, currentOCPN, userConfig, setChange, darkMode }) => {
     const mode = darkMode ? 'dark' : 'light';
     const sidebarClass = isOpen ? "sidebar open " + mode : "sidebar " + mode;
 
@@ -139,6 +140,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         }
         if (change) {
             setUserConfig(value, attribute);
+            setChange(true);
         }
     };
 
