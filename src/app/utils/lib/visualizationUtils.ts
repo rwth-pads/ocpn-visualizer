@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
+// import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 import OCPNLayout from '../classes/OCPNLayout';
 import OCPNConfig from '../classes/OCPNConfig';
 

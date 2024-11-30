@@ -1,0 +1,30 @@
+.config-option-container {
+    display: flex;
+    align-items: center; /* Vertically center the items */
+    justify-content: flex-start; /* Align items to the left */
+    min-width: fit-content;
+    /* border: solid 1px black; */
+    width: 100%;
+}
+
+.config-option-container {
+    margin-top: 3%;
+}
+
+.config-option-label {
+    word-wrap: break-word;
+    flex: 1;
+    width: 40%;
+}
+
+.config-option-content {
+    margin-left: 2%;
+    width: 60%;
+}
+/* Custom Number input */
+.custom-number-input {
+
+}
+
+.custom-number-input.dark {}
+.custom-number-input.light {}

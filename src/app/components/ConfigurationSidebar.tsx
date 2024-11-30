@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ConfigurationCategory from './ConfigurationCategory';
 import CustomMultiSelect from './CustomMultiSelect';
+import ConfigOption from './ConfigOption';
 import './ConfigurationSidebar.css';
 
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
@@ -23,6 +24,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
     const [objectAttraction, setObjectAttraction] = useState(userConfig.objectAttraction ?? 0.1);
     const [objectAttractionRangeMin, setObjectAttractionRangeMin] = useState(userConfig.objectAttractionRangeMin ?? 1);
     const [objectAttractionRangeMax, setObjectAttractionRangeMax] = useState(userConfig.objectAttractionRangeMax ?? 2);
+    const maxLayers = 4; // TODO: get length of layering.
     const [maxBarycenterIterations, setMaxBarycenterIterations] = useState(userConfig.maxBarycenterIterations ?? 4);
     const [combineArcs, setCombineArcs] = useState(userConfig.combineArcs ?? false);
     const [placeRadius, setPlaceRadius] = useState(userConfig.placeRadius ?? 5);
@@ -145,7 +147,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         if (change) {
             setUserConfig(value, attribute);
         }
-        setChange(true);
+        setChange(currentOCPN !== null);
     };
 
     const handleInputChange = (attribute: keyof OCPNConfig, change = false) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -180,28 +182,19 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                                 currentOCPN={currentOCPN}
                                 userConfig={userConfig} />
                             {/* one select for object types + transition, one select which vertex -> highlict hovered vertex */}
-                            <div>Sources and sinks
-                                &#8634;</div>
-                            <div>
-                                <label
-                                    className={`custom-configuration-label`}
-                                    htmlFor='indicate-sources-sinks'
-                                >Indicate sources and sinks</label>
+                            <ConfigOption label="Sources and sinks" darkMode={darkMode}>
+                                TODO &#8634;
+                            </ConfigOption>
+                            <ConfigOption label="Indicate sources and sinks" darkMode={darkMode}>
                                 <input
                                     type='checkbox'
                                     className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
                                     checked={indicateSourcesSinks}
                                     onChange={handleInputChange('indicateSourcesSinks', true)}
                                 />
-                            </div>
-                            {/* TODO: based on object types of ocpn */}
-                            <div>
-                                <label
-                                    className={`custom-configuration-label`}
-                                    htmlFor='type-color-mapping'
-                                >Type to color mapping</label>
+                            </ConfigOption>
+                            <ConfigOption label="Type to color mapping" darkMode={darkMode}>
                                 <select
-                                    id="type-color-mapping"
                                     className={`custom-configuration-select${darkMode ? ' dark' : ' light'}`}
                                     value={''}
                                     onChange={() => { }}
@@ -215,8 +208,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                                     className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
                                     value='#000000'
                                     onChange={() => { }}
-                                    />
-                            </div>
+                                />
+                            </ConfigOption>
                         </>
                     ) : (
                         <div style={{ padding: '3%' }}>
@@ -226,13 +219,11 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                         </div>
                     )}
                 </div>
-            </ConfigurationCategory>
+            </ConfigurationCategory >
             <ConfigurationCategory title="Sugiyama Configurations" darkMode={darkMode} categoryIndex={1}>
                 <div style={{ paddingLeft: '4%' }}>
-                    <div style={{ padding: '3% 0' }}>
-                        <label className='custom-configuration-label' htmlFor='flow-direction'>Flow Direction</label>
+                    <ConfigOption label="Flow direction" darkMode={darkMode}>
                         <select
-                            id="flow-direction"
                             className={`custom-configuration-select${darkMode ? ' dark' : ' light'}`}
                             value={flowDirection}
                             onChange={handleInputChange('direction', true)}
@@ -240,11 +231,11 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             <option value="TB">Top to Bottom</option>
                             <option value="LR">Left to Right</option>
                         </select>
-                    </div>
-                    {/* TODO: Not urgent */}
-                    <div>objectCentrality: TODO</div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='object-attraction'>Object Attraction</label>
+                    </ConfigOption>
+                    <ConfigOption label="Object centrality" darkMode={darkMode}>
+                        TODO &#8634;
+                    </ConfigOption>
+                    <ConfigOption label="Object attraction" darkMode={darkMode}>
                         <input
                             type='range'
                             className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
@@ -255,56 +246,51 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleInputChange('objectAttraction')}
                             onMouseUp={handleMouseUp('objectAttraction')}
                         />
-                    </div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='range-min'>Object Attraction Range Start</label>
+                    </ConfigOption>
+                    <ConfigOption label="Object attraction range start" darkMode={darkMode}>
                         <input
                             type='number'
-                            className={`custom-configuration-input${darkMode ? ' dark' : ' light'}`}
+                            className={`custom-number-input${darkMode ? ' dark' : ' light'}`}
                             min={1}
                             max={objectAttractionRangeMax}
                             value={objectAttractionRangeMin}
                             onChange={handleInputChange('objectAttractionRangeMin', true)}
                         />
-                    </div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='range-max'>Object Attraction Range End</label>
+                    </ConfigOption>
+                    <ConfigOption label="Object attraction range end" darkMode={darkMode}>
                         <input
                             type='number'
-                            className={`custom-configuration-input${darkMode ? ' dark' : ' light'}`}
+                            className={`custom-number-input${darkMode ? ' dark' : ' light'}`}
                             min={objectAttractionRangeMin}
-                            max={4} // TODO: get the number of layers from the OCPNLayout depending on the Petri Net.
+                            max={maxLayers} // TODO check correctness
                             value={objectAttractionRangeMax}
                             onChange={handleInputChange('objectAttractionRangeMax', true)}
                         />
-                    </div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='max-barycenter-iterations'>Max Barycenter Iterations</label>
+                    </ConfigOption>
+                    <ConfigOption label="Max barycenter iterations" darkMode={darkMode}>
                         <input
                             type='number'
-                            className={`custom-configuration-input${darkMode ? ' dark' : ' light'}`}
+                            className={`custom-number-input${darkMode ? ' dark' : ' light'}`}
                             min={4}
                             max={100} // TODO: check what fits
                             value={maxBarycenterIterations}
                             onChange={handleInputChange('maxBarycenterIterations', true)}
                         />
-                    </div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='combine-arcs'>Combine Long Arcs</label>
+                    </ConfigOption>
+                    <ConfigOption label="Combine long arcs" darkMode={darkMode}>
                         <input
                             type='checkbox'
                             className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
                             checked={combineArcs}
                             onChange={handleInputChange('combineArcs', true)}
                         />
-                    </div>
+                    </ConfigOption>
                 </div>
-            </ConfigurationCategory>
+            </ConfigurationCategory >
             <ConfigurationCategory title="Styling Configurations" darkMode={darkMode} categoryIndex={2}>
                 {/* Add subheadings: sizing, colors */}
                 <div style={{ paddingLeft: '4%' }}>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='place-radius'>Place radius</label>
+                    <ConfigOption label="Place radius" darkMode={darkMode}>
                         <input
                             type='range'
                             className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
@@ -315,18 +301,16 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleInputChange('placeRadius')}
                             onMouseUp={handleMouseUp('placeRadius')}
                         />
-                    </div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='transition-custom-width'>Use custom transition width</label>
+                    </ConfigOption>
+                    <ConfigOption label="Custom transition width" darkMode={darkMode}>
                         <input
                             type='checkbox'
                             className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
                             checked={transitionCustomWidth}
                             onChange={handleInputChange('transitionCustomWidth', true)}
                         />
-                    </div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='transition-width'>Transition Width</label>
+                    </ConfigOption>
+                    <ConfigOption label="Transition width" darkMode={darkMode}>
                         <input
                             type='range'
                             className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
@@ -338,9 +322,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onMouseUp={handleMouseUp('transitionWidth')}
                             disabled={transitionCustomWidth}
                         />
-                    </div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='transition-height'>Transition Height</label>
+                    </ConfigOption>
+                    <ConfigOption label="Transition height" darkMode={darkMode}>
                         <input
                             type='range'
                             className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
@@ -351,9 +334,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleInputChange('transitionHeight')}
                             onMouseUp={handleMouseUp('transitionHeight')}
                         />
-                    </div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='dummy-size'>Dummy Size</label>
+                    </ConfigOption>
+                    <ConfigOption label="Dummy size" darkMode={darkMode}>
                         <input
                             type='range'
                             className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
@@ -364,9 +346,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleInputChange('dummySize')}
                             onMouseUp={handleMouseUp('dummySize')}
                         />
-                    </div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='layer-sep'>Layer Separation</label>
+                    </ConfigOption>
+                    <ConfigOption label="Layer separation" darkMode={darkMode}>
                         <input
                             type='range'
                             className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
@@ -377,9 +358,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleInputChange('layerSep')}
                             onMouseUp={handleMouseUp('layerSep')}
                         />
-                    </div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='vertex-sep'>Vertex Separation</label>
+                    </ConfigOption>
+                    <ConfigOption label="Vertex separation" darkMode={darkMode}>
                         <input
                             type='range'
                             className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
@@ -390,9 +370,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleInputChange('vertexSep')}
                             onMouseUp={handleMouseUp('vertexSep')}
                         />
-                    </div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='default-place-color'>Default place color</label>
+                    </ConfigOption>
+                    <ConfigOption label="Default place color" darkMode={darkMode}>
                         <input
                             type='color'
                             className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
@@ -400,12 +379,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleColorChange('defaultPlaceColor')}
                             onBlur={handleColorBlur('defaultPlaceColor')}
                         />
-                    </div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor=''>checkbox fill places? - color fill - border radius</label>
-                    </div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='transition-color'>Transition color</label>
+                    </ConfigOption>
+                    <ConfigOption label="Transition color" darkMode={darkMode}>
                         <input
                             type='color'
                             className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
@@ -413,9 +388,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleInputChange('transitionColor')}
                             onBlur={handleColorBlur('transitionColor')}
                         />
-                    </div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='transition-fill-color'>Transition fill color</label>
+                    </ConfigOption>
+                    <ConfigOption label="Transition fill color" darkMode={darkMode}>
                         <input
                             type='color'
                             className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
@@ -423,9 +397,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleColorChange('transitionFillColor')}
                             onBlur={handleColorBlur('transitionFillColor')}
                         />
-                    </div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='transition-border-size'>Transition border size</label>
+                    </ConfigOption>
+                    <ConfigOption label="Transition border size" darkMode={darkMode}>
                         <input
                             type='range'
                             className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
@@ -436,19 +409,16 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleInputChange('transitionBorderSize')}
                             onMouseUp={handleMouseUp('transitionBorderSize')}
                         />
-                    </div>
-                    {/* checkbox, slider, slider, color picker */}
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='indicate-arc-weight'>Indicate arc weight</label>
+                    </ConfigOption>
+                    <ConfigOption label="Indicate arc weight" darkMode={darkMode}>
                         <input
                             type='checkbox'
                             className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
                             checked={indicateArcWeight}
                             onChange={handleInputChange('indicateArcWeight', true)}
                         />
-                    </div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='arc-size'>Arc size</label>
+                    </ConfigOption>
+                    <ConfigOption label="Arc size" darkMode={darkMode}>
                         <input
                             type='range'
                             className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
@@ -459,9 +429,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleInputChange('arcSize')}
                             onMouseUp={handleMouseUp('arcSize')}
                         />
-                    </div>
-                    <div>
-                        <label className='custom-configuration-label' htmlFor='arrow-head-size'>Arrow head size</label>
+                    </ConfigOption>
+                    <ConfigOption label="Arrow head size" darkMode={darkMode}>
                         <input
                             type='range'
                             className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
@@ -472,9 +441,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleInputChange('arrowHeadSize')}
                             onMouseUp={handleMouseUp('arrowHeadSize')}
                         />
-                    </div>
-                    <div> {/* TODO: only show when OCPN imported and ocpn.objectTypes empty. */}
-                        <label className='custom-configuration-label' htmlFor='arc-default-color'>Arc default color</label>
+                    </ConfigOption>
+                    <ConfigOption label="Arc default color" darkMode={darkMode}>
                         <input
                             type='color'
                             className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
@@ -482,12 +450,13 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleColorChange('arcDefaultColor')}
                             onBlur={handleColorBlur('arcDefaultColor')}
                         />
-                    </div>
+                    </ConfigOption>
                 </div>
             </ConfigurationCategory>
             <ConfigurationCategory title="History" darkMode={darkMode} categoryIndex={3}>
                 <div style={{ paddingLeft: '4%' }}>
                     <div>
+                        {/* TODO style this. */}
                         <button onClick={clearHistory}>Clear History</button>
                         {configHistory.map((logEntry, index) => (
                             <div key={index} style={{ color: index === currentHistoryIndex ? 'red' : 'inherit' }}>
@@ -497,7 +466,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     </div>
                 </div>
             </ConfigurationCategory>
-        </div>
+        </div >
     );
 }
 

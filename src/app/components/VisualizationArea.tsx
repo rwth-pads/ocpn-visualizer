@@ -18,6 +18,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                 width: '100vw',
                 bgcolor: darkMode ? '#ffffff' : '#ffffff',
                 overflow: 'hidden',
+                userSelect: 'none',
             }}>
             <Box
                 sx={{

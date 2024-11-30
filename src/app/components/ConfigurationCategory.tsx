@@ -15,23 +15,12 @@ const ConfigurationCategory: React.FC<ConfigurationCategoryProps> = ({ title, da
         setCategoryOpen(!categoryOpen);
     }
 
-    useEffect(() => {
-        const categoryContent = categoryContentRef.current;
-        if (categoryContent) {
-            if (categoryOpen) {
-                categoryContent.style.maxHeight = categoryContent.scrollHeight + 'px';
-            } else {
-                categoryContent.style.maxHeight = '';
-            }
-        }
-    }, [categoryOpen, children]);
-
     const mode = darkMode ? ' dark' : ' light';
     const notFirstCategory = categoryIndex > 0 ? ' not-first' : '';
     const categoryClass = categoryOpen ? `sidebar-category open${mode}${notFirstCategory}` :
         `sidebar-category${mode}${notFirstCategory}`;
     const categoryTitleClass = `sidebar-category-title${mode}`;
-    const toggleIndicator = categoryOpen ? '-' : '+';
+    const toggleIndicator = categoryOpen ? '⯅' : '⯆';
     const categoryContentClass = categoryOpen ? `sidebar-category-content open${mode}` : `sidebar-category-content${mode}`;
 
     return (

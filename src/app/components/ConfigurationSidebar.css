@@ -3,6 +3,7 @@
     top: 0;
     left: -40vw;
     width: 40vw;
+    min-width: fit-content;
     height: 100%;
     transition: left 0.3s ease-in-out;
     z-index: 1;
@@ -99,6 +100,7 @@
 
 .sidebar-category-content.open {
     overflow: visible;
+    max-height: fit-content;
 }
 
 .sidebar-category-content.dark {}
