@@ -52,13 +52,43 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
     for (const vertexId in layout.vertices) {
         const vertex = layout.vertices[vertexId];
         if (vertex.type === OCPNLayout.PLACE_TYPE) {
+            // TODO: if checkbox 'indicate sources and sinks' is checked, then add a source/sink indicator
+            // otherwise, just draw a circle with fill color.
+            const fill = objectTypeColorMap.get(vertex.objectType) || config.defaultPlaceColor;
             g.append('circle')
                 .attr('cx', vertex.x)
                 .attr('cy', vertex.y)
                 .attr('r', config.placeRadius) // TODO: user defined radius
                 .attr('id', vertexId)
                 .attr('class', 'ocpnplace')
-                .attr('fill', objectTypeColorMap.get(vertex.objectType) || config.defaultPlaceColor);
+                .attr('fill', fill);
+            if (vertex.source && config.indicateSourcesSinks) {
+                g.append('text')
+                    .attr('x', vertex.x)
+                    .attr('y', vertex.y)
+                    .attr('text-anchor', 'middle')
+                    .attr('alignment-baseline', 'middle')
+                    .attr('font-size', config.placeRadius) // Adjust font size as needed
+                    .attr('fill', 'black')
+                    .text('⯈');
+            } else if (vertex.sink && config.indicateSourcesSinks) {
+                g.append('text')
+                    .attr('x', vertex.x)
+                    .attr('y', vertex.y)
+                    .attr('text-anchor', 'middle')
+                    .attr('alignment-baseline', 'middle')
+                    .attr('font-size', config.placeRadius) // Adjust font size as needed
+                    .attr('fill', 'black')
+                    .text('■');
+            } else if (config.indicateSourcesSinks) {
+                g.append('circle')
+                    .attr('cx', vertex.x)
+                    .attr('cy', vertex.y)
+                    .attr('r', config.placeRadius - 0.5) // config.placeBorderSize) // TODO: user defined radius
+                    .attr('id', vertexId)
+                    .attr('class', 'ocpnplace')
+                    .attr('fill', 'white');
+            }
 
             // g.append('text')
             //     .attr('x', vertex.x)

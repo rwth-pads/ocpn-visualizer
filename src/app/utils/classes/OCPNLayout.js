@@ -19,6 +19,8 @@ class OCPNLayout {
                 y: undefined,
                 layer: -1,
                 pos: -1,
+                source: place.initial,
+                sink: place.final,
                 type: OCPNLayout.PLACE_TYPE
             };
         });

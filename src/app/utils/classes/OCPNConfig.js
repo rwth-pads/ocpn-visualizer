@@ -5,6 +5,7 @@ class OCPNConfig {
         includedObjectTypes = [],
         sources = [],
         sinks = [],
+        indicateSourcesSinks = true,
         objectCentrality = {},
         maxBarycenterIterations = 4,
         objectAttraction = 0.1,
@@ -35,6 +36,7 @@ class OCPNConfig {
         // Cycle Breaking
         this.sources = sources; // The ids of user selected sources.
         this.sinks = sinks; // The ids of user selected sinks.
+        this.indicateSourcesSinks = indicateSourcesSinks;
         // Vertex Ordering
         this.objectCentrality = objectCentrality; // Let the user define an initial ordering of the vertices in the layers.
         this.maxBarycenterIterations = maxBarycenterIterations;

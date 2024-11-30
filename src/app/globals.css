@@ -31,6 +31,8 @@ body {
     height: 100vh;
 }
 
+
+
 .ocpnplace:hover {
     cursor: pointer;
     opacity: 0.5;

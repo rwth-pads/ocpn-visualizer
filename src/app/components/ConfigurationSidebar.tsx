@@ -18,6 +18,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
     const mode = darkMode ? 'dark' : 'light';
     const sidebarClass = isOpen ? "sidebar open " + mode : "sidebar " + mode;
 
+    const [indicateSourcesSinks, setIndicateSourcesSinks] = useState(userConfig.indicateSourcesSinks ?? false);
     const [flowDirection, setFlowDirection] = useState(userConfig.direction ?? 'TB');
     const [objectAttraction, setObjectAttraction] = useState(userConfig.objectAttraction ?? 0.1);
     const [objectAttractionRangeMin, setObjectAttractionRangeMin] = useState(userConfig.objectAttractionRangeMin ?? 1);
@@ -72,6 +73,9 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
 
     const handleConfigChange = (attribute: keyof OCPNConfig, value: any, change = true) => {
         switch (attribute) {
+            case 'indicateSourcesSinks':
+                setIndicateSourcesSinks(value);
+                break;
             case 'direction':
                 setFlowDirection(value);
                 break;
@@ -140,8 +144,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         }
         if (change) {
             setUserConfig(value, attribute);
-            setChange(true);
         }
+        setChange(true);
     };
 
     const handleInputChange = (attribute: keyof OCPNConfig, change = false) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -171,15 +175,48 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     {(currentOCPN !== null) ? (
                         <>
                             {/* multi select */}
-                            <CustomMultiSelect 
+                            <CustomMultiSelect
                                 darkMode={darkMode}
-                                currentOCPN={currentOCPN} 
+                                currentOCPN={currentOCPN}
                                 userConfig={userConfig} />
                             {/* one select for object types + transition, one select which vertex -> highlict hovered vertex */}
-                            <div>Sources and sinks</div>
-                            <div>Indicate sources, sinks with custom styling checkbox</div>
-                            {/* List of names and corresponding color pickers */}
-                            <div>type to color mapping</div>
+                            <div>Sources and sinks
+                                &#8634;</div>
+                            <div>
+                                <label
+                                    className={`custom-configuration-label`}
+                                    htmlFor='indicate-sources-sinks'
+                                >Indicate sources and sinks</label>
+                                <input
+                                    type='checkbox'
+                                    className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
+                                    checked={indicateSourcesSinks}
+                                    onChange={handleInputChange('indicateSourcesSinks', true)}
+                                />
+                            </div>
+                            {/* TODO: based on object types of ocpn */}
+                            <div>
+                                <label
+                                    className={`custom-configuration-label`}
+                                    htmlFor='type-color-mapping'
+                                >Type to color mapping</label>
+                                <select
+                                    id="type-color-mapping"
+                                    className={`custom-configuration-select${darkMode ? ' dark' : ' light'}`}
+                                    value={''}
+                                    onChange={() => { }}
+                                >
+                                    {currentOCPN.objectTypes.map((objectType: string) => (
+                                        <option key={objectType} value={objectType}>{objectType}</option>
+                                    ))}
+                                </select>
+                                <input
+                                    type='color'
+                                    className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
+                                    value='#000000'
+                                    onChange={() => { }}
+                                    />
+                            </div>
                         </>
                     ) : (
                         <div style={{ padding: '3%' }}>
