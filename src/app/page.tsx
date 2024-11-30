@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CustomThemeProvider from './context/CustomThemeProvider';
@@ -25,6 +25,11 @@ const Home = () => {
     const [selectedOCPN, setSelectedOCPN] = useState<number | null>(null);
     const [userConfig, setUserConfig] = useState<OCPNConfig>(new OCPNConfig());
     const [changed, setChanged] = useState(false);
+
+    const svgRef = useRef<SVGSVGElement>(null!); // Initialize as not null
+    const previousOCPNRef = useRef<ObjectCentricPetriNet | null>(null);
+
+    
 
     useEffect(() => {
         setDarkMode(prefersDarkMode);
@@ -55,6 +60,7 @@ const Home = () => {
     const applyConfigChanges = () => {
         console.log("Apply Sugiyama", userConfig.includedObjectTypes);
         // rerun visualization with new config
+        
         setChanged(false);
     }
 
@@ -155,7 +161,9 @@ const Home = () => {
                     <VisualizationArea
                         selectedOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
                         userConfig={userConfig}
-                        darkMode={darkMode} />
+                        darkMode={darkMode}
+                        svgRef={svgRef}
+                        previousOCPNRef={previousOCPNRef} />
                 </Box>
             </Box>
             <ImportDialog
