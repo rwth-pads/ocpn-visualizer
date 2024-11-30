@@ -15,16 +15,34 @@
     word-wrap: break-word;
     flex: 1;
     width: 40%;
+    margin-right: 1%;
 }
 
 .config-option-content {
-    margin-left: 2%;
     width: 60%;
 }
 /* Custom Number input */
 .custom-number-input {
-
+    width: 30%;
+    padding: 10px 14px;
+    text-align: center;
+    border-radius: 10px;
 }
 
-.custom-number-input.dark {}
-.custom-number-input.light {}
+.custom-number-input.dark {
+    color: white;
+    background-color: #2b2a2a;
+    border: solid 1px #818181;
+}
+.custom-number-input.dark:hover {
+    background-color: #333333;
+    border: solid 1px #fff;
+}
+.custom-number-input.light {
+    color: #000;
+    background-color: #f2f2f2;
+    border: 1px solid #ced4da;
+}
+.custom-number-input.light:hover {
+    border: solid 1px #333333;
+}
