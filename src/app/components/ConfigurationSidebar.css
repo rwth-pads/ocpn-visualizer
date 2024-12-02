@@ -3,7 +3,6 @@
     top: 0;
     left: -40vw;
     width: 40vw;
-    min-width: fit-content;
     height: 100%;
     transition: left 0.3s ease-in-out;
     z-index: 1;
@@ -25,6 +24,7 @@
 
 .sidebar.open {
     left: 0;
+    /* min-width: fit-content; */
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
 }
 
@@ -130,4 +130,27 @@
 
 .custom-configuration-slider {
     padding: 2% 0;
+}
+
+/* Range styling */
+.custom-range-input {
+
+}
+.custom-range-input.dark {
+
+}
+.custom-range-input.light {
+
+}
+.custom-range-input.dark::-webkit-slider-thumb {
+
+}
+.custom-range-input.light::-webkit-slider-thumb {
+
+}
+.custom-range-input.dark::-webkit-slider-runnable-track {
+
+}
+.custom-range-input.light::-webkit-slider-runnable-track {
+
 }

@@ -9,6 +9,7 @@ import glpkModule from 'glpk.js';
  */
 function createILPObjective(arcs) {
     const vars = [];
+    console.log(arcs);
     for (const arc of arcs) {
         // Change coefficient if the arc is reversed.
         vars.push({ name: arc.target, coef: 1 });
@@ -86,14 +87,18 @@ function createPositiveLayerConstraints(vertices, glpk) {
  * @param {ObjectCentricPetriNet} ocpn 
  * @returns A layering of the nodes of the OCPN.
  */
-async function assignLayers(ocpn) {
+async function assignLayers(ocpn, config) {
     const glpk = await glpkModule();
 
-    // Initialize the OCPN graph, the ILP objective and constraints.
     const ocpnGraph = new OCPNGraph(ocpn);
+    // Initialize the OCPN graph, the ILP objective and constraints.
     const objectiveVars = createILPObjective(ocpnGraph.arcs);
     const arcConstraint = createArcSpanConstraints(ocpnGraph.arcs, glpk);
     const positiveConstraint = createPositiveLayerConstraints(ocpnGraph.nodes, glpk);
+    console.log("Objective: ", objectiveVars);
+    console.log("Arc Constraint: ", arcConstraint);
+    console.log("Positive Constraint: ", positiveConstraint);
+
     // Define the linear program.
     const lp = {
         name: ocpn.name,
@@ -119,6 +124,7 @@ async function assignLayers(ocpn) {
 
     // Get the layers of the nodes.
     const layers = result.result.vars;
+    console.log(layers)
     const layering = {};
     // Iterate over the pairs of node and the node's layer.
     for (const [node, layer] of Object.entries(layers)) {

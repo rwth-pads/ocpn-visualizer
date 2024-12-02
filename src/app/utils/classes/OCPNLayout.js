@@ -4,53 +4,89 @@ class OCPNLayout {
     static TRANSITION_TYPE = 1;
     static DUMMY_TYPE = 2;
 
-    constructor(ocpn) {
+    constructor(ocpn, config) {
         this.vertices = {};
         this.arcs = {};
         this.layering = [];
-        this.objectTypes = ocpn.objectTypes; // TODO filter only user included subset.
+        this.objectTypes = config.includedObjectTypes; // TODO filter only user included subset.
         this.layerSizes = [];
 
+        // Boolean to indicate whether certain vertices should be removed.
+        var shouldRemove = 0 < config.includedObjectTypes.length &&
+            config.includedObjectTypes.length < ocpn.objectTypes.length;
+
         ocpn.places.forEach(place => {
-            this.vertices[place.id] = {
-                name: place.name,
-                objectType: place.objectType,
-                x: undefined,
-                y: undefined,
-                layer: -1,
-                pos: -1,
-                source: place.initial,
-                sink: place.final,
-                type: OCPNLayout.PLACE_TYPE
-            };
+            if (!shouldRemove || this.objectTypes.includes(place.objectType)) {
+                this.vertices[place.id] = {
+                    name: place.name,
+                    objectType: place.objectType,
+                    x: undefined,
+                    y: undefined,
+                    layer: -1,
+                    pos: -1,
+                    source: place.initial,
+                    sink: place.final,
+                    type: OCPNLayout.PLACE_TYPE
+                };
+            }
         });
 
         ocpn.transitions.forEach(transition => {
-            this.vertices[transition.id] = {
-                name: transition.name,
-                label: transition.label,
-                x: undefined,
-                y: undefined,
-                layer: -1,
-                pos: -1,
-                type: OCPNLayout.TRANSITION_TYPE
-            };
+            if (!shouldRemove || this.incidentToObjectType(transition, this.objectTypes))
+                this.vertices[transition.id] = {
+                    name: transition.name,
+                    label: transition.label,
+                    x: undefined,
+                    y: undefined,
+                    layer: -1,
+                    pos: -1,
+                    type: OCPNLayout.TRANSITION_TYPE
+                };
         });
 
         ocpn.arcs.forEach(arc => {
-            this.arcs[arc.id] = {
-                source: arc.source.id, // It holds source.layer < target.layer due to setArcDirection().
-                target: arc.target.id,
-                reversed: false,
-                weight: arc.weight,
-                path: [], // The path will contain the ids of the dummy vertices.
-                minLayer: -1,
-                maxLayer: -1,
-                type1: false,
-                original: true,
-                objectType: undefined,
-            };
+            if (!shouldRemove || this.adjacentVerticesInLayout(arc)) {
+                this.arcs[arc.id] = {
+                    source: arc.source.id, // It holds source.layer < target.layer due to setArcDirection().
+                    target: arc.target.id,
+                    reversed: false,
+                    weight: arc.weight,
+                    path: [], // The path will contain the ids of the dummy vertices.
+                    minLayer: -1,
+                    maxLayer: -1,
+                    type1: false,
+                    original: true,
+                    objectType: undefined,
+                };
+            }
         });
+        console.log("After filtering: ", this);
+    }
+
+    // Returns true if the transition is incident to an object type in the given set.
+    incidentToObjectType(transition, ot) {
+        let adjacent = false;
+        // Check the inArcs.
+        transition.inArcs.forEach(arc => {
+            let placeOt = arc.source.objectType;
+            if (ot.includes(placeOt)) {
+                adjacent = true;
+            }
+        });
+        // Check the outArcs.
+        transition.outArcs.forEach(arc => {
+            let placeOt = arc.target.objectType;
+            if (ot.includes(placeOt)) {
+                adjacent = true;
+            }
+        });
+        return adjacent;
+    }
+
+    // Returns true if the arc is adjacent to vertices in the layout.
+    adjacentVerticesInLayout(arc) {
+        // Transitions and places have been filtered beforehand so this suffices.
+        return this.vertices[arc.source.id] && this.vertices[arc.target.id];
     }
 
     setArcDirection(arcId, reversed) {

@@ -11,7 +11,7 @@ import { clone2DArray, arraysEqual } from '../lib/arrays';
  */
 function orderVertices(ocpn, config) {
     // Adjust the initial order within the layering according to the users object centrality.
-    if (config.objectCentralitySet) {
+    if (config.objectCentrality && false) {
         console.log("Adjusting Initial Relative Order of Vertices...");
         adjustLayeringOrderByObjectCentrality(ocpn, config);
     }

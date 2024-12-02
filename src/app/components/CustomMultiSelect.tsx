@@ -21,6 +21,7 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode, current
 
     useEffect(() => {
         userConfig.includedObjectTypes = selectedObjectTypes;
+        console.log('Included object types: ', userConfig.includedObjectTypes);
     }, [selectedObjectTypes]);
 
     const handleOptionToggle = (option: string) => {

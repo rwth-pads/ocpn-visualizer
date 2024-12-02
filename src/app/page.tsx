@@ -65,7 +65,7 @@ const Home = () => {
     };
 
     const applyConfigChanges = () => {
-        console.log("Applying Config Changes");
+        // console.log("Applying Config Changes");
         handleVisualizationUpdate(null);
         setChanged(false);
     }
@@ -79,20 +79,20 @@ const Home = () => {
         }
         if (thisOCPN) {
             const ocpnLayout = await sugiyama(thisOCPN, userConfig);
-            console.log("OCPN Layout: ", ocpnLayout);
+            // console.log("OCPN Layout: ", ocpnLayout);
             if (!ocpnLayout) {
                 return;
             }
             if (svgRef.current) {
-                console.log("SVG exists");
+                // console.log("SVG exists");
                 d3.select(svgRef.current).selectAll('*').remove();
                 visualizeOCPN(ocpnLayout, userConfig, svgRef.current);
             } else {
-                console.log("SVG does not exist");
+                // console.log("SVG does not exist");
             }
             previousOCPNRef.current = thisOCPN;
         } else {
-            console.log("No OCPN to visualize");
+            // console.log("No OCPN to visualize");
         }
     }
 
@@ -126,7 +126,7 @@ const Home = () => {
                                 currentConfig.typeColorMapping.set(ot, COLORS_ARRAY[index % COLORS_ARRAY.length]);
                             });
                             setUserConfig(currentConfig);
-                            console.log(currentConfig);
+                            // console.log(currentConfig);
                             handleImportClose();
                             return newImportedObjects;
                         });

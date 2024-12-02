@@ -89,11 +89,9 @@ class ObjectCentricPetriNet {
      */
     getNodeIds() {
         var nodes = [];
-        for (var p of this.places) {
-            nodes.push(p.id);
-        }
-        for (var t of this.transitions) {
-            nodes.push(t.id);
+        for (var vId in this.layout.vertices) {
+            // console.log(vId);
+            nodes.push(vId);
         }
         return nodes;
     }
@@ -105,10 +103,11 @@ class ObjectCentricPetriNet {
      */
     getArcs() {
         var as = [];
-        for (var arc of this.arcs) {
-            let rev = this.layout.arcs[arc.id].reversed;
-            let upper = rev ? arc.target.id : arc.source.id;
-            let lower = rev ? arc.source.id : arc.target.id;
+        for (var arcId in this.layout.arcs) {
+            let arc = this.layout.arcs[arcId];
+            let rev = arc.reversed;
+            let upper = arc.source;
+            let lower = arc.target;
             as.push({ source: upper, target: lower, reversed: rev });
         }
         return as;

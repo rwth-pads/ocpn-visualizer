@@ -18,7 +18,7 @@ interface ConfigurationSidebarProps {
 const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, currentOCPN, userConfig, setChange, darkMode }) => {
     const mode = darkMode ? 'dark' : 'light';
     const sidebarClass = isOpen ? "sidebar open " + mode : "sidebar " + mode;
-
+    // TODO: use effect on config options that depend on the current OCPN.
     const [indicateSourcesSinks, setIndicateSourcesSinks] = useState(userConfig.indicateSourcesSinks ?? false);
     const [flowDirection, setFlowDirection] = useState(userConfig.direction ?? 'TB');
     const [objectAttraction, setObjectAttraction] = useState(userConfig.objectAttraction ?? 0.1);
@@ -183,7 +183,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         userConfig.typeColorMapping.set(currentTypeKey, color);
         setChange(true);
     }
-    console.log("Sidebar Init, ", userConfig);
+    // console.log("Sidebar Init, ", userConfig);
     const [currentTypeKey, setCurrentTypeKey] = useState(userConfig.includedObjectTypes[0]);
     const [currentTypeColor, setCurrentTypeColor] = useState(userConfig.typeColorMapping.get(currentTypeKey));
     return (
@@ -254,7 +254,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     <ConfigOption label="Object attraction" darkMode={darkMode}>
                         <input
                             type='range'
-                            className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={0}
                             max={0.5}
                             value={objectAttraction}
@@ -309,7 +309,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     <ConfigOption label="Place radius" darkMode={darkMode}>
                         <input
                             type='range'
-                            className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={3}
                             max={20}
                             value={placeRadius}
@@ -329,7 +329,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     <ConfigOption label="Transition width" darkMode={darkMode}>
                         <input
                             type='range'
-                            className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={20}
                             max={50}
                             value={transitionWidth}
@@ -342,7 +342,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     <ConfigOption label="Transition height" darkMode={darkMode}>
                         <input
                             type='range'
-                            className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={5}
                             max={20}
                             value={transitionHeight}
@@ -354,7 +354,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     <ConfigOption label="Dummy size" darkMode={darkMode}>
                         <input
                             type='range'
-                            className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={0}
                             max={10}
                             value={dummySize}
@@ -366,7 +366,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     <ConfigOption label="Layer separation" darkMode={darkMode}>
                         <input
                             type='range'
-                            className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={3}
                             max={40}
                             value={layerSep}
@@ -378,7 +378,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     <ConfigOption label="Vertex separation" darkMode={darkMode}>
                         <input
                             type='range'
-                            className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={0}
                             max={20}
                             value={vertexSep}
@@ -417,7 +417,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     <ConfigOption label="Transition border size" darkMode={darkMode}>
                         <input
                             type='range'
-                            className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={0.1}
                             max={2}
                             value={transitionBorderSize}
@@ -437,7 +437,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     <ConfigOption label="Arc size" darkMode={darkMode}>
                         <input
                             type='range'
-                            className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={0.1}
                             max={2}
                             step={0.05}
@@ -449,7 +449,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     <ConfigOption label="Arrow head size" darkMode={darkMode}>
                         <input
                             type='range'
-                            className={`custom-configuration-slider${darkMode ? ' dark' : ' light'}`}
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={2}
                             max={20}
                             step={1}

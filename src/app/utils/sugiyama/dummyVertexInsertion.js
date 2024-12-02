@@ -11,14 +11,14 @@ import OCPNLayout from '../classes/OCPNLayout';
  */
 function insertDummyVertices(ocpn) {
     var dummyCount = 0;
-    console.log("Dummy Insertion: ", ocpn);
-    for (const arc of ocpn.arcs) {
-        let upper = ocpn.layout.arcs[arc.id].source;
-        let lower = ocpn.layout.arcs[arc.id].target;
+    // console.log("Dummy Insertion: ", ocpn);
+    for (const [arcId, arc] of Object.entries(ocpn.layout.arcs)) {
+        let upper = arc.source;
+        let lower = arc.target;
         let sourceLayer = ocpn.layout.vertices[upper].layer;
         let targetLayer = ocpn.layout.vertices[lower].layer;
-        ocpn.layout.arcs[arc.id].minLayer = sourceLayer,
-        ocpn.layout.arcs[arc.id].maxLayer = targetLayer;
+        ocpn.layout.arcs[arcId].minLayer = sourceLayer,
+        ocpn.layout.arcs[arcId].maxLayer = targetLayer;
         const slack = targetLayer - sourceLayer;
         if (slack > 1) {
             let dummies = [];
@@ -28,7 +28,7 @@ function insertDummyVertices(ocpn) {
                 // Create a dummy node.
                 var dummy = {
                     id : ObjectCentricPetriNet.generateDummyId(),
-                    belongsTo: arc.id, // The id of the arc the dummy belongs to.
+                    belongsTo: arcId, // The id of the arc the dummy belongs to.
                     type: OCPNLayout.DUMMY_TYPE,
                     x: undefined,
                     y: undefined,
@@ -51,7 +51,7 @@ function insertDummyVertices(ocpn) {
                 let curDummy = dummies[i];
                 ocpn.layout.vertices[curDummy].upper = i === 0 ? upper : dummies[i - 1];
                 ocpn.layout.vertices[curDummy].lower = i === dummies.length - 1 ? lower : dummies[i + 1];
-                ocpn.layout.arcs[arc.id].path.push(curDummy); // Add the dummy to the path of the arc.
+                arc.path.push(curDummy); // Add the dummy to the path of the arc.
             }
             // Create two new arcs for markingType1 conflicts in the vertexPositioning step.
             let arc1Id = ObjectCentricPetriNet.generateArcId();
@@ -59,7 +59,7 @@ function insertDummyVertices(ocpn) {
             ocpn.layout.arcs[arc1Id] = {
                 source: upper,
                 target: dummies[0],
-                reversed: ocpn.layout.arcs[arc.id].reversed,
+                reversed: arc.reversed,
                 path: [],
                 minLayer: sourceLayer,
                 maxLayer: sourceLayer + 1,
@@ -69,7 +69,7 @@ function insertDummyVertices(ocpn) {
             ocpn.layout.arcs[arc2Id] = {
                 source: dummies[dummies.length - 1],
                 target: lower,
-                reversed: ocpn.layout.arcs[arc.id].reversed,
+                reversed: arc.reversed,
                 path: [],
                 minLayer: targetLayer - 1,
                 maxLayer: targetLayer,

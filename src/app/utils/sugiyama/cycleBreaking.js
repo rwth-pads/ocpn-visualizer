@@ -6,20 +6,21 @@ import OCPNGraph from '../classes/OCPNGraph';
  * 
  * @param {ObjectCentricPetriNet} ocpn The Object Centric Petri Net to reverse cycles in.
  * @param {*} config The configuration object.
- * @returns {Number} The number of arcs that were reversed.
+ * @returns 
  */
 function reverseCycles(ocpn, config) {
     let reversedArcs = 0;
     // Construct the graph from the OCPN.
-    var net = new OCPNGraph(ocpn);
+    var net = new OCPNGraph(ocpn, config);
     // Compute solution to the modified FAS problem.
     var fas = modifiedGreedyFAS(net, config.sources, config.sinks);
     // console.log("FAS: ", fas);
-    ocpn.arcs.forEach(arc => {
-        let sourceIndex = fas.indexOf(arc.source.id);
-        let targetIndex = fas.indexOf(arc.target.id);
+    Object.entries(ocpn.layout.arcs).forEach(([arcId, arc]) => {
+        let sourceIndex = fas.indexOf(arc.source);
+        let targetIndex = fas.indexOf(arc.target);
+        // console.log(sourceIndex, targetIndex);
         // Reverse the arc if the source's index is greater than the target's index.
-        ocpn.layout.setArcDirection(arc.id, sourceIndex > targetIndex);
+        ocpn.layout.setArcDirection(arcId, sourceIndex > targetIndex);
         reversedArcs += sourceIndex > targetIndex ? 1 : 0;
     });
     return reversedArcs;
