@@ -11,8 +11,8 @@ import { clone2DArray, arraysEqual } from '../lib/arrays';
  */
 function orderVertices(ocpn, config) {
     // Adjust the initial order within the layering according to the users object centrality.
-    if (config.objectCentrality && false) {
-        console.log("Adjusting Initial Relative Order of Vertices...");
+    if (config.objectCentrality !== undefined) {
+        console.log("Adjusting Initial Relative Order of Vertices...", config.objectCentrality);
         adjustLayeringOrderByObjectCentrality(ocpn, config);
     }
     // Implementation of the barycenter method for vertex ordering.
@@ -41,6 +41,7 @@ function adjustLayeringOrderByObjectCentrality(ocpn, config) {
         while (j < ocpn.layout.layering[i].length) {
             // Check whether the current layer is a 'place' or 'transition' layer.
             let type = ocpn.layout.vertices[ocpn.layout.layering[i][j]].type;
+            console.log(`\tLayer ${i} Type: ${type}`);
             if (type === OCPNLayout.PLACE_TYPE) {
                 layerType = OCPNLayout.PLACE_TYPE;
                 break;
@@ -54,10 +55,9 @@ function adjustLayeringOrderByObjectCentrality(ocpn, config) {
         if (layerType === OCPNLayout.PLACE_TYPE) {
             // Sort the places according to the user defined object centrality.
             // Example: objectCentrality = { "A": 3, "B": 1, "C": 2 } -> [placeA, placeC, placeB]
-
-            ocpn.layout.layering[i].sort((a, b) =>
-                objectCentrality[ocpn.layout.vertices[b].objectType] ?? 1
-                - objectCentrality[ocpn.layout.vertices[a].objectType] ?? 1);
+            let l = ocpn.layout.layering[i].sort((a, b) =>
+                (objectCentrality[ocpn.layout.vertices[a].objectType] ?? 0)
+                - (objectCentrality[ocpn.layout.vertices[b].objectType] ?? 0));
         }
     }
 }

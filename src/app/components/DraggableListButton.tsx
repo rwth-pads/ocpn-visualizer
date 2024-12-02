@@ -15,6 +15,8 @@ const DraggableListButton: React.FC<DraggableListButtonProps> = ({ buttonLabel, 
     const [listOpen, setListOpen] = useState(false);
     const listRef = useRef<HTMLUListElement>(null);
     const [draggedItem, setDraggedItem] = useState<HTMLElement | null>(null);
+    const fromLabel = userConfig.direction == 'TB' ? 'Left' : 'Top';
+    const toLabel = userConfig.direction == 'TB' ? 'Right' : 'Bottom';
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -35,6 +37,10 @@ const DraggableListButton: React.FC<DraggableListButtonProps> = ({ buttonLabel, 
 
         const handleDragStart = (e: DragEvent) => {
             const target = e.target as HTMLElement;
+            if (target.classList.contains('list-item-left') || target.classList.contains('list-item-right')) {
+                e.preventDefault();
+                return;
+            }
             setDraggedItem(target);
             target.classList.add('dragging');
         };
@@ -45,10 +51,12 @@ const DraggableListButton: React.FC<DraggableListButtonProps> = ({ buttonLabel, 
             setDraggedItem(null);
 
             // Update userConfig.objectCentrality based on the new order
-            const newOrder = Array.from(list.children).map((child, index) => ({
-                objectType: child.textContent || '',
-                index
-            }));
+            const newOrder = Array.from(list.children)
+                .filter(child => !child.classList.contains('list-item-left') && !child.classList.contains('list-item-right'))
+                .map((child, index) => ({
+                    objectType: child.textContent || '',
+                    index
+                }));
 
             const newObjectCentrality: { [key: string]: number } = {};
             newOrder.forEach(item => {
@@ -65,7 +73,7 @@ const DraggableListButton: React.FC<DraggableListButtonProps> = ({ buttonLabel, 
             const afterElement = getDragAfterElement(list, e.clientY);
             if (draggedItem) {
                 if (afterElement == null) {
-                    list.appendChild(draggedItem);
+                    list.insertBefore(draggedItem, list.querySelector('.list-item-right'));
                 } else {
                     list.insertBefore(draggedItem, afterElement);
                 }
@@ -73,7 +81,7 @@ const DraggableListButton: React.FC<DraggableListButtonProps> = ({ buttonLabel, 
         };
 
         const getDragAfterElement = (container: HTMLElement, y: number) => {
-            const draggableElements = Array.from(container.querySelectorAll<HTMLElement>('li:not(.dragging)'));
+            const draggableElements = Array.from(container.querySelectorAll<HTMLElement>('li:not(.dragging):not(.list-item-left):not(.list-item-right)'));
 
             return draggableElements.reduce(
                 (closest, child) => {
@@ -107,15 +115,20 @@ const DraggableListButton: React.FC<DraggableListButtonProps> = ({ buttonLabel, 
                 onClick={() => setListOpen(!listOpen)}
             >
                 {buttonLabel}
+                <span className={`open-indicator-arrow${mode}`}>{listOpen ? '⯅' : '⯆'}</span>
             </button>
             <ul id="sortable-list" ref={listRef} className={`draggable-list${mode}${listOpen ? ' open' : ''}`}>
-                <li className={`list-item-left${mode}`}>Left to</li>
+                <li className={`list-item-left${mode}`} draggable={false}>{fromLabel}</li>
                 {userConfig.includedObjectTypes.map((objectType, index) => (
-                    <li key={index} className={`draggable-list-item${mode}`} draggable>
+                    <li
+                        key={index}
+                        className={`draggable-list-item${mode}`}
+                        style={{ backgroundColor: userConfig.typeColorMapping.get(objectType) }}
+                        draggable>
                         {objectType}
                     </li>
                 ))}
-                <li className={`list-item-right${mode}`}>Right</li>
+                <li className={`list-item-right${mode}`} draggable={false}>{toLabel}</li>
             </ul>
         </div>
     );

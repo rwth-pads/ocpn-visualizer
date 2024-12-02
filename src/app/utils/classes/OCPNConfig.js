@@ -6,7 +6,7 @@ class OCPNConfig {
         sources = [],
         sinks = [],
         indicateSourcesSinks = true,
-        objectCentrality = {},
+        objectCentrality = undefined,
         maxBarycenterIterations = 4,
         objectAttraction = 0.1,
         objectAttractionRangeMin = 1,
