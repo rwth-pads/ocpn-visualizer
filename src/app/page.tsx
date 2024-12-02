@@ -158,6 +158,10 @@ const Home = () => {
         }
     };
 
+    useEffect(() => {
+        console.log(userConfig.objectCentrality);
+    }, [userConfig.objectCentrality]);
+
     const handleSelectChange = (event: SelectChangeEvent<number | "default">) => {
         const value = event.target.value;
         setSelectedOCPN(value === "default" ? null : value as number);

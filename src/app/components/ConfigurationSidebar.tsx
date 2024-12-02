@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ConfigurationCategory from './ConfigurationCategory';
 import CustomMultiSelect from './CustomMultiSelect';
 import ConfigOption from './ConfigOption';
+import DraggableListButton from './DraggableListButton';
 import './ConfigurationSidebar.css';
 
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
@@ -207,6 +208,14 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                                 userConfig={userConfig}
                                 setChange={setChange} />
                             {/* one select for object types + transition, one select which vertex -> highlict hovered vertex */}
+                            <ConfigOption label="Adjust initial order" darkMode={darkMode}>
+                                <DraggableListButton
+                                    buttonLabel="Drag and drop to reorder"
+                                    darkMode={darkMode}
+                                    userConfig={userConfig}
+                                    setChange={setChange}
+                                />
+                            </ConfigOption>
                             <ConfigOption label="Sources and sinks" darkMode={darkMode}>
                                 TODO &#8634;
                             </ConfigOption>
@@ -217,9 +226,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                                     checked={indicateSourcesSinks}
                                     onChange={handleInputChange('indicateSourcesSinks', true)}
                                 />
-                            </ConfigOption>
-                            <ConfigOption label="Object centrality" darkMode={darkMode}>
-                                TODO &#8634;
                             </ConfigOption>
                             <ConfigOption label="Type to color mapping" darkMode={darkMode}>
                                 <select

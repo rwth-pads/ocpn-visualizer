@@ -1,0 +1,56 @@
+.draggable-list-container {
+    margin: 0;
+    padding: 0;
+}
+.draggable-list-button {
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+.draggable-list-button.dark {
+    background-color: #2b2a2a;
+    border: 1px solid #4a4a4a;
+}
+.draggable-list-button.dark:hover {
+    border: 1px solid #e5e7eb;
+}
+.draggable-list-button.light {
+    background-color: #f2f2f2;
+    border: 1px solid #ced4da;
+}
+.draggable-list-button.light:hover {
+    border: 1px solid #e5e7eb;
+}
+
+.draggable-list {
+    list-style-type: none;
+    position: absolute;
+    display: none;
+    margin: 0 0;
+    min-width: 20vw;
+    width: fit-content;
+    padding: 0;
+}
+.draggable-list.open {
+    display: block;
+}
+.draggable-list.dark {}
+.draggable-list.light {}
+
+.draggable-list-item {
+    padding: 10px;
+    width: 100%;
+    background-color: #f0f0f0;
+    cursor: grab;
+}
+.draggable-list-item.dark.dragging {
+    border: 2px solid #e5e7eb;
+}
+.draggable-list-item.light.dragging {
+    border: 2px solid lightblue;
+}
+.draggable-list-item.dark {
+    background-color: #2b2a2a;
+}
+.draggable-list-item.light {
+    background-color: #f2f2f2;
+}
