@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ConfigurationCategory from './ConfigurationCategory';
 import CustomMultiSelect from './CustomMultiSelect';
 import ConfigOption from './ConfigOption';
@@ -175,6 +175,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         const color = userConfig.typeColorMapping.get(objectType) || '#000000';
         setCurrentTypeKey(objectType);
         setCurrentTypeColor(color);
+        console.log(`${objectType}: ${color}`);
     }
 
     const handleColorMappingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -182,10 +183,17 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         setCurrentTypeColor(color);
         userConfig.typeColorMapping.set(currentTypeKey, color);
         setChange(true);
+        console.log(`${currentTypeKey}: ${color}`);
     }
     // console.log("Sidebar Init, ", userConfig);
     const [currentTypeKey, setCurrentTypeKey] = useState(userConfig.includedObjectTypes[0]);
     const [currentTypeColor, setCurrentTypeColor] = useState(userConfig.typeColorMapping.get(currentTypeKey));
+
+    useEffect(() => {
+        setCurrentTypeKey(userConfig.includedObjectTypes[0]);
+        setCurrentTypeColor(userConfig.typeColorMapping.get(userConfig.includedObjectTypes[0]));
+    }, [userConfig.includedObjectTypes]);
+
     return (
         <div className={sidebarClass}>
             <ConfigurationCategory title="Object Configurations" darkMode={darkMode} categoryIndex={0}>
@@ -196,7 +204,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             <CustomMultiSelect
                                 darkMode={darkMode}
                                 currentOCPN={currentOCPN}
-                                userConfig={userConfig} />
+                                userConfig={userConfig} 
+                                setChange={setChange} />
                             {/* one select for object types + transition, one select which vertex -> highlict hovered vertex */}
                             <ConfigOption label="Sources and sinks" darkMode={darkMode}>
                                 TODO &#8634;
@@ -215,7 +224,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                                     value={currentTypeKey ?? userConfig.includedObjectTypes[0]}
                                     onChange={handleTypeChange}
                                 >
-                                    {currentOCPN.objectTypes.map((objectType: string) => (
+                                    {userConfig.includedObjectTypes.map((objectType: string) => (
                                         <option key={objectType} value={objectType}>{objectType}</option>
                                     ))}
                                 </select>

@@ -1,4 +1,3 @@
-import preprocess from './preprocess';
 import reverseCycles from './cycleBreaking';
 import assignLayers from './layerAssignment';
 import insertDummyVertices from './dummyVertexInsertion';
@@ -28,28 +27,26 @@ async function sugiyama(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
         console.log("The input is not an OCPNConfig.");
         return undefined;
     }
-    console.log("Check included object types: ", config.includedObjectTypes);
+    // console.log("Check included object types: ", config.includedObjectTypes);
     ocpn.layout = new OCPNLayout(ocpn, config);
     // console.log("Sugiyama input: ", ocpn);
     // Cycle Breaking.
-    // console.log("\tReversing cycles...");
+    console.log("\tReversing cycles...");
     reverseCycles(ocpn, config);
     // Layer Assignment.
-    // console.log("\tAssigning layers...");
+    console.log("\tAssigning layers...");
     await assignLayers(ocpn, config);
     // Dummy Vertex Insertion.
-    // console.log("\tInserting dummy vertices...");
+    console.log("\tInserting dummy vertices...");
     insertDummyVertices(ocpn);
     // Vertex Ordering.
-    // console.log("\tOrdering vertices...");
-    console.log("Layering: ", ocpn.layout.layering);
+    console.log("\tOrdering vertices...");
     orderVertices(ocpn, config);
-    console.log("Layering: ", ocpn.layout.layering);
     // Vertex Positioning.
-    // console.log("\tPositioning vertices...");
+    console.log("\tPositioning vertices...");
     positionVertices(ocpn, config);
     // Route edges.
-    // console.log("\tRouting arcs...");
+    console.log("\tRouting arcs...");
     routeArcs(ocpn);
     // Return the OCPN Layout.
     // console.log("In sugiyama.js", ocpn.layout);

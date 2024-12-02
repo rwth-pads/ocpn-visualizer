@@ -161,7 +161,17 @@ const Home = () => {
     const handleSelectChange = (event: SelectChangeEvent<number | "default">) => {
         const value = event.target.value;
         setSelectedOCPN(value === "default" ? null : value as number);
+        // Update the user config settings that are based on the OCPN.
+        // Included object types
         userConfig.includedObjectTypes = Array.from(importedObjects[value as number].objectTypes);
+        // sources and sinks
+        userConfig.sources = []; // TODO: get the actual sources from the ocpn.
+        userConfig.sinks = []; // TODO: get the actual sinks from the ocpn.
+        // type to color mapping
+        userConfig.typeColorMapping = new Map<string, string>();
+        userConfig.includedObjectTypes.forEach((ot, index) => {
+            userConfig.typeColorMapping.set(ot, COLORS_ARRAY[index % COLORS_ARRAY.length]);
+        });
     };
 
     return (

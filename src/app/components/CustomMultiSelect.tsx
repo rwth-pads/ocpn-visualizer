@@ -7,9 +7,10 @@ interface CustomMultiSelectProps {
     darkMode: boolean;
     currentOCPN: ObjectCentricPetriNet;
     userConfig: OCPNConfig;
+    setChange: (change: boolean) => void;
 }
 
-const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode, currentOCPN, userConfig }) => {
+const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode, currentOCPN, userConfig, setChange }) => {
     const mode = darkMode ? ' dark' : ' light';
     const VISIBLEOBJECTTYPES = 2;
     const MIN_FOR_SEARCH = 2;
@@ -21,7 +22,8 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode, current
 
     useEffect(() => {
         userConfig.includedObjectTypes = selectedObjectTypes;
-        console.log('Included object types: ', userConfig.includedObjectTypes);
+        setChange(true);
+        // console.log('Included object types: ', userConfig.includedObjectTypes);
     }, [selectedObjectTypes]);
 
     const handleOptionToggle = (option: string) => {

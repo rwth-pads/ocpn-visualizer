@@ -60,7 +60,6 @@ class OCPNLayout {
                 };
             }
         });
-        console.log("After filtering: ", this);
     }
 
     // Returns true if the transition is incident to an object type in the given set.
