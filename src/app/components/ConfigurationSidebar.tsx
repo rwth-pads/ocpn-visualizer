@@ -217,7 +217,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                                 />
                             </ConfigOption>
                             <ConfigOption label="Sources and sinks" darkMode={darkMode}>
-                                TODO &#8634;
+                                Right-click places to add / remove sources and sinks. {/* See ...\Components\D3\index.html as example. */}
                             </ConfigOption>
                             <ConfigOption label="Indicate sources and sinks" darkMode={darkMode}>
                                 <input
