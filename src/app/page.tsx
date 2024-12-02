@@ -35,8 +35,6 @@ const Home = () => {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const previousOCPNRef = useRef<ObjectCentricPetriNet | null>(null);
 
-
-
     useEffect(() => {
         setDarkMode(prefersDarkMode);
     }, [prefersDarkMode]);
@@ -65,8 +63,6 @@ const Home = () => {
     };
 
     const applyConfigChanges = () => {
-        // console.log("Applying Config Changes");
-        console.log(userConfig.objectCentrality);
         handleVisualizationUpdate(null);
         setChanged(false);
     }
@@ -120,14 +116,18 @@ const Home = () => {
                             const newImportedObjects = [...prev, ocpn];
                             setSelectedOCPN(newImportedObjects.length - 1);
                             let currentConfig = userConfig;
+                            // Get the included object types from the imported OCPN.
                             currentConfig.includedObjectTypes = Array.from(ocpn.objectTypes);
+                            // Get the sources and sinks from the imported OCPN.
+                            currentConfig.sources = ocpn.places.filter(place => place.initial).map(place => place.id);
+                            currentConfig.sinks = ocpn.places.filter(place => place.final).map(place => place.id);
+                            // Get the type to color mapping from the imported OCPN.
                             currentConfig.typeColorMapping = new Map<string, string>();
-                            // console.log("Color Mapping, ", currentConfig.typeColorMapping);
                             currentConfig.includedObjectTypes.forEach((ot, index) => {
                                 currentConfig.typeColorMapping.set(ot, COLORS_ARRAY[index % COLORS_ARRAY.length]);
                             });
+                            // Update the user config settings based on the imported OCPN.
                             setUserConfig(currentConfig);
-                            // console.log(currentConfig);
                             handleImportClose();
                             return newImportedObjects;
                         });
@@ -163,16 +163,18 @@ const Home = () => {
         const value = event.target.value;
         setSelectedOCPN(value === "default" ? null : value as number);
         // Update the user config settings that are based on the OCPN.
+        let currentConfig = userConfig;
         // Included object types
-        userConfig.includedObjectTypes = Array.from(importedObjects[value as number].objectTypes);
+        currentConfig.includedObjectTypes = Array.from(importedObjects[value as number].objectTypes);
         // sources and sinks
-        userConfig.sources = []; // TODO: get the actual sources from the ocpn.
-        userConfig.sinks = []; // TODO: get the actual sinks from the ocpn.
+        currentConfig.sources = ocpn.places.filter(place => place.initial).map(place => place.id);
+        currentConfig.sinks = ocpn.places.filter(place => place.final).map(place => place.id);
         // type to color mapping
-        userConfig.typeColorMapping = new Map<string, string>();
-        userConfig.includedObjectTypes.forEach((ot, index) => {
-            userConfig.typeColorMapping.set(ot, COLORS_ARRAY[index % COLORS_ARRAY.length]);
+        currentConfig.typeColorMapping = new Map<string, string>();
+        currentConfig.includedObjectTypes.forEach((ot, index) => {
+            currentConfig.typeColorMapping.set(ot, COLORS_ARRAY[index % COLORS_ARRAY.length]);
         });
+        setUserConfig(currentConfig);
     };
 
     return (

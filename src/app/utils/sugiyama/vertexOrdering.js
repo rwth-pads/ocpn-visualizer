@@ -54,7 +54,7 @@ function adjustLayeringOrderByObjectCentrality(ocpn, config) {
         }
         if (layerType === OCPNLayout.PLACE_TYPE) {
             // Sort the places according to the user defined object centrality.
-            // Example: objectCentrality = { "A": 3, "B": 1, "C": 2 } -> [placeA, placeC, placeB]
+            // Example: objectCentrality = { "A": 0, "B": 2, "C": 1 } -> [placeA, placeC, placeB]
             let l = ocpn.layout.layering[i].sort((a, b) =>
                 (objectCentrality[ocpn.layout.vertices[a].objectType] ?? 0)
                 - (objectCentrality[ocpn.layout.vertices[b].objectType] ?? 0));

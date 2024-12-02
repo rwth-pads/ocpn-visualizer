@@ -38,19 +38,19 @@ function reverseCycles(ocpn, config) {
 function modifiedGreedyFAS(net, sources, sinks) {
     var s1 = [...sources]; // The id's of places belonging to s1.
     var s2 = [...sinks]; // The id's of places belonging to s2.
-
+    
     if (s1.length > 0) {
         // Sort the sources based on highest outDegree - inDegree.
         s1.sort((a, b) => net.getOutDegree(b) - net.getInDegree(b) - net.getOutDegree(a) + net.getInDegree(a));
         net.removeNodes(sources);
     }
+
     if (s2.length > 0) {
         // Sort the sinks based on highest outDegree - inDegree.
         s2.sort((a, b) => net.getOutDegree(b) - net.getInDegree(b) - net.getOutDegree(a) + net.getInDegree(a));
         net.removeNodes(sinks);
     }
-    // console.log("User defined SOURCES: ", s1);
-    // console.log("User defined SINKS: ", s2);
+
     // While there are nodes remaining in the graph.
     while (net.nodes.length > 0) {
         // While the net contains sinks, add the sink to the front of s2 and remove it and its edges from the net.
