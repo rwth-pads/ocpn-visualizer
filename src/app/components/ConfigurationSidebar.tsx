@@ -204,7 +204,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             <CustomMultiSelect
                                 darkMode={darkMode}
                                 currentOCPN={currentOCPN}
-                                userConfig={userConfig} 
+                                userConfig={userConfig}
                                 setChange={setChange} />
                             {/* one select for object types + transition, one select which vertex -> highlict hovered vertex */}
                             <ConfigOption label="Sources and sinks" darkMode={darkMode}>
@@ -217,6 +217,9 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                                     checked={indicateSourcesSinks}
                                     onChange={handleInputChange('indicateSourcesSinks', true)}
                                 />
+                            </ConfigOption>
+                            <ConfigOption label="Object centrality" darkMode={darkMode}>
+                                TODO &#8634;
                             </ConfigOption>
                             <ConfigOption label="Type to color mapping" darkMode={darkMode}>
                                 <select
@@ -256,9 +259,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             <option value="TB">Top to Bottom</option>
                             <option value="LR">Left to Right</option>
                         </select>
-                    </ConfigOption>
-                    <ConfigOption label="Object centrality" darkMode={darkMode}>
-                        TODO &#8634;
                     </ConfigOption>
                     <ConfigOption label="Object attraction" darkMode={darkMode}>
                         <input
