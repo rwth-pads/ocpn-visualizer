@@ -15,7 +15,7 @@ interface VisualizationAreaProps {
 
 const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, userConfig, darkMode, svgRef }) => {
     const [vertexInfo, setVertexInfo] = useState<{
-        visible: boolean, x: number, y: number, vertexId: string, vertexName: string, vertexType: String, objectType: string | null, isSource: boolean, isSink: boolean
+        visible: boolean, x: number, y: number, vertexId: string, vertexName: string, vertexType: string, objectType: string | null, isSource: boolean, isSink: boolean
     }>({ visible: false, x: 0, y: 0, vertexId: '', vertexName: '', vertexType: 'transition', objectType: null, isSource: false, isSink: false });
 
     const vertexInfoRef = useRef<HTMLDivElement>(null);
@@ -28,11 +28,14 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
         const vertex = selectedOCPN?.layout.vertices[vertexId];
         if (vertex && containerRef.current) {
             const containerRect = containerRef.current.getBoundingClientRect();
+            let x = event.clientX - containerRect.left;
+            let y = event.clientY - containerRect.top;
+
             setVertexInfo({
                 visible: true,
-                x: event.clientX - containerRect.left,
-                y: event.clientY - containerRect.top,
-                vertexId: vertexId,
+                x,
+                y,
+                vertexId,
                 vertexName: vertex.name,
                 objectType: vertex.type === OCPNLayout.PLACE_TYPE ? vertex.objectType : null,
                 vertexType: vertex.type === OCPNLayout.PLACE_TYPE ? 'place' : 'transition',
@@ -41,6 +44,29 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
             });
         }
     };
+
+    useEffect(() => {
+        if (vertexInfo.visible && vertexInfoRef.current && containerRef.current) {
+            const containerRect = containerRef.current.getBoundingClientRect();
+            const vertexInfoRect = vertexInfoRef.current.getBoundingClientRect();
+            let { x, y } = vertexInfo;
+
+            if (x + vertexInfoRect.width > containerRect.width) {
+                x = containerRect.width - vertexInfoRect.width;
+            }
+            if (y + vertexInfoRect.height > containerRect.height) {
+                y = containerRect.height - vertexInfoRect.height;
+            }
+            if (x < 0) {
+                x = 0;
+            }
+            if (y < 0) {
+                y = 0;
+            }
+
+            setVertexInfo(prev => ({ ...prev, x, y }));
+        }
+    }, [vertexInfo.visible]);
 
     const handleClickOutside = (event: MouseEvent) => {
         if (vertexInfoRef.current && !vertexInfoRef.current.contains(event.target as Node)) {
@@ -92,7 +118,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                             vertexId={vertexInfo.vertexId}
                             vertexName={vertexInfo.vertexName}
                             darkMode={darkMode}
-                            vertexType='place'
+                            vertexType={vertexInfo.vertexType}
                             objectType={vertexInfo.objectType}
                             isSource={vertexInfo.isSource}
                             isSink={vertexInfo.isSink}

@@ -14,8 +14,8 @@ interface VertexInfoProps {
 
 const VertexInfo: React.FC<VertexInfoProps> = ({ vertexId, vertexName, vertexType, objectType, darkMode, isSource, isSink }) => {
     const mode = darkMode ? ' dark' : ' light';
-    const sourceButtonLabel = isSource ? 'Add to sources' : 'Remove from sources';
-    const sinkButtonLabel = isSink ? 'Add to sinks' : 'Remove from sinks';
+    const sourceButtonLabel = isSource ? 'Remove from sources' : 'Add to sources';
+    const sinkButtonLabel = isSink ? 'Remove from sinks' : 'Add to sinks';
 
     return (
         <div className={`vertex-info-container${mode}`}>
@@ -30,13 +30,13 @@ const VertexInfo: React.FC<VertexInfoProps> = ({ vertexId, vertexName, vertexTyp
             </div>
             <div className={`vertex-actions`}>
                 <button
-                    className={`vertex-action-button`}
+                    className={`vertex-action-button${mode}`}
                     onClick={() => { console.log(`Toggle source ${vertexId}`) }}
                 >
                     {sourceButtonLabel}
                 </button>
                 <button
-                    className={`vertex-action-button`}
+                    className={`vertex-action-button${mode}`}
                     onClick={() => { console.log(`Toggle sink ${vertexId}`) }}
                 >
                     {sinkButtonLabel}

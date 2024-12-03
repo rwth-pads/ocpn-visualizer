@@ -8,7 +8,7 @@
 }
 
 .vertex-info-container.dark {
-    background-color: #2b2a2a;
+    background-color: #1b1b1b;
     color: white;
     border: 2px solid #3f3f3f;
 }
@@ -16,4 +16,26 @@
     background-color: #f2f2f2;
     color: #000;
     border: 2px solid #ced4da;
+}
+.vertex-action-button {
+    padding: 10px 14px;
+    display: block;
+    margin: 10px 0;
+    border-radius: 10px;
+}
+.vertex-action-button.dark {
+    color: #fff;
+    background-color: #2b2a2a;
+    border: 1px solid #3f3f3f;
+}
+.vertex-action-button.light {
+    color: #000;
+    background-color: lightblue;
+    border: 1px solid #fff;
+}
+.vertex-action-button.dark:hover {
+    background-color: #62626299;
+}
+.vertex-action-button.light:hover {
+    background-color: rgba(173, 216, 230, 0.621);
 }
