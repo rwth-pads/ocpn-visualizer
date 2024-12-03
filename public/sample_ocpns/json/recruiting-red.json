@@ -1,0 +1,510 @@
+{
+    "name": "recruiting-red",
+    "places": [
+        {
+            "name": "applications1",
+            "objectType": "applications",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "applications3",
+            "objectType": "applications",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "applications5",
+            "objectType": "applications",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "applications6",
+            "objectType": "applications",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "applications7",
+            "objectType": "applications",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "applications8",
+            "objectType": "applications",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "applications9",
+            "objectType": "applications",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "applications10",
+            "objectType": "applications",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "applications11",
+            "objectType": "applications",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "applications12",
+            "objectType": "applications",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "offers3",
+            "objectType": "offers",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "applications14",
+            "objectType": "applications",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "applications2",
+            "objectType": "applications",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "applications4",
+            "objectType": "applications",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "applications13",
+            "objectType": "applications",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "offers1",
+            "objectType": "offers",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "offers2",
+            "objectType": "offers",
+            "initial": false,
+            "final": false
+        }
+    ],
+    "transitions": [
+        {
+            "name": "5a24b87b-3878-4374-96e2-fed9d758c94f",
+            "label": "submit application",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "f0de6de3-dcd7-4135-ac5b-7a74c9f82cad",
+            "label": "f0de6de3-dcd7-4135-ac5b-7a74c9f82cad",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "d01a3ab9-c612-4ba1-91ed-c20db73851ed",
+            "label": "d01a3ab9-c612-4ba1-91ed-c20db73851ed",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "d8875ecf-c794-4094-ae95-c87f0997fb04",
+            "label": "assign recruiter",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "ea322269-1266-4075-be52-766d158c49ba",
+            "label": "ea322269-1266-4075-be52-766d158c49ba",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "a79280c5-a979-4670-aaeb-59b624f249df",
+            "label": "a79280c5-a979-4670-aaeb-59b624f249df",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "eae2d746-d5be-4c34-a64e-750cb0d6dac8",
+            "label": "invite for interview",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "a842fa50-2148-4841-b2b9-0029ce5a3173",
+            "label": "conduct interview",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "04031d69-2943-4646-8fa0-a082547d1dd0",
+            "label": "send rejection",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "9c8cd3e1-7005-4ace-b34f-6e96f007b148",
+            "label": "make job offer",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "9252216f-1bf6-4335-b071-1014ca19931a",
+            "label": "assign vacancy",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "05cc8fb0-4ad6-45b8-bd92-58957fb39ed9",
+            "label": "consult manager",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "ac41c68d-ff65-4c8d-8674-7d906abf4182",
+            "label": "ac41c68d-ff65-4c8d-8674-7d906abf4182",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "d9638f28-2853-4442-986a-8b2a1f189412",
+            "label": "offer accepted and hired",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "1210616e-1ee7-4341-bae2-b3c46f7492c2",
+            "label": "check references",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "baec5c01-b719-4753-9dd2-863eb984872e",
+            "label": "job offer declined",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "20040ce7-0125-499e-a984-de3fc7a6b3cd",
+            "label": "first screening",
+            "properties": {},
+            "silent": false
+        }
+    ],
+    "arcs": [
+        {
+            "source": "05cc8fb0-4ad6-45b8-bd92-58957fb39ed9",
+            "target": "applications4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "9c8cd3e1-7005-4ace-b34f-6e96f007b148",
+            "target": "offers2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "04031d69-2943-4646-8fa0-a082547d1dd0",
+            "target": "applications9",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications5",
+            "target": "d9638f28-2853-4442-986a-8b2a1f189412",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications13",
+            "target": "05cc8fb0-4ad6-45b8-bd92-58957fb39ed9",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "9252216f-1bf6-4335-b071-1014ca19931a",
+            "target": "applications1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications2",
+            "target": "ea322269-1266-4075-be52-766d158c49ba",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "f0de6de3-dcd7-4135-ac5b-7a74c9f82cad",
+            "target": "applications10",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "a842fa50-2148-4841-b2b9-0029ce5a3173",
+            "target": "applications10",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "d9638f28-2853-4442-986a-8b2a1f189412",
+            "target": "applications9",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "20040ce7-0125-499e-a984-de3fc7a6b3cd",
+            "target": "applications2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications8",
+            "target": "d01a3ab9-c612-4ba1-91ed-c20db73851ed",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications10",
+            "target": "04031d69-2943-4646-8fa0-a082547d1dd0",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications12",
+            "target": "a79280c5-a979-4670-aaeb-59b624f249df",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications8",
+            "target": "9252216f-1bf6-4335-b071-1014ca19931a",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "ea322269-1266-4075-be52-766d158c49ba",
+            "target": "applications3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "baec5c01-b719-4753-9dd2-863eb984872e",
+            "target": "offers3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications1",
+            "target": "20040ce7-0125-499e-a984-de3fc7a6b3cd",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications7",
+            "target": "d8875ecf-c794-4094-ae95-c87f0997fb04",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "eae2d746-d5be-4c34-a64e-750cb0d6dac8",
+            "target": "applications14",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "d01a3ab9-c612-4ba1-91ed-c20db73851ed",
+            "target": "applications1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications11",
+            "target": "eae2d746-d5be-4c34-a64e-750cb0d6dac8",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "d8875ecf-c794-4094-ae95-c87f0997fb04",
+            "target": "applications8",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "9c8cd3e1-7005-4ace-b34f-6e96f007b148",
+            "target": "applications5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications3",
+            "target": "1210616e-1ee7-4341-bae2-b3c46f7492c2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications4",
+            "target": "a79280c5-a979-4670-aaeb-59b624f249df",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offers2",
+            "target": "d9638f28-2853-4442-986a-8b2a1f189412",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "d9638f28-2853-4442-986a-8b2a1f189412",
+            "target": "offers3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications2",
+            "target": "f0de6de3-dcd7-4135-ac5b-7a74c9f82cad",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications11",
+            "target": "ac41c68d-ff65-4c8d-8674-7d906abf4182",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "ac41c68d-ff65-4c8d-8674-7d906abf4182",
+            "target": "applications10",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications6",
+            "target": "5a24b87b-3878-4374-96e2-fed9d758c94f",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "1210616e-1ee7-4341-bae2-b3c46f7492c2",
+            "target": "applications12",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications14",
+            "target": "a842fa50-2148-4841-b2b9-0029ce5a3173",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications10",
+            "target": "9c8cd3e1-7005-4ace-b34f-6e96f007b148",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "5a24b87b-3878-4374-96e2-fed9d758c94f",
+            "target": "applications7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "a79280c5-a979-4670-aaeb-59b624f249df",
+            "target": "applications11",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "baec5c01-b719-4753-9dd2-863eb984872e",
+            "target": "applications9",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "ea322269-1266-4075-be52-766d158c49ba",
+            "target": "applications13",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "applications5",
+            "target": "baec5c01-b719-4753-9dd2-863eb984872e",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offers1",
+            "target": "9c8cd3e1-7005-4ace-b34f-6e96f007b148",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offers2",
+            "target": "baec5c01-b719-4753-9dd2-863eb984872e",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        }
+    ],
+    "properties": {
+        "description": "Event log from ocpa repository."
+    }
+}

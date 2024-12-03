@@ -37,7 +37,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                 x,
                 y,
                 vertexId,
-                vertexName: vertex.name,
+                vertexName: vertex.type === OCPNLayout.PLACE_TYPE ? vertex.name : vertex.label,
                 objectType: vertex.type === OCPNLayout.PLACE_TYPE ? vertex.objectType : null,
                 vertexType: vertex.type === OCPNLayout.PLACE_TYPE ? 'place' : 'transition',
                 isSource: userConfig.sources.includes(vertexId),

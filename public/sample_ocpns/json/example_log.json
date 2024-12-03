@@ -1,0 +1,596 @@
+{
+    "name": "example_log",
+    "places": [
+        {
+            "name": "order2",
+            "objectType": "order",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "order3",
+            "objectType": "order",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "order4",
+            "objectType": "order",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "order6",
+            "objectType": "order",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "element2",
+            "objectType": "element",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "element3",
+            "objectType": "element",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "element4",
+            "objectType": "element",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "delivery1",
+            "objectType": "delivery",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "delivery2",
+            "objectType": "delivery",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "delivery3",
+            "objectType": "delivery",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "delivery5",
+            "objectType": "delivery",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "order1",
+            "objectType": "order",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "order5",
+            "objectType": "order",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "order7",
+            "objectType": "order",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "element1",
+            "objectType": "element",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "element5",
+            "objectType": "element",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "delivery4",
+            "objectType": "delivery",
+            "initial": false,
+            "final": true
+        }
+    ],
+    "transitions": [
+        {
+            "name": "95d1e805-e848-4038-a580-b81d9b70e65f",
+            "label": "Send for Credit Collection",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "42ceaf05-e530-4d5a-93d5-4fb65c0003f7",
+            "label": "42ceaf05-e530-4d5a-93d5-4fb65c0003f7",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "91df962b-3513-44b5-8533-67264ec593c0",
+            "label": "Remove Item",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "bd47237d-bcdd-4bba-bba0-7d7045ded320",
+            "label": "Delivery Failed",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "f60dec3c-4895-4e07-9b8c-0e7620ab7146",
+            "label": "f60dec3c-4895-4e07-9b8c-0e7620ab7146",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "af14389c-c207-4f4a-895c-cf1b2479b4ec",
+            "label": "Confirm Order",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "554cde78-fa4e-47fc-a5c1-1d1e89397a8f",
+            "label": "Payment Reminder",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "5c84cbd0-451d-437d-b257-d6f0022fbe8d",
+            "label": "Create Order",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "8eb9488b-826a-4407-acf1-ce2ce0c73698",
+            "label": "8eb9488b-826a-4407-acf1-ce2ce0c73698",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "13674fe5-1f6a-479e-acfb-c841b1c25827",
+            "label": "13674fe5-1f6a-479e-acfb-c841b1c25827",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "3bb809ad-aafb-469b-aa51-2e2374acfa87",
+            "label": "Delivery Successful",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "ff5d8d6d-567b-4ed3-9c57-2d7af94732a0",
+            "label": "Item back in Stock",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "7b8f2fb3-8c31-4c74-8106-504bfe82e20a",
+            "label": "Pay Order",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "3d64193a-65ed-475e-9476-7b3539e1be03",
+            "label": "3d64193a-65ed-475e-9476-7b3539e1be03",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "307f1e7f-a4aa-4f57-a69e-57cc3a265f7d",
+            "label": "Cancel Order",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "6af8fa90-a07b-4698-8466-d2e8184cb8f0",
+            "label": "Add Item to Order",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "800b447c-1dd1-40c3-94a4-860363b6dec8",
+            "label": "800b447c-1dd1-40c3-94a4-860363b6dec8",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "8cdf0ca6-22e7-4810-99e6-9b5d7a852b1e",
+            "label": "8cdf0ca6-22e7-4810-99e6-9b5d7a852b1e",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "bf2da866-6867-42f0-87aa-5ac65f1e8d11",
+            "label": "Retry Delivery",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "f2eab82b-1fa6-4442-9584-65877dc300c9",
+            "label": "Invoice Sent",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "05cfc17c-ebf7-4d5e-beef-80661d25a083",
+            "label": "Item out of Stock",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "b9f28e69-acad-4b5f-b7db-801cb1631379",
+            "label": "Create Delivery",
+            "properties": {},
+            "silent": false
+        }
+    ],
+    "arcs": [
+        {
+            "source": "order2",
+            "target": "8eb9488b-826a-4407-acf1-ce2ce0c73698",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "554cde78-fa4e-47fc-a5c1-1d1e89397a8f",
+            "target": "order7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "8eb9488b-826a-4407-acf1-ce2ce0c73698",
+            "target": "order6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "3d64193a-65ed-475e-9476-7b3539e1be03",
+            "target": "order6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "6af8fa90-a07b-4698-8466-d2e8184cb8f0",
+            "target": "element4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "element3",
+            "target": "6af8fa90-a07b-4698-8466-d2e8184cb8f0",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "91df962b-3513-44b5-8533-67264ec593c0",
+            "target": "element4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "800b447c-1dd1-40c3-94a4-860363b6dec8",
+            "target": "element2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "f60dec3c-4895-4e07-9b8c-0e7620ab7146",
+            "target": "element2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "8cdf0ca6-22e7-4810-99e6-9b5d7a852b1e",
+            "target": "delivery2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "delivery3",
+            "target": "bd47237d-bcdd-4bba-bba0-7d7045ded320",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "order7",
+            "target": "3d64193a-65ed-475e-9476-7b3539e1be03",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "order3",
+            "target": "6af8fa90-a07b-4698-8466-d2e8184cb8f0",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "307f1e7f-a4aa-4f57-a69e-57cc3a265f7d",
+            "target": "order5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "element4",
+            "target": "f60dec3c-4895-4e07-9b8c-0e7620ab7146",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "delivery3",
+            "target": "8cdf0ca6-22e7-4810-99e6-9b5d7a852b1e",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "bf2da866-6867-42f0-87aa-5ac65f1e8d11",
+            "target": "delivery2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "order4",
+            "target": "f2eab82b-1fa6-4442-9584-65877dc300c9",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "order7",
+            "target": "95d1e805-e848-4038-a580-b81d9b70e65f",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "element1",
+            "target": "800b447c-1dd1-40c3-94a4-860363b6dec8",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "13674fe5-1f6a-479e-acfb-c841b1c25827",
+            "target": "element5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "5c84cbd0-451d-437d-b257-d6f0022fbe8d",
+            "target": "element4",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "b9f28e69-acad-4b5f-b7db-801cb1631379",
+            "target": "delivery3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "6af8fa90-a07b-4698-8466-d2e8184cb8f0",
+            "target": "order4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "af14389c-c207-4f4a-895c-cf1b2479b4ec",
+            "target": "order4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "5c84cbd0-451d-437d-b257-d6f0022fbe8d",
+            "target": "order3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "order3",
+            "target": "307f1e7f-a4aa-4f57-a69e-57cc3a265f7d",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "05cfc17c-ebf7-4d5e-beef-80661d25a083",
+            "target": "element4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "b9f28e69-acad-4b5f-b7db-801cb1631379",
+            "target": "element4",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "ff5d8d6d-567b-4ed3-9c57-2d7af94732a0",
+            "target": "element4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "delivery2",
+            "target": "3bb809ad-aafb-469b-aa51-2e2374acfa87",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "delivery5",
+            "target": "bf2da866-6867-42f0-87aa-5ac65f1e8d11",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "order3",
+            "target": "af14389c-c207-4f4a-895c-cf1b2479b4ec",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "order1",
+            "target": "5c84cbd0-451d-437d-b257-d6f0022fbe8d",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "order6",
+            "target": "554cde78-fa4e-47fc-a5c1-1d1e89397a8f",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "element2",
+            "target": "42ceaf05-e530-4d5a-93d5-4fb65c0003f7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "42ceaf05-e530-4d5a-93d5-4fb65c0003f7",
+            "target": "element3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "element3",
+            "target": "ff5d8d6d-567b-4ed3-9c57-2d7af94732a0",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "element3",
+            "target": "13674fe5-1f6a-479e-acfb-c841b1c25827",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "element3",
+            "target": "5c84cbd0-451d-437d-b257-d6f0022fbe8d",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "delivery1",
+            "target": "b9f28e69-acad-4b5f-b7db-801cb1631379",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "3bb809ad-aafb-469b-aa51-2e2374acfa87",
+            "target": "delivery4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "element3",
+            "target": "91df962b-3513-44b5-8533-67264ec593c0",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "element3",
+            "target": "05cfc17c-ebf7-4d5e-beef-80661d25a083",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "element3",
+            "target": "b9f28e69-acad-4b5f-b7db-801cb1631379",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "95d1e805-e848-4038-a580-b81d9b70e65f",
+            "target": "order5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "7b8f2fb3-8c31-4c74-8106-504bfe82e20a",
+            "target": "order5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "order2",
+            "target": "7b8f2fb3-8c31-4c74-8106-504bfe82e20a",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "f2eab82b-1fa6-4442-9584-65877dc300c9",
+            "target": "order2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "bd47237d-bcdd-4bba-bba0-7d7045ded320",
+            "target": "delivery5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        }
+    ],
+    "properties": {
+        "description": "Event log from ocpa repository."
+    }
+}
