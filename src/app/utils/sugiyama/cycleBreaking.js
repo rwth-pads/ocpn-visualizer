@@ -38,7 +38,7 @@ function reverseCycles(ocpn, config) {
 function modifiedGreedyFAS(net, sources, sinks) {
     var s1 = [...sources]; // The id's of places belonging to s1.
     var s2 = [...sinks]; // The id's of places belonging to s2.
-    
+
     if (s1.length > 0) {
         // Sort the sources based on highest outDegree - inDegree.
         s1.sort((a, b) => net.getOutDegree(b) - net.getInDegree(b) - net.getOutDegree(a) + net.getInDegree(a));

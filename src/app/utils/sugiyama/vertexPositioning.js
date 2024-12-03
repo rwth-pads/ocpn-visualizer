@@ -309,12 +309,12 @@ function setCoordinates(ocpn, layering, layouts, config) {
                 break; // Layer either contains only places or only transitions (+ dummies for both).
             } else if (type == OCPNLayout.TRANSITION_TYPE) {
                 // TODO implement custom widths based on label length.
-                let curSize = config.direction == "TB" ? config.transitionHeight / 2: config.transitionWidth / 2;
+                let curSize = config.direction == "TB" ? config.transitionHeight / 2 : config.transitionWidth / 2;
                 layerSize = Math.max(layerSize, curSize);
             }
         }
-        layerHalfs.push({layer: i, size: layerSize});
-        ocpn.layout.layerSizes.push({layer: i, size: layerSize * 2}); // TODO: to adjust the y coordinate of the lower dummy vertices to the bottom of the layer.
+        layerHalfs.push({ layer: i, size: layerSize });
+        ocpn.layout.layerSizes.push({ layer: i, size: layerSize * 2 }); // TODO: to adjust the y coordinate of the lower dummy vertices to the bottom of the layer.
     }
 
 
