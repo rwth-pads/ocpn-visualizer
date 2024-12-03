@@ -98,6 +98,8 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             //     .attr('fill', 'black')
             //     .text(vertexId);
         } else if (vertex.type === OCPNLayout.TRANSITION_TYPE) {
+            const label = vertex.silent ? '𝜏' : vertex.label;
+            // TODO: custom silent width (and height).
             g.append('rect')
                 .attr('x', vertex.x - config.transitionWidth / 2)
                 .attr('y', vertex.y - config.transitionHeight / 2)
@@ -109,17 +111,39 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('class', 'ocpntransition')
                 .attr('id', vertexId);
 
-            g.append('text')
+            // Append the text element with an initial font size
+            const textElement = g.append('text')
                 .attr('x', vertex.x)
                 .attr('y', vertex.y)
                 .attr('text-anchor', 'middle')
                 .attr('alignment-baseline', 'middle')
-                .attr('font-size', '3px')
+                .attr('font-size', '30px') // Initial font size
                 .attr('fill', 'black')
-                .text(vertex.label)
+                .text(label)
                 .attr('user-select', 'none')
                 .attr('class', 'ocpntransition')
                 .attr('id', vertexId);
+
+            // Adjust the font size to fit within the rectangle
+            const adjustFontSize = () => {
+                const node = textElement.node();
+                if (!node) return;
+                let bbox = node.getBBox();
+                const maxWidth = config.transitionWidth * 0.8; // Adjust as needed
+                const maxHeight = config.transitionHeight * 0.8; // Adjust as needed
+                let fontSize = parseFloat(textElement.attr('font-size'));
+
+                while ((bbox.width > maxWidth || bbox.height > maxHeight) && fontSize > 1) {
+                    fontSize -= 1;
+                    textElement.attr('font-size', `${fontSize}px`);
+                    const textNode = textElement.node();
+                    if (textNode) {
+                        bbox = textNode.getBBox();
+                    }
+                }
+            };
+
+            adjustFontSize();
         }
     }
 

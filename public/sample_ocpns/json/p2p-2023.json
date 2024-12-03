@@ -1,0 +1,1376 @@
+{
+    "name": "p2p-2023",
+    "places": [
+        {
+            "name": "quotation5",
+            "objectType": "quotation",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "purchase_order7",
+            "objectType": "purchase_order",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "goods receipt1",
+            "objectType": "goods receipt",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "goods receipt7",
+            "objectType": "goods receipt",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "invoice receipt1",
+            "objectType": "invoice receipt",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "invoice receipt5",
+            "objectType": "invoice receipt",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "quotation1",
+            "objectType": "quotation",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "quotation2",
+            "objectType": "quotation",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "quotation6",
+            "objectType": "quotation",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "goods receipt5",
+            "objectType": "goods receipt",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "goods receipt10",
+            "objectType": "goods receipt",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "invoice receipt7",
+            "objectType": "invoice receipt",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "invoice receipt9",
+            "objectType": "invoice receipt",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "quotation8",
+            "objectType": "quotation",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "purchase_order1",
+            "objectType": "purchase_order",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "purchase_order3",
+            "objectType": "purchase_order",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "purchase_order6",
+            "objectType": "purchase_order",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "purchase_order5",
+            "objectType": "purchase_order",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "goods receipt6",
+            "objectType": "goods receipt",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "payment1",
+            "objectType": "payment",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "purchase_requisition1",
+            "objectType": "purchase_requisition",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "material1",
+            "objectType": "material",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "goods receipt3",
+            "objectType": "goods receipt",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "invoice receipt3",
+            "objectType": "invoice receipt",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "payment3",
+            "objectType": "payment",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "purchase_requisition2",
+            "objectType": "purchase_requisition",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "material2",
+            "objectType": "material",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "material3",
+            "objectType": "material",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "quotation4",
+            "objectType": "quotation",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "quotation7",
+            "objectType": "quotation",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "purchase_order2",
+            "objectType": "purchase_order",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "purchase_order8",
+            "objectType": "purchase_order",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "goods receipt2",
+            "objectType": "goods receipt",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "goods receipt9",
+            "objectType": "goods receipt",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "goods receipt11",
+            "objectType": "goods receipt",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "invoice receipt2",
+            "objectType": "invoice receipt",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "purchase_requisition3",
+            "objectType": "purchase_requisition",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "quotation3",
+            "objectType": "quotation",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "goods receipt4",
+            "objectType": "goods receipt",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "goods receipt8",
+            "objectType": "goods receipt",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "invoice receipt8",
+            "objectType": "invoice receipt",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "invoice receipt10",
+            "objectType": "invoice receipt",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "payment2",
+            "objectType": "payment",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "purchase_order4",
+            "objectType": "purchase_order",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "purchase_requisition4",
+            "objectType": "purchase_requisition",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "invoice receipt4",
+            "objectType": "invoice receipt",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "invoice receipt6",
+            "objectType": "invoice receipt",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "payment4",
+            "objectType": "payment",
+            "initial": false,
+            "final": false
+        }
+    ],
+    "transitions": [
+        {
+            "name": "6b741cb8-9fa2-486c-a6fa-3851170a23a9",
+            "label": "6b741cb8-9fa2-486c-a6fa-3851170a23a9",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "d4b9081a-3264-43f8-b04d-c25905228f52",
+            "label": "d4b9081a-3264-43f8-b04d-c25905228f52",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "6d75f470-4702-4208-b037-425888811cec",
+            "label": "6d75f470-4702-4208-b037-425888811cec",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "11052bd6-8d02-497c-bb20-22c31621cd91",
+            "label": "11052bd6-8d02-497c-bb20-22c31621cd91",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "cce55631-a715-4916-9b9d-8d843ee37b23",
+            "label": "cce55631-a715-4916-9b9d-8d843ee37b23",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "f8efcc69-3f67-479c-b43d-99d160934b17",
+            "label": "Approve Purchase Requisition",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "e74389c8-c61f-4055-8919-9df3164950a1",
+            "label": "Create Purchase Order",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "565187a4-29d8-4487-9f03-b7dd43a2b5e4",
+            "label": "565187a4-29d8-4487-9f03-b7dd43a2b5e4",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "cec86383-a06d-4f3c-8805-b08b81422ec7",
+            "label": "cec86383-a06d-4f3c-8805-b08b81422ec7",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "2fb78278-c004-4f3c-85ff-0671348f95b7",
+            "label": "2fb78278-c004-4f3c-85ff-0671348f95b7",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "ea7269a8-5a4f-4df4-9577-34392adead18",
+            "label": "ea7269a8-5a4f-4df4-9577-34392adead18",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "64cc00cb-5bf2-4f89-bc03-5df76c4232c1",
+            "label": "Approve Purchase Order",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "560e1999-0f68-41fa-9d17-af8395c5a511",
+            "label": "560e1999-0f68-41fa-9d17-af8395c5a511",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "2ef095a2-cf74-435e-878d-ba931a5b3ebc",
+            "label": "2ef095a2-cf74-435e-878d-ba931a5b3ebc",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "fd1a323a-f418-44b4-9e85-7f3d2ed25b84",
+            "label": "fd1a323a-f418-44b4-9e85-7f3d2ed25b84",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "d1c9c4f4-622a-4428-9e87-080bfa3440ba",
+            "label": "d1c9c4f4-622a-4428-9e87-080bfa3440ba",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "68d9cb6a-460e-462c-9b9d-2224e10e4920",
+            "label": "68d9cb6a-460e-462c-9b9d-2224e10e4920",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "f6cb8653-b5b7-47fe-be1c-333809d244d1",
+            "label": "Create Invoice Receipt",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "34aa02cd-909c-4e0f-af58-f0daf3464a4a",
+            "label": "Perform Two-Way Match",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "5f6d245c-f9f7-43b2-a302-b5a5a33d5302",
+            "label": "5f6d245c-f9f7-43b2-a302-b5a5a33d5302",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "d1d4ac16-33f8-4ba4-ac5d-b3e41f1aee4a",
+            "label": "d1d4ac16-33f8-4ba4-ac5d-b3e41f1aee4a",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "de5852a1-c561-4783-b7b5-2793e644f470",
+            "label": "de5852a1-c561-4783-b7b5-2793e644f470",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "76788f9f-c44e-48e4-850c-3b861d416758",
+            "label": "76788f9f-c44e-48e4-850c-3b861d416758",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "51987ed0-d275-4218-9679-9d1875cda672",
+            "label": "Create Purchase Requisition",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "5d16abb3-4960-4dfd-ba96-09b74331239c",
+            "label": "5d16abb3-4960-4dfd-ba96-09b74331239c",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "5c402c38-a688-4038-b5b8-bddf19514d43",
+            "label": "5c402c38-a688-4038-b5b8-bddf19514d43",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "7c293955-e572-4a4e-81d8-86b0718d4f64",
+            "label": "7c293955-e572-4a4e-81d8-86b0718d4f64",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "246f13d8-65b1-4d06-a602-61724a9244ac",
+            "label": "246f13d8-65b1-4d06-a602-61724a9244ac",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "09a6ba4e-841d-4223-9c35-4105a2a059a9",
+            "label": "09a6ba4e-841d-4223-9c35-4105a2a059a9",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "a72b3e45-e329-4feb-9567-f5a06efa8017",
+            "label": "a72b3e45-e329-4feb-9567-f5a06efa8017",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "ed47327d-344b-4c1d-99c7-afd48da1861f",
+            "label": "ed47327d-344b-4c1d-99c7-afd48da1861f",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "f671ddba-047b-4c02-b7b0-fc7d4de83b4e",
+            "label": "Create Goods Receipt",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "0f222cc8-ebdf-4432-a265-dd29c43f7c0d",
+            "label": "0f222cc8-ebdf-4432-a265-dd29c43f7c0d",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "f7115d0f-bb47-48e3-a340-ad8ff5540296",
+            "label": "f7115d0f-bb47-48e3-a340-ad8ff5540296",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "bbaded7d-a25b-4091-843e-cf9bf017ab9a",
+            "label": "bbaded7d-a25b-4091-843e-cf9bf017ab9a",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "e020e8f9-7b5c-4c13-a8d2-5c021ff8fefa",
+            "label": "Delegate Purchase Requisition Approval",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "ed81f297-1124-4a13-83fd-8a0b18b1f696",
+            "label": "Create Request for Quotation",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "5fa20c90-6c77-41ce-8e1d-f1f66a2845ac",
+            "label": "5fa20c90-6c77-41ce-8e1d-f1f66a2845ac",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "16adbbe6-6029-4b3b-a375-43cb9326980e",
+            "label": "Execute Payment",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "3251c88b-8035-47af-9f98-0471835908b7",
+            "label": "3251c88b-8035-47af-9f98-0471835908b7",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "facea91b-9d1b-46b3-b033-9bc94e90b5ba",
+            "label": "facea91b-9d1b-46b3-b033-9bc94e90b5ba",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "5b2642e1-fa0f-483c-9d95-52e87bf54b46",
+            "label": "5b2642e1-fa0f-483c-9d95-52e87bf54b46",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "0cc0681b-8be2-401d-aaa5-8e35b729c0e7",
+            "label": "0cc0681b-8be2-401d-aaa5-8e35b729c0e7",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "6bf44114-e344-4aff-b198-65e07513e695",
+            "label": "6bf44114-e344-4aff-b198-65e07513e695",
+            "properties": {},
+            "silent": true
+        }
+    ],
+    "arcs": [
+        {
+            "source": "purchase_order4",
+            "target": "0f222cc8-ebdf-4432-a265-dd29c43f7c0d",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "16adbbe6-6029-4b3b-a375-43cb9326980e",
+            "target": "invoice receipt3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "invoice receipt3",
+            "target": "ea7269a8-5a4f-4df4-9577-34392adead18",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "5c402c38-a688-4038-b5b8-bddf19514d43",
+            "target": "goods receipt6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "f6cb8653-b5b7-47fe-be1c-333809d244d1",
+            "target": "invoice receipt2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "invoice receipt9",
+            "target": "5b2642e1-fa0f-483c-9d95-52e87bf54b46",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "purchase_requisition2",
+            "target": "f8efcc69-3f67-479c-b43d-99d160934b17",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "f7115d0f-bb47-48e3-a340-ad8ff5540296",
+            "target": "goods receipt7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "2fb78278-c004-4f3c-85ff-0671348f95b7",
+            "target": "invoice receipt8",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "246f13d8-65b1-4d06-a602-61724a9244ac",
+            "target": "invoice receipt10",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "purchase_requisition3",
+            "target": "ed81f297-1124-4a13-83fd-8a0b18b1f696",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "6b741cb8-9fa2-486c-a6fa-3851170a23a9",
+            "target": "quotation6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "quotation2",
+            "target": "ed47327d-344b-4c1d-99c7-afd48da1861f",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "5c402c38-a688-4038-b5b8-bddf19514d43",
+            "target": "goods receipt2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "invoice receipt2",
+            "target": "facea91b-9d1b-46b3-b033-9bc94e90b5ba",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "5b2642e1-fa0f-483c-9d95-52e87bf54b46",
+            "target": "invoice receipt8",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "quotation7",
+            "target": "560e1999-0f68-41fa-9d17-af8395c5a511",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "d1c9c4f4-622a-4428-9e87-080bfa3440ba",
+            "target": "purchase_order3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "goods receipt7",
+            "target": "d1d4ac16-33f8-4ba4-ac5d-b3e41f1aee4a",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "invoice receipt6",
+            "target": "de5852a1-c561-4783-b7b5-2793e644f470",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "09a6ba4e-841d-4223-9c35-4105a2a059a9",
+            "target": "payment3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "ed81f297-1124-4a13-83fd-8a0b18b1f696",
+            "target": "purchase_requisition4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "material3",
+            "target": "e020e8f9-7b5c-4c13-a8d2-5c021ff8fefa",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "ed47327d-344b-4c1d-99c7-afd48da1861f",
+            "target": "quotation4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "purchase_order7",
+            "target": "11052bd6-8d02-497c-bb20-22c31621cd91",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "34aa02cd-909c-4e0f-af58-f0daf3464a4a",
+            "target": "invoice receipt9",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "quotation4",
+            "target": "e74389c8-c61f-4055-8919-9df3164950a1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "e74389c8-c61f-4055-8919-9df3164950a1",
+            "target": "quotation5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "16adbbe6-6029-4b3b-a375-43cb9326980e",
+            "target": "purchase_order7",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "5f6d245c-f9f7-43b2-a302-b5a5a33d5302",
+            "target": "goods receipt10",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "fd1a323a-f418-44b4-9e85-7f3d2ed25b84",
+            "target": "invoice receipt5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "e020e8f9-7b5c-4c13-a8d2-5c021ff8fefa",
+            "target": "purchase_requisition3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "purchase_order5",
+            "target": "2ef095a2-cf74-435e-878d-ba931a5b3ebc",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "goods receipt6",
+            "target": "f671ddba-047b-4c02-b7b0-fc7d4de83b4e",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "invoice receipt4",
+            "target": "fd1a323a-f418-44b4-9e85-7f3d2ed25b84",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "invoice receipt8",
+            "target": "34aa02cd-909c-4e0f-af58-f0daf3464a4a",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "ed81f297-1124-4a13-83fd-8a0b18b1f696",
+            "target": "quotation2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "quotation3",
+            "target": "5d16abb3-4960-4dfd-ba96-09b74331239c",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "5c402c38-a688-4038-b5b8-bddf19514d43",
+            "target": "goods receipt4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "3251c88b-8035-47af-9f98-0471835908b7",
+            "target": "invoice receipt6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "51987ed0-d275-4218-9679-9d1875cda672",
+            "target": "material3",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "6d75f470-4702-4208-b037-425888811cec",
+            "target": "purchase_order6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "16adbbe6-6029-4b3b-a375-43cb9326980e",
+            "target": "goods receipt11",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "material1",
+            "target": "51987ed0-d275-4218-9679-9d1875cda672",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "e74389c8-c61f-4055-8919-9df3164950a1",
+            "target": "purchase_order2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "goods receipt9",
+            "target": "5f6d245c-f9f7-43b2-a302-b5a5a33d5302",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "payment4",
+            "target": "6bf44114-e344-4aff-b198-65e07513e695",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "0cc0681b-8be2-401d-aaa5-8e35b729c0e7",
+            "target": "payment2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "goods receipt2",
+            "target": "f6cb8653-b5b7-47fe-be1c-333809d244d1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "51987ed0-d275-4218-9679-9d1875cda672",
+            "target": "purchase_requisition2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "purchase_order3",
+            "target": "f671ddba-047b-4c02-b7b0-fc7d4de83b4e",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "560e1999-0f68-41fa-9d17-af8395c5a511",
+            "target": "quotation3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "64cc00cb-5bf2-4f89-bc03-5df76c4232c1",
+            "target": "purchase_order3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "cec86383-a06d-4f3c-8805-b08b81422ec7",
+            "target": "goods receipt3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "e020e8f9-7b5c-4c13-a8d2-5c021ff8fefa",
+            "target": "material2",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "quotation6",
+            "target": "64cc00cb-5bf2-4f89-bc03-5df76c4232c1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "payment1",
+            "target": "0cc0681b-8be2-401d-aaa5-8e35b729c0e7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "purchase_order4",
+            "target": "d1c9c4f4-622a-4428-9e87-080bfa3440ba",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "purchase_order5",
+            "target": "6d75f470-4702-4208-b037-425888811cec",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "7c293955-e572-4a4e-81d8-86b0718d4f64",
+            "target": "invoice receipt7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "purchase_requisition1",
+            "target": "51987ed0-d275-4218-9679-9d1875cda672",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "f6cb8653-b5b7-47fe-be1c-333809d244d1",
+            "target": "goods receipt8",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "goods receipt1",
+            "target": "5c402c38-a688-4038-b5b8-bddf19514d43",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "goods receipt11",
+            "target": "cce55631-a715-4916-9b9d-8d843ee37b23",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "invoice receipt3",
+            "target": "76788f9f-c44e-48e4-850c-3b861d416758",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "f8efcc69-3f67-479c-b43d-99d160934b17",
+            "target": "purchase_requisition3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "565187a4-29d8-4487-9f03-b7dd43a2b5e4",
+            "target": "quotation4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "goods receipt7",
+            "target": "cec86383-a06d-4f3c-8805-b08b81422ec7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "34aa02cd-909c-4e0f-af58-f0daf3464a4a",
+            "target": "goods receipt5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "76788f9f-c44e-48e4-850c-3b861d416758",
+            "target": "invoice receipt1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "goods receipt4",
+            "target": "34aa02cd-909c-4e0f-af58-f0daf3464a4a",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "11052bd6-8d02-497c-bb20-22c31621cd91",
+            "target": "purchase_order6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "purchase_order2",
+            "target": "64cc00cb-5bf2-4f89-bc03-5df76c4232c1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "2ef095a2-cf74-435e-878d-ba931a5b3ebc",
+            "target": "purchase_order4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "cce55631-a715-4916-9b9d-8d843ee37b23",
+            "target": "goods receipt10",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "facea91b-9d1b-46b3-b033-9bc94e90b5ba",
+            "target": "invoice receipt7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "purchase_requisition1",
+            "target": "a72b3e45-e329-4feb-9567-f5a06efa8017",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "quotation1",
+            "target": "ed81f297-1124-4a13-83fd-8a0b18b1f696",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "goods receipt8",
+            "target": "cec86383-a06d-4f3c-8805-b08b81422ec7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "invoice receipt7",
+            "target": "f6cb8653-b5b7-47fe-be1c-333809d244d1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "invoice receipt6",
+            "target": "246f13d8-65b1-4d06-a602-61724a9244ac",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "payment4",
+            "target": "09a6ba4e-841d-4223-9c35-4105a2a059a9",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "68d9cb6a-460e-462c-9b9d-2224e10e4920",
+            "target": "purchase_order4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "a72b3e45-e329-4feb-9567-f5a06efa8017",
+            "target": "purchase_requisition3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "quotation7",
+            "target": "d4b9081a-3264-43f8-b04d-c25905228f52",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "0f222cc8-ebdf-4432-a265-dd29c43f7c0d",
+            "target": "purchase_order8",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "f671ddba-047b-4c02-b7b0-fc7d4de83b4e",
+            "target": "goods receipt9",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "goods receipt10",
+            "target": "16adbbe6-6029-4b3b-a375-43cb9326980e",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "d1d4ac16-33f8-4ba4-ac5d-b3e41f1aee4a",
+            "target": "goods receipt6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "bbaded7d-a25b-4091-843e-cf9bf017ab9a",
+            "target": "goods receipt7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "d4b9081a-3264-43f8-b04d-c25905228f52",
+            "target": "quotation6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "goods receipt11",
+            "target": "bbaded7d-a25b-4091-843e-cf9bf017ab9a",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "invoice receipt10",
+            "target": "16adbbe6-6029-4b3b-a375-43cb9326980e",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "64cc00cb-5bf2-4f89-bc03-5df76c4232c1",
+            "target": "quotation7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "5fa20c90-6c77-41ce-8e1d-f1f66a2845ac",
+            "target": "quotation2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "payment2",
+            "target": "16adbbe6-6029-4b3b-a375-43cb9326980e",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "purchase_requisition2",
+            "target": "e020e8f9-7b5c-4c13-a8d2-5c021ff8fefa",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "quotation3",
+            "target": "5fa20c90-6c77-41ce-8e1d-f1f66a2845ac",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "5d16abb3-4960-4dfd-ba96-09b74331239c",
+            "target": "quotation8",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "invoice receipt9",
+            "target": "3251c88b-8035-47af-9f98-0471835908b7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "invoice receipt2",
+            "target": "2fb78278-c004-4f3c-85ff-0671348f95b7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "6bf44114-e344-4aff-b198-65e07513e695",
+            "target": "payment2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "f8efcc69-3f67-479c-b43d-99d160934b17",
+            "target": "material2",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "quotation5",
+            "target": "565187a4-29d8-4487-9f03-b7dd43a2b5e4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "invoice receipt5",
+            "target": "7c293955-e572-4a4e-81d8-86b0718d4f64",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "ea7269a8-5a4f-4df4-9577-34392adead18",
+            "target": "invoice receipt10",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "purchase_order6",
+            "target": "16adbbe6-6029-4b3b-a375-43cb9326980e",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "purchase_order7",
+            "target": "68d9cb6a-460e-462c-9b9d-2224e10e4920",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "goods receipt9",
+            "target": "f7115d0f-bb47-48e3-a340-ad8ff5540296",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "de5852a1-c561-4783-b7b5-2793e644f470",
+            "target": "invoice receipt5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "16adbbe6-6029-4b3b-a375-43cb9326980e",
+            "target": "payment4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "goods receipt5",
+            "target": "cec86383-a06d-4f3c-8805-b08b81422ec7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "material3",
+            "target": "f8efcc69-3f67-479c-b43d-99d160934b17",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "quotation5",
+            "target": "6b741cb8-9fa2-486c-a6fa-3851170a23a9",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "purchase_order1",
+            "target": "e74389c8-c61f-4055-8919-9df3164950a1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "f671ddba-047b-4c02-b7b0-fc7d4de83b4e",
+            "target": "purchase_order5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        }
+    ],
+    "properties": {
+        "description": "Event log from ocpa repository."
+    }
+}

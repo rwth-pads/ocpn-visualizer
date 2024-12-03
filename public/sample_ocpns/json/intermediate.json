@@ -1,0 +1,1592 @@
+{
+    "name": "intermediate",
+    "places": [
+        {
+            "name": "application1",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application2",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application3",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application9",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application21",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application23",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "offer11",
+            "objectType": "offer",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application7",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application11",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application13",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application25",
+            "objectType": "application",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "offer1",
+            "objectType": "offer",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "offer3",
+            "objectType": "offer",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "offer10",
+            "objectType": "offer",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application6",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application14",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "offer8",
+            "objectType": "offer",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application16",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application17",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application27",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "offer2",
+            "objectType": "offer",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "offer4",
+            "objectType": "offer",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application8",
+            "objectType": "application",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "application10",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application22",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application24",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "offer5",
+            "objectType": "offer",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "offer9",
+            "objectType": "offer",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application5",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application15",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application18",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application26",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "offer6",
+            "objectType": "offer",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "offer7",
+            "objectType": "offer",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application4",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application12",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application19",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "application20",
+            "objectType": "application",
+            "initial": false,
+            "final": false
+        }
+    ],
+    "transitions": [
+        {
+            "name": "35bd420e-5c1f-476e-a3ef-55eb2a744a37",
+            "label": "Validate",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "b2291a1b-2437-48e6-803c-b79a8853ffb1",
+            "label": "b2291a1b-2437-48e6-803c-b79a8853ffb1",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "384d2a90-121c-4276-b1e5-1940a1117fb6",
+            "label": "Accept offer",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "08155cfb-bb16-4cd3-a546-bb18a266d768",
+            "label": "Handle leads",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "0df638f9-3f3a-4594-83ed-f7c9cdd4b3fe",
+            "label": "0df638f9-3f3a-4594-83ed-f7c9cdd4b3fe",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "37d54a19-8926-4da5-83be-d52d5a4a2466",
+            "label": "37d54a19-8926-4da5-83be-d52d5a4a2466",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "115b4726-9146-4300-9628-e95552dbd2ce",
+            "label": "Return",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "52d52578-21db-4773-b1a0-d43ce224e630",
+            "label": "52d52578-21db-4773-b1a0-d43ce224e630",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "1023f8f0-930d-4a55-8472-9fda89311cff",
+            "label": "1023f8f0-930d-4a55-8472-9fda89311cff",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "2564dda4-e7e9-4ef9-9cf3-2d7203783f8c",
+            "label": "2564dda4-e7e9-4ef9-9cf3-2d7203783f8c",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "9a2dd28a-eb1d-49f2-894d-c54b09faaf38",
+            "label": "9a2dd28a-eb1d-49f2-894d-c54b09faaf38",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "72e77d44-d945-46b9-b0a1-8aa934df0dfb",
+            "label": "Call",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "eb849303-62cd-43ff-a19f-ebc55eb4e0b2",
+            "label": "eb849303-62cd-43ff-a19f-ebc55eb4e0b2",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "de23e0de-877c-4db9-95f6-cdb1525db23c",
+            "label": "de23e0de-877c-4db9-95f6-cdb1525db23c",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "066b8bae-5cf1-4633-a4bb-e71d7098a897",
+            "label": "066b8bae-5cf1-4633-a4bb-e71d7098a897",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "c6ffa7e6-ffd2-43fd-bd4d-7e6b342ba89b",
+            "label": "c6ffa7e6-ffd2-43fd-bd4d-7e6b342ba89b",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "f76a373a-c188-4df6-8b2c-d6ae6d73990f",
+            "label": "Send (online)",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "34e4eb60-9713-438c-b4cd-3a27b2b48960",
+            "label": "Submit",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "9020d17e-f6ef-42d3-a40b-a6a61c98fda5",
+            "label": "Refuse offer",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "90e5e6c4-1a03-4445-893f-1783e13c17ee",
+            "label": "Pending",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "3bc20e04-db50-4440-a2a4-23cdd669dcb8",
+            "label": "3bc20e04-db50-4440-a2a4-23cdd669dcb8",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "e3edc018-f543-4028-b21f-26051b7478d0",
+            "label": "e3edc018-f543-4028-b21f-26051b7478d0",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "03f35493-acf7-44a0-bc2c-7104b2f82e97",
+            "label": "03f35493-acf7-44a0-bc2c-7104b2f82e97",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "8aaa3f51-183c-43a1-b05d-58cf7c8e4e51",
+            "label": "Cancel offer",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "75a6dd19-58ad-4225-9323-7dd782b73763",
+            "label": "75a6dd19-58ad-4225-9323-7dd782b73763",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "9aa44ac5-dce5-4252-b6c2-a7b4827cb270",
+            "label": "9aa44ac5-dce5-4252-b6c2-a7b4827cb270",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "bafc1dda-5fc9-4e00-b0f7-aadfa4f84298",
+            "label": "bafc1dda-5fc9-4e00-b0f7-aadfa4f84298",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "dd4d99c3-ba7a-4d67-b7ca-9a2dae2f3185",
+            "label": "dd4d99c3-ba7a-4d67-b7ca-9a2dae2f3185",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "ba0cfe36-8821-45c8-be00-5d1509ade5ba",
+            "label": "ba0cfe36-8821-45c8-be00-5d1509ade5ba",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "5c11c480-7b51-4742-bcbc-2e86263ff21f",
+            "label": "5c11c480-7b51-4742-bcbc-2e86263ff21f",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "1d6eaa7a-0f60-4c57-bbda-352f6633c84a",
+            "label": "Shorten completion",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "89b5644d-61e3-49ea-9694-e914f7b162c9",
+            "label": "89b5644d-61e3-49ea-9694-e914f7b162c9",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "89597322-10a3-4721-ac9f-aef9182434a7",
+            "label": "Create offer",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "6cae4ad8-cc37-4bc8-b7a7-4375bf486342",
+            "label": "Accept",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "bc16959b-83eb-4ac7-afa7-f491c218e770",
+            "label": "bc16959b-83eb-4ac7-afa7-f491c218e770",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "5d5f1357-155b-41a6-8ece-e3ab43030be5",
+            "label": "5d5f1357-155b-41a6-8ece-e3ab43030be5",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "a62cab9f-93b1-42fd-8079-c85c67603dcc",
+            "label": "a62cab9f-93b1-42fd-8079-c85c67603dcc",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "98c3a8da-3ebc-45cb-a910-060e36e9c93c",
+            "label": "98c3a8da-3ebc-45cb-a910-060e36e9c93c",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "678a45aa-8ef9-45ae-a284-ee513826e73a",
+            "label": "678a45aa-8ef9-45ae-a284-ee513826e73a",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "8a97f608-27a9-4bc6-85a8-89d5f8715e9d",
+            "label": "8a97f608-27a9-4bc6-85a8-89d5f8715e9d",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "5efbc869-37d5-48d8-acd7-e9caae2148cb",
+            "label": "Call incomplete files",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "fc427a30-4edb-48ed-a06c-62d1de949db7",
+            "label": "fc427a30-4edb-48ed-a06c-62d1de949db7",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "08f0dec0-c530-4675-b2b5-fa7d4f3fa022",
+            "label": "08f0dec0-c530-4675-b2b5-fa7d4f3fa022",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "406bb8eb-013c-4160-9ce3-ab01ceccc62d",
+            "label": "Send (mail and online)",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "fd049407-bd41-4461-bfef-54d9216e21fd",
+            "label": "fd049407-bd41-4461-bfef-54d9216e21fd",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "919be6f0-6902-4660-9a6d-78a8ab9a3542",
+            "label": "Assess potential fraud",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "ff0ecfb0-dbfa-4231-808b-cd094692c6ce",
+            "label": "Create application",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "0fc178c4-473a-4e21-b076-e8b3ff6f565d",
+            "label": "Cancel application",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "21ed2492-17da-4d25-9f4f-9d1b1e2c8feb",
+            "label": "21ed2492-17da-4d25-9f4f-9d1b1e2c8feb",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "c2f403b2-56a4-4f14-b39b-078d08732949",
+            "label": "c2f403b2-56a4-4f14-b39b-078d08732949",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "feaee4a2-66a7-482e-960d-3642dc1e6e74",
+            "label": "feaee4a2-66a7-482e-960d-3642dc1e6e74",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "f1eb47fe-b3be-43d3-96c1-574e971e1a6c",
+            "label": "f1eb47fe-b3be-43d3-96c1-574e971e1a6c",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "67bc89a0-8ea0-41f3-ad48-4e58d618c727",
+            "label": "67bc89a0-8ea0-41f3-ad48-4e58d618c727",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "e52301a8-6d57-45e8-88a3-c5dfa2b2e9aa",
+            "label": "e52301a8-6d57-45e8-88a3-c5dfa2b2e9aa",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "af9aaa5b-486e-4086-bca8-ab0c911712ba",
+            "label": "af9aaa5b-486e-4086-bca8-ab0c911712ba",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "ce351490-ad6b-4a78-b1fa-abf286917ab4",
+            "label": "Complete",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "7c25cc6a-4c71-46aa-9562-1271c9ffd33f",
+            "label": "7c25cc6a-4c71-46aa-9562-1271c9ffd33f",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "a7232b0c-1763-49b0-bdba-363053f9017b",
+            "label": "Deny",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "8695c9bd-c26f-45bc-b4cc-b5f9e0a53f3b",
+            "label": "8695c9bd-c26f-45bc-b4cc-b5f9e0a53f3b",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "a9691853-2b81-4e4c-9200-4143938d882b",
+            "label": "a9691853-2b81-4e4c-9200-4143938d882b",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "afaf1875-3cc5-43fe-b8a4-93b9e8554263",
+            "label": "afaf1875-3cc5-43fe-b8a4-93b9e8554263",
+            "properties": {},
+            "silent": true
+        },
+        {
+            "name": "971d954a-da7a-4c35-9757-34816d5ebd82",
+            "label": "971d954a-da7a-4c35-9757-34816d5ebd82",
+            "properties": {},
+            "silent": true
+        }
+    ],
+    "arcs": [
+        {
+            "source": "ce351490-ad6b-4a78-b1fa-abf286917ab4",
+            "target": "application20",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "ba0cfe36-8821-45c8-be00-5d1509ade5ba",
+            "target": "application26",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "75a6dd19-58ad-4225-9323-7dd782b73763",
+            "target": "application18",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application5",
+            "target": "afaf1875-3cc5-43fe-b8a4-93b9e8554263",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer7",
+            "target": "406bb8eb-013c-4160-9ce3-ab01ceccc62d",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "e3edc018-f543-4028-b21f-26051b7478d0",
+            "target": "application23",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application21",
+            "target": "919be6f0-6902-4660-9a6d-78a8ab9a3542",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "a62cab9f-93b1-42fd-8079-c85c67603dcc",
+            "target": "application16",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer5",
+            "target": "dd4d99c3-ba7a-4d67-b7ca-9a2dae2f3185",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "066b8bae-5cf1-4633-a4bb-e71d7098a897",
+            "target": "application21",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application14",
+            "target": "8a97f608-27a9-4bc6-85a8-89d5f8715e9d",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application24",
+            "target": "75a6dd19-58ad-4225-9323-7dd782b73763",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "fc427a30-4edb-48ed-a06c-62d1de949db7",
+            "target": "application15",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application19",
+            "target": "21ed2492-17da-4d25-9f4f-9d1b1e2c8feb",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "bafc1dda-5fc9-4e00-b0f7-aadfa4f84298",
+            "target": "application22",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer7",
+            "target": "f76a373a-c188-4df6-8b2c-d6ae6d73990f",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer8",
+            "target": "8aaa3f51-183c-43a1-b05d-58cf7c8e4e51",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "bc16959b-83eb-4ac7-afa7-f491c218e770",
+            "target": "application2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application11",
+            "target": "89b5644d-61e3-49ea-9694-e914f7b162c9",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "384d2a90-121c-4276-b1e5-1940a1117fb6",
+            "target": "application6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application3",
+            "target": "a62cab9f-93b1-42fd-8079-c85c67603dcc",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer11",
+            "target": "c6ffa7e6-ffd2-43fd-bd4d-7e6b342ba89b",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application23",
+            "target": "35bd420e-5c1f-476e-a3ef-55eb2a744a37",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "9020d17e-f6ef-42d3-a40b-a6a61c98fda5",
+            "target": "application5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "a9691853-2b81-4e4c-9200-4143938d882b",
+            "target": "application15",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application7",
+            "target": "7c25cc6a-4c71-46aa-9562-1271c9ffd33f",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application2",
+            "target": "8695c9bd-c26f-45bc-b4cc-b5f9e0a53f3b",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "115b4726-9146-4300-9628-e95552dbd2ce",
+            "target": "offer5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "35bd420e-5c1f-476e-a3ef-55eb2a744a37",
+            "target": "application18",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "34e4eb60-9713-438c-b4cd-3a27b2b48960",
+            "target": "application14",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "0fc178c4-473a-4e21-b076-e8b3ff6f565d",
+            "target": "application19",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "ff0ecfb0-dbfa-4231-808b-cd094692c6ce",
+            "target": "application9",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "6cae4ad8-cc37-4bc8-b7a7-4375bf486342",
+            "target": "application12",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer3",
+            "target": "08f0dec0-c530-4675-b2b5-fa7d4f3fa022",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer5",
+            "target": "fd049407-bd41-4461-bfef-54d9216e21fd",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "9aa44ac5-dce5-4252-b6c2-a7b4827cb270",
+            "target": "application10",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "de23e0de-877c-4db9-95f6-cdb1525db23c",
+            "target": "application14",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application20",
+            "target": "98c3a8da-3ebc-45cb-a910-060e36e9c93c",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application7",
+            "target": "67bc89a0-8ea0-41f3-ad48-4e58d618c727",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "afaf1875-3cc5-43fe-b8a4-93b9e8554263",
+            "target": "application13",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application22",
+            "target": "af9aaa5b-486e-4086-bca8-ab0c911712ba",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "21ed2492-17da-4d25-9f4f-9d1b1e2c8feb",
+            "target": "application22",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "eb849303-62cd-43ff-a19f-ebc55eb4e0b2",
+            "target": "application7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "8695c9bd-c26f-45bc-b4cc-b5f9e0a53f3b",
+            "target": "application25",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer4",
+            "target": "384d2a90-121c-4276-b1e5-1940a1117fb6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "f1eb47fe-b3be-43d3-96c1-574e971e1a6c",
+            "target": "offer8",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "3bc20e04-db50-4440-a2a4-23cdd669dcb8",
+            "target": "application4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "89597322-10a3-4721-ac9f-aef9182434a7",
+            "target": "application18",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application3",
+            "target": "066b8bae-5cf1-4633-a4bb-e71d7098a897",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application11",
+            "target": "9aa44ac5-dce5-4252-b6c2-a7b4827cb270",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "0df638f9-3f3a-4594-83ed-f7c9cdd4b3fe",
+            "target": "application4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application9",
+            "target": "de23e0de-877c-4db9-95f6-cdb1525db23c",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application12",
+            "target": "8695c9bd-c26f-45bc-b4cc-b5f9e0a53f3b",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application15",
+            "target": "feaee4a2-66a7-482e-960d-3642dc1e6e74",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application15",
+            "target": "5efbc869-37d5-48d8-acd7-e9caae2148cb",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "72e77d44-d945-46b9-b0a1-8aa934df0dfb",
+            "target": "application27",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer4",
+            "target": "52d52578-21db-4773-b1a0-d43ce224e630",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application27",
+            "target": "e3edc018-f543-4028-b21f-26051b7478d0",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application26",
+            "target": "0df638f9-3f3a-4594-83ed-f7c9cdd4b3fe",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "af9aaa5b-486e-4086-bca8-ab0c911712ba",
+            "target": "application26",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "90e5e6c4-1a03-4445-893f-1783e13c17ee",
+            "target": "application19",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application26",
+            "target": "2564dda4-e7e9-4ef9-9cf3-2d7203783f8c",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "f76a373a-c188-4df6-8b2c-d6ae6d73990f",
+            "target": "offer2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "8aaa3f51-183c-43a1-b05d-58cf7c8e4e51",
+            "target": "application19",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "89b5644d-61e3-49ea-9694-e914f7b162c9",
+            "target": "application3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "9a2dd28a-eb1d-49f2-894d-c54b09faaf38",
+            "target": "application18",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "e52301a8-6d57-45e8-88a3-c5dfa2b2e9aa",
+            "target": "application17",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application4",
+            "target": "72e77d44-d945-46b9-b0a1-8aa934df0dfb",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application2",
+            "target": "eb849303-62cd-43ff-a19f-ebc55eb4e0b2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "72e77d44-d945-46b9-b0a1-8aa934df0dfb",
+            "target": "offer5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "c2f403b2-56a4-4f14-b39b-078d08732949",
+            "target": "application13",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "678a45aa-8ef9-45ae-a284-ee513826e73a",
+            "target": "application21",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "0fc178c4-473a-4e21-b076-e8b3ff6f565d",
+            "target": "offer5",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "application8",
+            "target": "ff0ecfb0-dbfa-4231-808b-cd094692c6ce",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application20",
+            "target": "678a45aa-8ef9-45ae-a284-ee513826e73a",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "1d6eaa7a-0f60-4c57-bbda-352f6633c84a",
+            "target": "application17",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application21",
+            "target": "e52301a8-6d57-45e8-88a3-c5dfa2b2e9aa",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application17",
+            "target": "b2291a1b-2437-48e6-803c-b79a8853ffb1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "89597322-10a3-4721-ac9f-aef9182434a7",
+            "target": "offer7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application6",
+            "target": "90e5e6c4-1a03-4445-893f-1783e13c17ee",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "98c3a8da-3ebc-45cb-a910-060e36e9c93c",
+            "target": "application16",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application10",
+            "target": "08155cfb-bb16-4cd3-a546-bb18a266d768",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application15",
+            "target": "0fc178c4-473a-4e21-b076-e8b3ff6f565d",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application15",
+            "target": "384d2a90-121c-4276-b1e5-1940a1117fb6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application1",
+            "target": "6cae4ad8-cc37-4bc8-b7a7-4375bf486342",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "1023f8f0-930d-4a55-8472-9fda89311cff",
+            "target": "offer9",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "2564dda4-e7e9-4ef9-9cf3-2d7203783f8c",
+            "target": "application23",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "feaee4a2-66a7-482e-960d-3642dc1e6e74",
+            "target": "application6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "7c25cc6a-4c71-46aa-9562-1271c9ffd33f",
+            "target": "application3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application19",
+            "target": "a9691853-2b81-4e4c-9200-4143938d882b",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "5efbc869-37d5-48d8-acd7-e9caae2148cb",
+            "target": "application19",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "08f0dec0-c530-4675-b2b5-fa7d4f3fa022",
+            "target": "offer1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "8a97f608-27a9-4bc6-85a8-89d5f8715e9d",
+            "target": "application1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application6",
+            "target": "8aaa3f51-183c-43a1-b05d-58cf7c8e4e51",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application23",
+            "target": "89597322-10a3-4721-ac9f-aef9182434a7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer6",
+            "target": "89597322-10a3-4721-ac9f-aef9182434a7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "8aaa3f51-183c-43a1-b05d-58cf7c8e4e51",
+            "target": "offer5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "5c11c480-7b51-4742-bcbc-2e86263ff21f",
+            "target": "application18",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application23",
+            "target": "5c11c480-7b51-4742-bcbc-2e86263ff21f",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer8",
+            "target": "72e77d44-d945-46b9-b0a1-8aa934df0dfb",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer8",
+            "target": "0fc178c4-473a-4e21-b076-e8b3ff6f565d",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "application18",
+            "target": "bafc1dda-5fc9-4e00-b0f7-aadfa4f84298",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "919be6f0-6902-4660-9a6d-78a8ab9a3542",
+            "target": "application17",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application18",
+            "target": "fc427a30-4edb-48ed-a06c-62d1de949db7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application13",
+            "target": "9020d17e-f6ef-42d3-a40b-a6a61c98fda5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "03f35493-acf7-44a0-bc2c-7104b2f82e97",
+            "target": "offer4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer4",
+            "target": "1023f8f0-930d-4a55-8472-9fda89311cff",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer8",
+            "target": "115b4726-9146-4300-9628-e95552dbd2ce",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "52d52578-21db-4773-b1a0-d43ce224e630",
+            "target": "offer3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "c6ffa7e6-ffd2-43fd-bd4d-7e6b342ba89b",
+            "target": "offer10",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer2",
+            "target": "03f35493-acf7-44a0-bc2c-7104b2f82e97",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application9",
+            "target": "34e4eb60-9713-438c-b4cd-3a27b2b48960",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "08155cfb-bb16-4cd3-a546-bb18a266d768",
+            "target": "application11",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "8a97f608-27a9-4bc6-85a8-89d5f8715e9d",
+            "target": "application7",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "37d54a19-8926-4da5-83be-d52d5a4a2466",
+            "target": "offer9",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "dd4d99c3-ba7a-4d67-b7ca-9a2dae2f3185",
+            "target": "offer8",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "67bc89a0-8ea0-41f3-ad48-4e58d618c727",
+            "target": "application10",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application23",
+            "target": "a7232b0c-1763-49b0-bdba-363053f9017b",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "fd049407-bd41-4461-bfef-54d9216e21fd",
+            "target": "offer4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "971d954a-da7a-4c35-9757-34816d5ebd82",
+            "target": "offer2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application27",
+            "target": "3bc20e04-db50-4440-a2a4-23cdd669dcb8",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application22",
+            "target": "bc16959b-83eb-4ac7-afa7-f491c218e770",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer2",
+            "target": "f1eb47fe-b3be-43d3-96c1-574e971e1a6c",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "a7232b0c-1763-49b0-bdba-363053f9017b",
+            "target": "offer11",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "9020d17e-f6ef-42d3-a40b-a6a61c98fda5",
+            "target": "offer10",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application21",
+            "target": "1d6eaa7a-0f60-4c57-bbda-352f6633c84a",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "a7232b0c-1763-49b0-bdba-363053f9017b",
+            "target": "application24",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application16",
+            "target": "ce351490-ad6b-4a78-b1fa-abf286917ab4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "406bb8eb-013c-4160-9ce3-ab01ceccc62d",
+            "target": "offer2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer10",
+            "target": "37d54a19-8926-4da5-83be-d52d5a4a2466",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer9",
+            "target": "a7232b0c-1763-49b0-bdba-363053f9017b",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "offer10",
+            "target": "5d5f1357-155b-41a6-8ece-e3ab43030be5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "5d5f1357-155b-41a6-8ece-e3ab43030be5",
+            "target": "offer3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "b2291a1b-2437-48e6-803c-b79a8853ffb1",
+            "target": "application2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application5",
+            "target": "9a2dd28a-eb1d-49f2-894d-c54b09faaf38",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "384d2a90-121c-4276-b1e5-1940a1117fb6",
+            "target": "offer3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer7",
+            "target": "971d954a-da7a-4c35-9757-34816d5ebd82",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application17",
+            "target": "ba0cfe36-8821-45c8-be00-5d1509ade5ba",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "application24",
+            "target": "c2f403b2-56a4-4f14-b39b-078d08732949",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "offer11",
+            "target": "9020d17e-f6ef-42d3-a40b-a6a61c98fda5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        }
+    ],
+    "properties": {
+        "description": "Event log from ocpa repository."
+    }
+}

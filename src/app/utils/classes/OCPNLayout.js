@@ -36,6 +36,7 @@ class OCPNLayout {
                 this.vertices[transition.id] = {
                     name: transition.name,
                     label: transition.label,
+                    silent: transition.silent,
                     x: undefined,
                     y: undefined,
                     layer: -1,

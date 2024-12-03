@@ -1,0 +1,496 @@
+{
+    "name": "exported-p2p-normal",
+    "places": [
+        {
+            "name": "MATERIAL1",
+            "objectType": "MATERIAL",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "MATERIAL2",
+            "objectType": "MATERIAL",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "MATERIAL5",
+            "objectType": "MATERIAL",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "MATERIAL8",
+            "objectType": "MATERIAL",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "PURCHORD5",
+            "objectType": "PURCHORD",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "PURCHORD1",
+            "objectType": "PURCHORD",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "PURCHORD2",
+            "objectType": "PURCHORD",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "GDSRCPT3",
+            "objectType": "GDSRCPT",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "PURCHORD6",
+            "objectType": "PURCHORD",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "MATERIAL3",
+            "objectType": "MATERIAL",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "MATERIAL7",
+            "objectType": "MATERIAL",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "GDSRCPT1",
+            "objectType": "GDSRCPT",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "GDSRCPT4",
+            "objectType": "GDSRCPT",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "INVOICE1",
+            "objectType": "INVOICE",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "INVOICE2",
+            "objectType": "INVOICE",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "MATERIAL6",
+            "objectType": "MATERIAL",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "MATERIAL9",
+            "objectType": "MATERIAL",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "PURCHREQ1",
+            "objectType": "PURCHREQ",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "PURCHREQ2",
+            "objectType": "PURCHREQ",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "PURCHREQ3",
+            "objectType": "PURCHREQ",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "PURCHORD3",
+            "objectType": "PURCHORD",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "PURCHORD4",
+            "objectType": "PURCHORD",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "MATERIAL4",
+            "objectType": "MATERIAL",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "GDSRCPT2",
+            "objectType": "GDSRCPT",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "INVOICE3",
+            "objectType": "INVOICE",
+            "initial": false,
+            "final": false
+        }
+    ],
+    "transitions": [
+        {
+            "name": "1e91e857-cef8-4764-8b4b-92d3098063e1",
+            "label": "Create Purchase Order",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "e0f2a005-c581-4658-a81f-7ee1672dd41c",
+            "label": "Create Purchase Requisition",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "27b7f3e1-d2aa-41bd-a9c4-4535d2e8799c",
+            "label": "Issue Goods Receipt",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "5ed88f77-961a-4fa8-bfaf-8ec366db90b6",
+            "label": "Receive Goods",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "c53ba8be-29cf-4f3c-91ee-b457007985c6",
+            "label": "Plan Goods Issue",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "232a7aac-4660-467a-beac-7db8ab34e8ed",
+            "label": "Verify Material",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "f818cfc7-9e86-4261-882f-9f62be8c761e",
+            "label": "Goods Issue",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "7b6a896c-d3d8-499d-b9cf-818779767943",
+            "label": "Clear Invoice",
+            "properties": {},
+            "silent": false
+        },
+        {
+            "name": "fdacae45-e471-43d3-a85f-9572d2371e9c",
+            "label": "Receive Invoice",
+            "properties": {},
+            "silent": false
+        }
+    ],
+    "arcs": [
+        {
+            "source": "e0f2a005-c581-4658-a81f-7ee1672dd41c",
+            "target": "PURCHREQ2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "f818cfc7-9e86-4261-882f-9f62be8c761e",
+            "target": "MATERIAL2",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "MATERIAL9",
+            "target": "f818cfc7-9e86-4261-882f-9f62be8c761e",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "MATERIAL5",
+            "target": "1e91e857-cef8-4764-8b4b-92d3098063e1",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "MATERIAL1",
+            "target": "e0f2a005-c581-4658-a81f-7ee1672dd41c",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "1e91e857-cef8-4764-8b4b-92d3098063e1",
+            "target": "PURCHREQ3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "PURCHORD4",
+            "target": "27b7f3e1-d2aa-41bd-a9c4-4535d2e8799c",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "PURCHORD6",
+            "target": "7b6a896c-d3d8-499d-b9cf-818779767943",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "27b7f3e1-d2aa-41bd-a9c4-4535d2e8799c",
+            "target": "GDSRCPT2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "GDSRCPT4",
+            "target": "27b7f3e1-d2aa-41bd-a9c4-4535d2e8799c",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "7b6a896c-d3d8-499d-b9cf-818779767943",
+            "target": "GDSRCPT3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "PURCHREQ1",
+            "target": "e0f2a005-c581-4658-a81f-7ee1672dd41c",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "232a7aac-4660-467a-beac-7db8ab34e8ed",
+            "target": "MATERIAL9",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "MATERIAL3",
+            "target": "27b7f3e1-d2aa-41bd-a9c4-4535d2e8799c",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "27b7f3e1-d2aa-41bd-a9c4-4535d2e8799c",
+            "target": "MATERIAL6",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "MATERIAL6",
+            "target": "c53ba8be-29cf-4f3c-91ee-b457007985c6",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "27b7f3e1-d2aa-41bd-a9c4-4535d2e8799c",
+            "target": "MATERIAL8",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "MATERIAL7",
+            "target": "f818cfc7-9e86-4261-882f-9f62be8c761e",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "PURCHORD1",
+            "target": "1e91e857-cef8-4764-8b4b-92d3098063e1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "PURCHORD2",
+            "target": "5ed88f77-961a-4fa8-bfaf-8ec366db90b6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "fdacae45-e471-43d3-a85f-9572d2371e9c",
+            "target": "INVOICE3",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "PURCHREQ2",
+            "target": "1e91e857-cef8-4764-8b4b-92d3098063e1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "e0f2a005-c581-4658-a81f-7ee1672dd41c",
+            "target": "MATERIAL5",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "1e91e857-cef8-4764-8b4b-92d3098063e1",
+            "target": "PURCHORD2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "27b7f3e1-d2aa-41bd-a9c4-4535d2e8799c",
+            "target": "PURCHORD3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "fdacae45-e471-43d3-a85f-9572d2371e9c",
+            "target": "PURCHORD6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "GDSRCPT1",
+            "target": "5ed88f77-961a-4fa8-bfaf-8ec366db90b6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "GDSRCPT2",
+            "target": "7b6a896c-d3d8-499d-b9cf-818779767943",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "INVOICE1",
+            "target": "fdacae45-e471-43d3-a85f-9572d2371e9c",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "INVOICE3",
+            "target": "7b6a896c-d3d8-499d-b9cf-818779767943",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "5ed88f77-961a-4fa8-bfaf-8ec366db90b6",
+            "target": "MATERIAL3",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "MATERIAL8",
+            "target": "232a7aac-4660-467a-beac-7db8ab34e8ed",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "c53ba8be-29cf-4f3c-91ee-b457007985c6",
+            "target": "MATERIAL7",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "MATERIAL4",
+            "target": "5ed88f77-961a-4fa8-bfaf-8ec366db90b6",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "1e91e857-cef8-4764-8b4b-92d3098063e1",
+            "target": "MATERIAL4",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        },
+        {
+            "source": "5ed88f77-961a-4fa8-bfaf-8ec366db90b6",
+            "target": "PURCHORD4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "PURCHORD3",
+            "target": "fdacae45-e471-43d3-a85f-9572d2371e9c",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "7b6a896c-d3d8-499d-b9cf-818779767943",
+            "target": "PURCHORD5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "5ed88f77-961a-4fa8-bfaf-8ec366db90b6",
+            "target": "GDSRCPT4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "7b6a896c-d3d8-499d-b9cf-818779767943",
+            "target": "INVOICE2",
+            "weight": 1,
+            "variable": true,
+            "properties": {}
+        }
+    ],
+    "properties": {
+        "description": "Event log from ocpa repository."
+    }
+}
