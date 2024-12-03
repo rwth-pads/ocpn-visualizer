@@ -9,7 +9,7 @@
     border-radius: 30%;
     color: #fff;
     background-color: green;
-    z-index: 10000;
+    z-index: 2;
     transition: left 0.3s ease-in-out, background-color 0.1s ease-in-out;
     box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, 0.5);
 }

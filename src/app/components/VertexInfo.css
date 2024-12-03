@@ -22,6 +22,7 @@
     display: block;
     margin: 10px 0;
     border-radius: 10px;
+    transition: color 0.1s ease-in-out, background-color 0.1s ease-in-out;
 }
 .vertex-action-button.dark {
     color: #fff;
@@ -38,4 +39,11 @@
 }
 .vertex-action-button.light:hover {
     background-color: rgba(173, 216, 230, 0.621);
+}
+.vertex-action-button.dark:active {
+    background-color: #000;
+}
+.vertex-action-button.light:active {
+    background-color: #002e57;
+    color: white;
 }

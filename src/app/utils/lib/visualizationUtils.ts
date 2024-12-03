@@ -48,6 +48,8 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             // TODO: if checkbox 'indicate sources and sinks' is checked, then add a source/sink indicator
             // otherwise, just draw a circle with fill color.
             const fill = config.typeColorMapping.get(vertex.objectType) || config.defaultPlaceColor;
+            const source = config.sources.includes(vertexId);
+            const sink = config.sinks.includes(vertexId);
             g.append('circle')
                 .attr('cx', vertex.x)
                 .attr('cy', vertex.y)
@@ -55,7 +57,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('id', vertexId)
                 .attr('class', 'ocpnplace')
                 .attr('fill', fill);
-            if (vertex.source && config.indicateSourcesSinks) {
+            if (source && config.indicateSourcesSinks) {
                 g.append('text')
                     .attr('x', vertex.x)
                     .attr('y', vertex.y)
@@ -66,7 +68,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                     .attr('id', vertexId)
                     .attr('class', 'ocpnplace')
                     .text('⯈');
-            } else if (vertex.sink && config.indicateSourcesSinks) {
+            } else if (sink && config.indicateSourcesSinks) {
                 g.append('text')
                     .attr('x', vertex.x)
                     .attr('y', vertex.y)

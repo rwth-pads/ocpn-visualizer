@@ -9,11 +9,12 @@ import * as d3 from 'd3';
 interface VisualizationAreaProps {
     selectedOCPN: ObjectCentricPetriNet | null;
     userConfig: OCPNConfig;
+    setChange: (change: boolean) => void;
     darkMode: boolean;
     svgRef: React.RefObject<SVGSVGElement>;
 }
 
-const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, userConfig, darkMode, svgRef }) => {
+const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, userConfig, setChange, darkMode, svgRef }) => {
     const [vertexInfo, setVertexInfo] = useState<{
         visible: boolean, x: number, y: number, vertexId: string, vertexName: string, vertexType: string, objectType: string | null, isSource: boolean, isSink: boolean
     }>({ visible: false, x: 0, y: 0, vertexId: '', vertexName: '', vertexType: 'transition', objectType: null, isSource: false, isSink: false });
@@ -39,12 +40,12 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                 vertexName: vertex.name,
                 objectType: vertex.type === OCPNLayout.PLACE_TYPE ? vertex.objectType : null,
                 vertexType: vertex.type === OCPNLayout.PLACE_TYPE ? 'place' : 'transition',
-                isSource: vertex.source,
-                isSink: vertex.sink
+                isSource: userConfig.sources.includes(vertexId),
+                isSink: userConfig.sinks.includes(vertexId),
             });
         }
     };
-
+    
     useEffect(() => {
         if (vertexInfo.visible && vertexInfoRef.current && containerRef.current) {
             const containerRect = containerRef.current.getBoundingClientRect();
@@ -89,6 +90,34 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
         }
     }, [svgRef, selectedOCPN]);
 
+    const toggleSource = (vertexId: string) => {
+        let modifySink = false;
+        if (userConfig.sources.includes(vertexId)) {
+            userConfig.sources = userConfig.sources.filter((source) => source !== vertexId);
+        } else {
+            userConfig.sources.push(vertexId);
+            // A vertex cannot be both a source and a sink.
+            userConfig.sinks = userConfig.sinks.filter((sink) => sink !== vertexId);
+            modifySink = true;
+        }
+        setVertexInfo(prev => ({ ...prev, isSource: !prev.isSource, isSink: modifySink ? false : prev.isSink }));
+        setChange(true);
+    };
+
+    const toggleSink = (vertexId: string) => {
+        let modifySource = false;
+        if (userConfig.sinks.includes(vertexId)) {
+            userConfig.sinks = userConfig.sinks.filter((sink) => sink !== vertexId);
+        } else {
+            userConfig.sinks.push(vertexId);
+            // A vertex cannot be both a source and a sink.
+            userConfig.sources = userConfig.sources.filter((source) => source !== vertexId);
+            modifySource = true;
+        }
+        setVertexInfo(prev => ({ ...prev, isSink: !prev.isSink, isSource: modifySource ? false : prev.isSource }));
+        setChange(true);
+    };
+
     return (
         <Box
             sx={{
@@ -115,13 +144,16 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                 {vertexInfo.visible && (
                     <div ref={vertexInfoRef} style={{ position: 'absolute', left: vertexInfo.x, top: vertexInfo.y }}>
                         <VertexInfo
+                            userConfig={userConfig}
                             vertexId={vertexInfo.vertexId}
                             vertexName={vertexInfo.vertexName}
-                            darkMode={darkMode}
                             vertexType={vertexInfo.vertexType}
                             objectType={vertexInfo.objectType}
+                            darkMode={darkMode}
                             isSource={vertexInfo.isSource}
                             isSink={vertexInfo.isSink}
+                            toggleSource={toggleSource}
+                            toggleSink={toggleSink}
                         />
                     </div>
                 )}

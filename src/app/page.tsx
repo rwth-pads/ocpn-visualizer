@@ -63,6 +63,8 @@ const Home = () => {
     };
 
     const applyConfigChanges = () => {
+        console.log("Sources: ", userConfig.sources);
+        console.log("Sinks: ", userConfig.sinks);
         handleVisualizationUpdate(null);
         setChanged(false);
     }
@@ -217,6 +219,7 @@ const Home = () => {
                     <VisualizationArea
                         selectedOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
                         userConfig={userConfig}
+                        setChange={setChanged}
                         darkMode={darkMode}
                         svgRef={svgRef} />
                 </Box>
