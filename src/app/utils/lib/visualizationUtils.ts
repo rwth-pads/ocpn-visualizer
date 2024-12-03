@@ -63,6 +63,8 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                     .attr('alignment-baseline', 'middle')
                     .attr('font-size', config.placeRadius) // Adjust font size as needed
                     .attr('fill', 'black')
+                    .attr('id', vertexId)
+                    .attr('class', 'ocpnplace')
                     .text('⯈');
             } else if (vertex.sink && config.indicateSourcesSinks) {
                 g.append('text')
@@ -72,14 +74,16 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                     .attr('alignment-baseline', 'middle')
                     .attr('font-size', config.placeRadius) // Adjust font size as needed
                     .attr('fill', 'black')
+                    .attr('id', vertexId)
+                    .attr('class', 'ocpnplace')
                     .text('■');
             } else if (config.indicateSourcesSinks) {
                 g.append('circle')
                     .attr('cx', vertex.x)
                     .attr('cy', vertex.y)
                     .attr('r', config.placeRadius - 0.5) // config.placeBorderSize) // TODO: user defined radius
-                    .attr('id', vertexId)
                     .attr('class', 'ocpnplace')
+                    .attr('id', vertexId)
                     .attr('fill', 'white');
             }
 
@@ -97,11 +101,11 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('y', vertex.y - config.transitionHeight / 2)
                 .attr('width', config.transitionWidth) // TODO: user defined width
                 .attr('height', config.transitionHeight) // TODO: user defined height
-                .attr('id', vertexId)
-                .attr('class', 'ocpntransition')
                 .attr('fill', config.transitionFillColor)
                 .attr('stroke', config.transitionColor)
-                .attr('stroke-width', config.transitionBorderSize); // TODO: color based on transition type
+                .attr('stroke-width', config.transitionBorderSize) // TODO: color based on transition type
+                .attr('class', 'ocpntransition')
+                .attr('id', vertexId);
 
             g.append('text')
                 .attr('x', vertex.x)
@@ -110,7 +114,10 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('alignment-baseline', 'middle')
                 .attr('font-size', '3px')
                 .attr('fill', 'black')
-                .text(vertex.label);
+                .text(vertex.label)
+                .attr('user-select', 'none')
+                .attr('class', 'ocpntransition')
+                .attr('id', vertexId);
         }
     }
 

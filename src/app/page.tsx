@@ -164,6 +164,7 @@ const Home = () => {
         setSelectedOCPN(value === "default" ? null : value as number);
         // Update the user config settings that are based on the OCPN.
         let currentConfig = userConfig;
+        let ocpn = importedObjects[value as number];
         // Included object types
         currentConfig.includedObjectTypes = Array.from(importedObjects[value as number].objectTypes);
         // sources and sinks
