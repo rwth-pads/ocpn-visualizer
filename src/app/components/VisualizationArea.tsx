@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Box from '@mui/material/Box';
 import VertexInfo from './VertexInfo';
+import ArcInfo from './ArcInfo';
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
 import OCPNConfig from '../utils/classes/OCPNConfig';
 import OCPNLayout from '../utils/classes/OCPNLayout';
@@ -19,14 +20,20 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
         visible: boolean, x: number, y: number, vertexId: string, vertexName: string, vertexType: string, objectType: string | null, isSource: boolean, isSink: boolean
     }>({ visible: false, x: 0, y: 0, vertexId: '', vertexName: '', vertexType: 'transition', objectType: null, isSource: false, isSink: false });
 
+    const [arcInfo, setArcInfo] = useState<{
+        visible: boolean, x: number, y: number, arcId: string, source: string, target: string, reversed: boolean, weight: number, path: string[], minLayer: number, maxLayer: number, type1: boolean, objectType: string
+    }>({ visible: false, x: 0, y: 0, arcId: '', source: '', target: '', reversed: false, weight: 0, path: [], minLayer: 0, maxLayer: 0, type1: false, objectType: '' });
+
     const vertexInfoRef = useRef<HTMLDivElement>(null);
+    const arcInfoRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
     const handleRightClick = (event: React.MouseEvent<SVGElement, MouseEvent>) => {
         event.preventDefault();
         const target = event.target as HTMLElement;
-        const vertexId = target.id;
-        const vertex = selectedOCPN?.layout.vertices[vertexId];
+        const elementId = target.id;
+        console.log("Right click on element: ", elementId);
+        const vertex = selectedOCPN?.layout.vertices[elementId];
         if (vertex && containerRef.current) {
             const containerRect = containerRef.current.getBoundingClientRect();
             let x = event.clientX - containerRect.left;
@@ -36,16 +43,41 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                 visible: true,
                 x,
                 y,
-                vertexId,
+                vertexId: elementId,
                 vertexName: vertex.type === OCPNLayout.PLACE_TYPE ? vertex.name : vertex.label,
                 objectType: vertex.type === OCPNLayout.PLACE_TYPE ? vertex.objectType : null,
                 vertexType: vertex.type === OCPNLayout.PLACE_TYPE ? 'place' : 'transition',
-                isSource: userConfig.sources.includes(vertexId),
-                isSink: userConfig.sinks.includes(vertexId),
+                isSource: userConfig.sources.includes(elementId),
+                isSink: userConfig.sinks.includes(elementId),
             });
+            setArcInfo({ visible: false, x: 0, y: 0, arcId: '', source: '', target: '', reversed: false, weight: 0, path: [], minLayer: 0, maxLayer: 0, type1: false, objectType: '' });
+            return;
+        }
+        const arc = selectedOCPN?.layout.arcs[elementId];
+        if (arc && containerRef.current) {
+            const containerRect = containerRef.current.getBoundingClientRect();
+            let x = event.clientX - containerRect.left;
+            let y = event.clientY - containerRect.top;
+
+            setArcInfo({
+                visible: true,
+                x,
+                y,
+                arcId: elementId,
+                source: arc.source,
+                target: arc.target,
+                reversed: arc.reversed,
+                weight: arc.weight,
+                path: arc.path,
+                minLayer: arc.minLayer,
+                maxLayer: arc.maxLayer,
+                type1: arc.type1,
+                objectType: arc.objectType,
+            });
+            setVertexInfo({ visible: false, x: 0, y: 0, vertexId: '', vertexName: '', vertexType: 'transition', objectType: null, isSource: false, isSink: false });
         }
     };
-    
+
     useEffect(() => {
         if (vertexInfo.visible && vertexInfoRef.current && containerRef.current) {
             const containerRect = containerRef.current.getBoundingClientRect();
@@ -69,9 +101,35 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
         }
     }, [vertexInfo.visible]);
 
+    useEffect(() => {
+        if (arcInfo.visible && arcInfoRef.current && containerRef.current) {
+            const containerRect = containerRef.current.getBoundingClientRect();
+            const arcInfoRect = arcInfoRef.current.getBoundingClientRect();
+            let { x, y } = arcInfo;
+
+            if (x + arcInfoRect.width > containerRect.width) {
+                x = containerRect.width - arcInfoRect.width;
+            }
+            if (y + arcInfoRect.height > containerRect.height) {
+                y = containerRect.height - arcInfoRect.height;
+            }
+            if (x < 0) {
+                x = 0;
+            }
+            if (y < 0) {
+                y = 0;
+            }
+
+            setArcInfo(prev => ({ ...prev, x, y }));
+        }
+    }, [arcInfo.visible]);
+
     const handleClickOutside = (event: MouseEvent) => {
         if (vertexInfoRef.current && !vertexInfoRef.current.contains(event.target as Node)) {
             setVertexInfo(prev => ({ ...prev, visible: false }));
+        }
+        if (arcInfoRef.current && !arcInfoRef.current.contains(event.target as Node)) {
+            setArcInfo(prev => ({ ...prev, visible: false }));
         }
     };
 
@@ -85,7 +143,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
     useEffect(() => {
         if (svgRef.current) {
             const svg = d3.select(svgRef.current);
-            svg.selectAll('.ocpntransition, .ocpnplace')
+            svg.selectAll('.ocpntransition, .ocpnplace, .ocpnarc')
                 .on('contextmenu', handleRightClick);
         }
     }, [svgRef, selectedOCPN]);
@@ -154,6 +212,23 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                             isSink={vertexInfo.isSink}
                             toggleSource={toggleSource}
                             toggleSink={toggleSink}
+                        />
+                    </div>
+                )}
+                {arcInfo.visible && (
+                    <div ref={arcInfoRef} style={{ position: 'absolute', left: arcInfo.x, top: arcInfo.y }}>
+                        <ArcInfo
+                            darkMode={darkMode}
+                            arcId={arcInfo.arcId}
+                            source={arcInfo.source}
+                            target={arcInfo.target}
+                            reversed={arcInfo.reversed}
+                            weight={arcInfo.weight}
+                            path={arcInfo.path}
+                            minLayer={arcInfo.minLayer}
+                            maxLayer={arcInfo.maxLayer}
+                            type1={arcInfo.type1}
+                            objectType={arcInfo.objectType}
                         />
                     </div>
                 )}
