@@ -429,6 +429,15 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onBlur={handleColorBlur('transitionFillColor')}
                         />
                     </ConfigOption>
+                    <ConfigOption label="Transition text color" darkMode={darkMode}>
+                        <input
+                            type='color'
+                            className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
+                            value={transitionFillColor}
+                            onChange={() => { console.log('TODO: Transition text color changed') }}
+                            onBlur={() => { console.log('TODO: Transition text color changed') }}
+                        />
+                    </ConfigOption>
                     <ConfigOption label="Transition border size" darkMode={darkMode}>
                         <input
                             type='range'

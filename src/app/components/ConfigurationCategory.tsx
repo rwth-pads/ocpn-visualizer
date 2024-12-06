@@ -19,15 +19,15 @@ const ConfigurationCategory: React.FC<ConfigurationCategoryProps> = ({ title, da
     const notFirstCategory = categoryIndex > 0 ? ' not-first' : '';
     const categoryClass = categoryOpen ? `sidebar-category open${mode}${notFirstCategory}` :
         `sidebar-category${mode}${notFirstCategory}`;
-    const categoryTitleClass = `sidebar-category-title${mode}`;
+    const categoryTitleClass = `sidebar-category-title${mode}${categoryOpen ? ' open' : ''}`;
     const toggleIndicator = categoryOpen ? '⯅' : '⯆';
     const categoryContentClass = categoryOpen ? `sidebar-category-content open${mode}` : `sidebar-category-content${mode}`;
 
     return (
         <div className={categoryClass}>
             <div className={categoryTitleClass} onClick={toggleCategory}>
-                <h1>{title}</h1>
-                <span style={{ userSelect: 'none' }}>{toggleIndicator}</span>
+                {title}
+                <span>{toggleIndicator}</span>
             </div>
             <div className={categoryContentClass} ref={categoryContentRef}>
                 {children}

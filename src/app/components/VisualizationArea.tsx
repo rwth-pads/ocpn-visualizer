@@ -181,14 +181,14 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
             sx={{
                 height: '90vh',
                 width: '100vw',
-                bgcolor: darkMode ? '#ffffff' : '#ffffff',
+                bgcolor: darkMode ? '#2b2a2a' : '#ffffff',
                 overflow: 'hidden',
                 userSelect: 'none',
             }}>
             <Box
                 ref={containerRef}
                 sx={{
-                    border: '2px solid black',
+                    border: darkMode ? '1px solid #f2f2f2' : '1px solid black',
                     height: '88vh',
                     width: '98vw',
                     margin: '1vh 1vw',

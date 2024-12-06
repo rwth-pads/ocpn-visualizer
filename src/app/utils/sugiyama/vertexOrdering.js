@@ -12,7 +12,7 @@ import { clone2DArray, arraysEqual } from '../lib/arrays';
 function orderVertices(ocpn, config) {
     // Adjust the initial order within the layering according to the users object centrality.
     if (config.objectCentrality !== undefined) {
-        console.log("Adjusting Initial Relative Order of Vertices...", config.objectCentrality);
+        // console.log("Adjusting Initial Relative Order of Vertices...", config.objectCentrality);
         adjustLayeringOrderByObjectCentrality(ocpn, config);
     }
     // Implementation of the barycenter method for vertex ordering.
@@ -41,7 +41,6 @@ function adjustLayeringOrderByObjectCentrality(ocpn, config) {
         while (j < ocpn.layout.layering[i].length) {
             // Check whether the current layer is a 'place' or 'transition' layer.
             let type = ocpn.layout.vertices[ocpn.layout.layering[i][j]].type;
-            console.log(`\tLayer ${i} Type: ${type}`);
             if (type === OCPNLayout.PLACE_TYPE) {
                 layerType = OCPNLayout.PLACE_TYPE;
                 break;
@@ -81,16 +80,16 @@ function upDownBarycenterBilayerSweep(ocpn, config) {
     // Perform the barycenter method going up and down the layers.
     var sweepCounter = 1;
     while (true) {
-        layering = singleUpDownSweep(ocpn, layering, config); // Phase 1
-        // console.log("UpDown ", layering);
-        layering = adjustEqualBarycenters(ocpn, layering) // Phase 2
+        layering = singleUpDownSweep(ocpn, clone2DArray(layering), config); // Phase 1
+        layering = adjustEqualBarycenters(ocpn, clone2DArray(layering)) // Phase 2
         var currentScore = computeLayeringScore(ocpn, layering, config);
-        // console.log(`Sweep ${sweepCounter} score: ${currentScore}\nLayering:`);
-        // console.log(layering);
+        console.log(`Sweep ${sweepCounter} score: ${currentScore}\nLayering:`);
+        console.log(layering);
         // Check if the vertex order has improved.
         if (currentScore < bestScore) {
             bestScore = currentScore;
             best = clone2DArray(layering);
+            console.log(`Improved score to ${bestScore}!`);
             noImprovementCounter = 0;
         } else {
             // Increment the counter if no improvement was made.

@@ -24,7 +24,8 @@ const VertexInfo: React.FC<VertexInfoProps> = ({ userConfig, vertexId, vertexNam
     return (
         <div className={`vertex-info-container${mode}`}>
             <div className={`vertex-info`}>
-                Name: {vertexName}
+                Name: {vertexName}<br />
+                Id: {vertexId}
                 {vertexType === 'place' && (
                     <>
                         <br />

@@ -63,8 +63,6 @@ const Home = () => {
     };
 
     const applyConfigChanges = () => {
-        console.log("Sources: ", userConfig.sources);
-        console.log("Sinks: ", userConfig.sinks);
         handleVisualizationUpdate(null);
         setChanged(false);
     }

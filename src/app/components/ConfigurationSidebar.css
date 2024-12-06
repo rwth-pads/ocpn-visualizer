@@ -31,7 +31,7 @@
 .sidebar.dark {
     background-color: #212121;
     color: white;
-    border-right: 2px solid white;
+    border-right: 2px solid #4a4a4a;
 }
 
 .sidebar.light {
@@ -41,16 +41,15 @@
 }
 
 .sidebar::-webkit-scrollbar {
-    width: 0.3vw;
+    width: 9px;
 }
 
 .sidebar::-webkit-scrollbar-thumb {
-    background-color: white;
-    border-radius: 10px;
+    border-radius: 8px;
 }
 
 .sidebar.dark::-webkit-scrollbar-thumb {
-    background-color: white;
+    background-color: #4a4a4a;
 }
 
 .sidebar.light::-webkit-scrollbar-thumb {
@@ -58,7 +57,7 @@
 }
 
 .sidebar-category.not-first {
-    margin: 2% 0;
+    margin: 0;
 }
 
 .sidebar-category.open {} /* The open refers to the content beneath the title and toggle icon. */
@@ -72,22 +71,26 @@
     grid-template-columns: 98% 2%;
     cursor: pointer;
     padding: 2%;
+    /* font-size: 1.1em; */
+    font-weight: bold;
 }
 
 .sidebar-category-title.dark {
-    border-top: 2px solid white;
-    border-bottom: 2px solid white;
+    border-bottom: 2px solid #4a4a4a;
+}
+.sidebar-category.open + .sidebar-category > .sidebar-category-title.dark {
+    border-top: 2px solid #4a4a4a;
 }
 
+.sidebar-category.open + .sidebar-category > .sidebar-category-title.light {
+    border-top: 2px solid #002e57;
+}
 .sidebar-category-title.dark:hover {
     background-color: #333333;
 }
-
 .sidebar-category-title.light {
-    border-top: 2px solid #002e57;
     border-bottom: 2px solid #002e57;
 }
-
 .sidebar-category-title.light:hover {
     background-color: #002e573b;
 }
@@ -101,6 +104,7 @@
 .sidebar-category-content.open {
     overflow: visible;
     max-height: fit-content;
+    padding-bottom: 2%;
 }
 
 .sidebar-category-content.dark {}
