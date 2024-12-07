@@ -145,6 +145,14 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
             const svg = d3.select(svgRef.current);
             svg.selectAll('.ocpntransition, .ocpnplace, .ocpnarc')
                 .on('contextmenu', handleRightClick);
+
+            const zoom = d3.zoom<SVGSVGElement, unknown>()
+                .scaleExtent([0.1, 10])
+                .on('zoom', (event) => {
+                    svg.selectAll('g').attr('transform', event.transform);
+                });
+
+            svg.call(zoom);
         }
     }, [svgRef, selectedOCPN]);
 
