@@ -1,0 +1,32 @@
+.center-button-container {
+    position: absolute;
+    top: 20px;
+    right: 28px;
+    z-index: 2;
+}
+
+.center-button {
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 10px;
+}
+.center-button.dark {
+    color: white;
+    background-color: #000;
+}
+.center-button.dark:hover {
+    background-color: #ffffff10;
+}
+.center-button.dark:active {
+    background-color: #ffffff20;
+} 
+.center-button.light {
+    color: white;
+    background-color: #002e57;
+}
+.center-button.light:hover {
+    background-color: #002e57d7
+}
+.center-button.light:active {
+    background-color: #002e57b7;
+}

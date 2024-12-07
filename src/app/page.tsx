@@ -6,6 +6,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import CustomThemeProvider from './context/CustomThemeProvider';
 import Header from './components/Header';
 import VisualizationArea from './components/VisualizationArea';
+import CenterButton from './components/CenterButton';
 import { SelectChangeEvent } from '@mui/material/Select';
 import ImportDialog from './components/ImportDialog';
 import ConfigurationSidebar from './components/ConfigurationSidebar';
@@ -220,6 +221,9 @@ const Home = () => {
                         setChange={setChanged}
                         darkMode={darkMode}
                         svgRef={svgRef} />
+                    <CenterButton
+                        darkMode={darkMode}
+                        centerVisualization={() => {console.log("TODO: Implement center visualization")}} />
                 </Box>
             </Box>
             <ImportDialog
