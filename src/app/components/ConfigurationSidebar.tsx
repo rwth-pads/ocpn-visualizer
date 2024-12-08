@@ -28,9 +28,11 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
     const maxLayers = 4; // TODO: get length of layering.
     const [maxBarycenterIterations, setMaxBarycenterIterations] = useState(userConfig.maxBarycenterIterations ?? 4);
     const [combineArcs, setCombineArcs] = useState(userConfig.combineArcs ?? false);
+    const [backgroundColor, setBackgroundColor] = useState(userConfig.svgBackgroundColor ?? '#ffffff');
     const [placeRadius, setPlaceRadius] = useState(userConfig.placeRadius ?? 5);
     const [transitionCustomWidth, setTransitionCustomWidth] = useState(userConfig.transitionCustomWidth ?? false);
     const [transitionWidth, setTransitionWidth] = useState(userConfig.transitionWidth ?? 20);
+    const [silentTransitionWidth, setSilentTransitionWidth] = useState(userConfig.silentTransitionWidth ?? 10);
     const [transitionHeight, setTransitionHeight] = useState(userConfig.transitionHeight ?? 10);
     const [dummySize, setDummySize] = useState(userConfig.dummySize ?? 5);
     const [layerSep, setLayerSep] = useState(userConfig.layerSep ?? 10);
@@ -97,6 +99,9 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
             case 'combineArcs':
                 setCombineArcs(value);
                 break;
+            case 'svgBackgroundColor':
+                setBackgroundColor(value);
+                break;
             case 'placeRadius':
                 setPlaceRadius(value);
                 break;
@@ -105,6 +110,9 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                 break;
             case 'transitionWidth':
                 setTransitionWidth(value);
+                break;
+            case 'silentTransitionWidth':
+                setSilentTransitionWidth(value);
                 break;
             case 'transitionHeight':
                 setTransitionHeight(value);
@@ -227,6 +235,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                                     onChange={handleInputChange('indicateSourcesSinks', true)}
                                 />
                             </ConfigOption>
+                            {/* TODO: update based on included object type selection */}
                             <ConfigOption label="Type to color mapping" darkMode={darkMode}>
                                 <select
                                     className={`custom-configuration-select${darkMode ? ' dark' : ' light'}`}
@@ -321,6 +330,15 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
             <ConfigurationCategory title="Styling Configurations" darkMode={darkMode} categoryIndex={2}>
                 {/* Add subheadings: sizing, colors */}
                 <div style={{ paddingLeft: '4%' }}>
+                    <ConfigOption label="Background color" darkMode={darkMode}>
+                        <input
+                            type='color'
+                            className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
+                            value={backgroundColor}
+                            onChange={handleColorChange('svgBackgroundColor')}
+                            onBlur={handleColorBlur('svgBackgroundColor')}
+                        />
+                    </ConfigOption>
                     <ConfigOption label="Place radius" darkMode={darkMode}>
                         <input
                             type='range'
@@ -352,6 +370,18 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleInputChange('transitionWidth')}
                             onMouseUp={handleMouseUp('transitionWidth')}
                             disabled={transitionCustomWidth}
+                        />
+                    </ConfigOption>
+                    <ConfigOption label="Silent transition width" darkMode={darkMode}>
+                        <input
+                            type='range'
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
+                            min={3}
+                            max={30}
+                            value={silentTransitionWidth}
+                            step={1}
+                            onChange={handleInputChange('silentTransitionWidth')}
+                            onMouseUp={handleMouseUp('silentTransitionWidth')}
                         />
                     </ConfigOption>
                     <ConfigOption label="Transition height" darkMode={darkMode}>

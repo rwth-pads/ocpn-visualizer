@@ -15,6 +15,7 @@ class OCPNConfig {
         placeRadius = 5,
         customTransitionWidth = false,
         transitionWidth = 30,
+        silentTransitionWidth = 10,
         transitionHeight = 5,
         dummySize = 2,
         layerSep = 10,
@@ -26,6 +27,7 @@ class OCPNConfig {
         transitionColor = "#000000",
         transitionFillColor = "#ffffff",
         transitionBorderSize = 0.3,
+        svgBackgroundColor = "#fff",
         combineArcs = false,
         arcSize = 0.2,
         indicateArcWeight = false,
@@ -48,6 +50,7 @@ class OCPNConfig {
         this.placeRadius = placeRadius;
         this.transitionCustomWidth = customTransitionWidth;
         this.transitionWidth = transitionWidth;
+        this.silentTransitionWidth = silentTransitionWidth;
         this.transitionHeight = transitionHeight;
         this.dummySize = dummySize;
         this.layerSep = layerSep; // The space between the bounds of two adjacent layers.
@@ -60,6 +63,7 @@ class OCPNConfig {
         this.transitionColor = transitionColor;
         this.transitionFillColor = transitionFillColor;
         this.transitionBorderSize = transitionBorderSize;
+        this.svgBackgroundColor = svgBackgroundColor;
         this.combineArcs = combineArcs;
         this.arcSize = arcSize;
         this.indicateArcWeight = indicateArcWeight;

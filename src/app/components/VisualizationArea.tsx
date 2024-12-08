@@ -55,6 +55,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
         }
         const arc = selectedOCPN?.layout.arcs[elementId];
         if (arc && containerRef.current) {
+            console.log("Right click on arc: ", arc);
             const containerRect = containerRef.current.getBoundingClientRect();
             let x = event.clientX - containerRect.left;
             let y = event.clientY - containerRect.top;
@@ -206,7 +207,13 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                     position: 'relative', // Ensure the parent container is positioned
                 }}
             >
-                <svg ref={svgRef} width="100%" height="100%" onContextMenu={handleRightClick}></svg>
+                <svg
+                    ref={svgRef}
+                    width="100%"
+                    height="100%"
+                    onContextMenu={handleRightClick}
+                    style={{ backgroundColor: userConfig.svgBackgroundColor}}
+                ></svg>
                 {vertexInfo.visible && (
                     <div ref={vertexInfoRef} style={{ position: 'absolute', left: vertexInfo.x, top: vertexInfo.y }}>
                         <VertexInfo

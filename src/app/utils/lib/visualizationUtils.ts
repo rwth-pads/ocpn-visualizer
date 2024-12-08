@@ -100,10 +100,11 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
         } else if (vertex.type === OCPNLayout.TRANSITION_TYPE) {
             const label = vertex.silent ? '𝜏' : vertex.label;
             // TODO: custom silent width (and height).
+            let width = vertex.silent ? config.silentTransitionWidth : config.transitionWidth;
             g.append('rect')
-                .attr('x', vertex.x - config.transitionWidth / 2)
+                .attr('x', vertex.x - width / 2)
                 .attr('y', vertex.y - config.transitionHeight / 2)
-                .attr('width', config.transitionWidth) // TODO: user defined width
+                .attr('width', width) // TODO: user defined width
                 .attr('height', config.transitionHeight) // TODO: user defined height
                 .attr('fill', config.transitionFillColor)
                 .attr('stroke', config.transitionColor)

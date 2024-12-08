@@ -179,6 +179,17 @@ const Home = () => {
         setUserConfig(currentConfig);
     };
 
+    const resetZoom = (svg: React.RefObject<SVGSVGElement>) => {
+        // TODO: fix this.
+        if (svg.current) {
+            const svgSelection = d3.select(svg.current);
+            svgSelection.transition().duration(750).call(
+                d3.zoom<SVGSVGElement, unknown>().transform,
+                d3.zoomIdentity
+            );
+        }
+    };
+
     return (
         <CustomThemeProvider darkMode={darkMode}>
             <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
@@ -221,9 +232,10 @@ const Home = () => {
                         setChange={setChanged}
                         darkMode={darkMode}
                         svgRef={svgRef} />
-                    <CenterButton
+                    {/* <CenterButton
                         darkMode={darkMode}
-                        centerVisualization={() => {console.log("TODO: Implement center visualization")}} />
+                        centerVisualization={resetZoom}
+                        svg={svgRef} /> */}
                 </Box>
             </Box>
             <ImportDialog

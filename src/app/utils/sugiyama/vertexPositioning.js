@@ -24,7 +24,8 @@ function positionVertices(ocpn, config) {
 
             // Align each vertex vertically with its median neighbor where possible.
             let [roots, aligns] = verticalAlignment(ocpn, currentLayering, pos, verticalDir == 0);
-
+            console.log("Roots: ", roots);
+            console.log("Aligns: ", aligns);
             // Determine coordinates subject to the current alignment.
             let [coords, maxCoord] = horizontalCompaction(ocpn, currentLayering, roots, aligns, pos, config);
 
@@ -59,7 +60,13 @@ function transformLayering(layering, verticalDir, horizontalDir) {
     if (horizontalDir == 1) {
         layering.forEach(layer => layer.reverse());
     }
-
+    // TODO: here is the error.
+    // Occurs because adjacent dummies do not necessarily have the same index in the layering.
+    // Solution: The whole layer from the dummy onwards has to be shifted to the right.
+    // Example:
+    //          [_, d, _, _, _] -> [_, s, d, _, _]
+    //          [_, _, d, _, _] -> [_, _, d, _, _]
+    // where s represents the shift.
     var pos = [];
     for (let i = 0; i < layering.length; i++) {
         for (let j = 0; j < layering[i].length; j++) {
@@ -141,14 +148,19 @@ function verticalAlignment(ocpn, layering, pos, down) {
     for (let i = 1; i < layering.length; i++) {
         const layer = layering[i];
         let r = -1; // Initialize r to a value that is not a valid position.
+        console.log("Layer: ", i);
+        console.log(layer);
         for (let k = 0; k < layer.length; k++) {
             const v = layer[k];
             var neighbors = down ? getUpperNeighbors(ocpn, v) : getLowerNeighbors(ocpn, v);
+            console.log("\tDown? ", down, " Neighbors of ", v, ": ", neighbors);
             neighbors.sort((a, b) => pos[a] - pos[b]);
             if (neighbors.length > 0) {
                 const lowerUpperMedians = [...new Set([Math.floor((neighbors.length - 1) / 2), Math.ceil((neighbors.length - 1) / 2)])];
                 for (let m of lowerUpperMedians) {
                     if (align[v] == v) {
+                        console.log("\tAligning ", v, " with ", neighbors[m]);
+                        console.log("\tR: ", r, "Pos(m): ", pos[neighbors[m]], " Marked: ", isMarked(ocpn, neighbors[m], v));
                         if (!isMarked(ocpn, neighbors[m], v) && r < pos[neighbors[m]]) {
                             align[neighbors[m]] = v;
                             root[v] = root[neighbors[m]];
@@ -165,6 +177,9 @@ function verticalAlignment(ocpn, layering, pos, down) {
 
 function isMarked(ocpn, u, v) {
     let arc = ocpn.layout.getArcsBetween(u, v);
+    // TODO: this is wrong as well.
+    // Always returns false because getArcsBetween always returns [].
+    console.log(arc);
     return arc.length > 0 && arc[0].type1;
 }
 
