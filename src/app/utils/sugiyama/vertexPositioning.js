@@ -323,8 +323,6 @@ function setCoordinates(ocpn, layering, layouts, config) {
         ocpn.layout.layerSizes.push({ layer: i, size: layerSize * 2 }); // TODO: to adjust the y coordinate of the lower dummy vertices to the bottom of the layer.
     }
 
-
-
     var curSize = config.borderPaddingY; // TODO: check config.direciton influence.
     for (let i = 0; i < layering.length; i++) {
         for (let j = 0; j < layering[i].length; j++) {
@@ -332,7 +330,7 @@ function setCoordinates(ocpn, layering, layouts, config) {
             // Get the four candidate coordinates for the vertex in ascending order.
             const candidateCoords = layouts.map(layout => layout[v]).sort((a, b) => a - b);
             // Compute the average median of the four candidate coordinates.
-            const medianCoord = Math.floor((candidateCoords[1] + candidateCoords[2]) / 2);
+            const medianCoord = (candidateCoords[1] + candidateCoords[2]) / 2;
             // Set the vertex coordinates.
             ocpn.layout.vertices[v].x = medianCoord + config.borderPaddingX;
             ocpn.layout.vertices[v].y = curSize + layerHalfs.find(l => l.layer == i).size;

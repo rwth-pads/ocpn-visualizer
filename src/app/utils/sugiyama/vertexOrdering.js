@@ -4,10 +4,6 @@ import { clone2DArray, arraysEqual } from '../lib/arrays';
 
 /**
  * Orders the vertices within the layers of the OCPN according to the barycenter method.
- * @param {ObjectCentricPetriNet} ocpn 
- * @param {*} layering 
- * @param {*} config 
- * @returns 
  */
 function orderVertices(ocpn, config) {
     // Adjust the initial order within the layering according to the users object centrality.
@@ -61,12 +57,6 @@ function adjustLayeringOrderByObjectCentrality(ocpn, config) {
     }
 }
 
-/**
- * 
- * @param {ObjectCentricPetriNet} ocpn 
- * @param {*} config 
- * @returns 
- */
 function upDownBarycenterBilayerSweep(ocpn, config) {
     // Computes the intitial score of the order.
     var bestScore = computeLayeringScore(ocpn, ocpn.layout.layering, config);
@@ -79,9 +69,11 @@ function upDownBarycenterBilayerSweep(ocpn, config) {
     computedLayerings.push(clone2DArray(layering));
     // Perform the barycenter method going up and down the layers.
     var sweepCounter = 1;
+    console.log("Initial layering: ", layering);
+    console.log("Initial score: ", bestScore);
     while (true) {
-        layering = singleUpDownSweep(ocpn, clone2DArray(layering), config); // Phase 1
-        layering = adjustEqualBarycenters(ocpn, clone2DArray(layering)) // Phase 2
+        layering = singleUpDownSweep(ocpn, layering, config); // Phase 1
+        layering = adjustEqualBarycenters(ocpn, layering) // Phase 2
         var currentScore = computeLayeringScore(ocpn, layering, config);
         console.log(`Sweep ${sweepCounter} score: ${currentScore}\nLayering:`);
         console.log(layering);
@@ -113,23 +105,22 @@ function upDownBarycenterBilayerSweep(ocpn, config) {
 
 /**
  * Performs a single up-down sweep of the layers within the layering.
- *
- * @param {ObjectCentricPetriNet} ocpn The OCPN. 
- * @param {*} layering The layering returned by the layer assignment step.
- * @param {*} config User defined configurations.
- * @returns The updated layering.
  */
 function singleUpDownSweep(ocpn, layering, config) {
     // Go down and up the layers and adjust the vertex order.
+    console.log("Before up-down sweep: ", layering);
     for (let dir = 0; dir < 2; dir++) {
         let start = dir == 0 ? 1 : layering.length - 2;
         for (let layer = start;
             dir == 0 ? layer < layering.length : layer >= 0;
             dir == 0 ? layer++ : layer--) {
             // Adjusts only the layering[layer] while keeping the other layers fixed.
-            layering = modifiedBarycenterOrder(ocpn, layering, layer, dir == 0, config);
+
+            layering[layer] = modifiedBarycenterOrder(ocpn, layering, layer, dir == 0, config);
+            console.log(`Layer ${layer} after ${dir == 0 ? "down" : "up"} sweep: `, layering[layer]);
         }
     }
+    console.log("After up-down sweep: ", layering);
     return layering;
 }
 
@@ -146,10 +137,6 @@ function adjustEqualBarycenters(ocpn, layering) {
 
 /**
  * TODO: change to modified barycenter instead of normal barycenter.
- * @param {ObjectCentricPetriNet} ocpn The OCPN.
- * @param {*} layering The current layering.
- * @param {*} layer The layer that is currently being adjusted.
- * @param {boolean} down Determines the direction of the sweep.
  */
 function modifiedBarycenterOrder(ocpn, layering, layer, down, config) {
     // Compute the barycenter values for the current layer.
@@ -157,17 +144,11 @@ function modifiedBarycenterOrder(ocpn, layering, layer, down, config) {
     // Sort the vertices in the layer according to the barycenter values.
     // The greater the barycenter value the more to the right the vertex is placed.
     // Equal barycenter values are sorted by the original order.
-    layering[layer].sort((a, b) => barycenters[a] - barycenters[b]);
-    return layering;
+    let orderedLayer = layering[layer].sort((a, b) => barycenters[a] - barycenters[b]);
+    console.log(barycenters);
+    return orderedLayer;
 }
 
-/**
- * 
- * @param {ObjectCentricPetriNet} ocpn 
- * @param {*} layering 
- * @param {*} layer 
- * @param {*} down 
- */
 function computeModifiedBarycenters(ocpn, layering, layer, down, config) {
     var barycenters = {};
     var vertices = layering[layer];
@@ -184,14 +165,6 @@ function computeModifiedBarycenters(ocpn, layering, layer, down, config) {
     return barycenters;
 }
 
-/**
- * 
- * @param {ObjectCentricPetriNet.Place} place 
- * @param {*} layering 
- * @param {*} layer 
- * @param {*} down 
- * @returns 
- */
 function placeBarycenter(ocpn, place, layering, layer, down, config) {
     var barycenter = 0;
     var objectBarycenter = 0;
@@ -251,7 +224,8 @@ function transitionBarycenter(ocpn, transition, layering, layer, down) {
     // console.log(`Transition ${transition} neighbors: `, neighbors);
     // If there are no neighbors in the fixed layer, return the current index + 1.
     if (neighbors.length == 0) {
-        return layering[layer].indexOf(transition) + 1;
+        // return layering[layer].indexOf(transition) + 1;
+        return undefined; // Use the barycenter of its left neighbor (or 0 if none).
     }
 
     // Compute the barycenter value.
@@ -364,7 +338,7 @@ function measureObjectAttractionCount(ocpn, layering, config) {
             objectDeviation += Math.abs(objectPlaces[i].index - avgIndex);
         }
     });
-    return objectDeviation * (config.objectAttraction * 10); // TODO: either introduce a new config parameter or rework the * 10.
+    return objectDeviation * config.objectAttraction; // TODO: either introduce a new config parameter or rework the * 10.
 }
 
 /**

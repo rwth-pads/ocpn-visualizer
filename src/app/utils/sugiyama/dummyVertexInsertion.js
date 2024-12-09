@@ -17,6 +17,9 @@ function insertDummyVertices(ocpn) {
         let lower = arc.target;
         let sourceLayer = ocpn.layout.vertices[upper].layer;
         let targetLayer = ocpn.layout.vertices[lower].layer;
+        let sourceLayerIndex = ocpn.layout.layering[sourceLayer].indexOf(upper);
+        let targetLayerIndex = ocpn.layout.layering[targetLayer].indexOf(lower);
+        let medianIndex = Math.floor((sourceLayerIndex + targetLayerIndex) / 2);
         ocpn.layout.arcs[arcId].minLayer = sourceLayer;
         ocpn.layout.arcs[arcId].maxLayer = targetLayer;
         const slack = targetLayer - sourceLayer;
@@ -40,8 +43,10 @@ function insertDummyVertices(ocpn) {
                 dummies.push(dummy.id);
                 // Add the dummy to the layout.
                 ocpn.layout.vertices[dummy.id] = dummy;
-                ocpn.layout.layering[curLayer].push(dummy.id);
-                // TODO: Maybe insert the dummy at the index of its upper neighbor.
+                // Insert the dummy into the layering, based on the position of the upper and lower vertices.
+                let layer = ocpn.layout.layering[curLayer];
+                let insertIndex = Math.min(medianIndex, layer.length);
+                layer.splice(insertIndex, 0, dummy.id);
                 // Add the dummy to the layering.
                 dummyCount++;
             }

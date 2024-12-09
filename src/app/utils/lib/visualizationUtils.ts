@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 // import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 import OCPNLayout from '../classes/OCPNLayout';
 import OCPNConfig from '../classes/OCPNConfig';
+import { Point2D, Intersection } from 'kld-intersections';
 
 const COLORS_ARRAY = ['#99cefd', '#f5a800', '#002e57', 'red', 'green', 'purple', 'orange', 'yellow', 'pink', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'navy', 'olive', 'silver', 'aqua', 'fuchsia', 'gray', 'black'];
 
@@ -120,7 +121,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('alignment-baseline', 'middle')
                 .attr('font-size', '20px') // Initial font size
                 .attr('fill', 'black')
-                .text(label)
+                .text(label) // TODO: reset to label
                 .attr('user-select', 'none')
                 .attr('class', 'ocpntransition')
                 .attr('id', vertexId);
@@ -146,6 +147,30 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
 
             adjustFontSize();
         }
+        //  else if (vertex.type === OCPNLayout.DUMMY_TYPE) {
+        //     g.append('circle')
+        //         .attr('cx', vertex.x)
+        //         .attr('cy', vertex.y)
+        //         .attr('r', 2)
+        //         .attr('fill', 'red')
+        //         .attr('class', 'ocpndummy')
+        //         .attr('id', vertexId);
+
+        //     g.append('text')
+        //         .attr('x', vertex.x)
+        //         .attr('y', vertex.y)
+        //         .attr('text-anchor', 'middle')
+        //         .attr('alignment-baseline', 'middle')
+        //         .attr('font-size', '3px')
+        //         .attr('fill', 'black')
+        //         .text(vertexId);
+        // }
+
+        // g.append('circle')
+        //     .attr('cx', vertex.x)
+        //     .attr('cy', vertex.y)
+        //     .attr('r', 0.4)
+        //     .attr('fill', 'red')
     }
 
     // Calculate the bounding box of the layout
@@ -171,7 +196,35 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
 function getArcPath(arcId: string, layout: OCPNLayout, config: OCPNConfig): string {
     var path = '';
     var arc = layout.arcs[arcId];
-    var sourcePoint = getArcConnectionPoint(arcId, true, layout, config);
+    console.log(arc);
+    var source = layout.vertices[arc.source];
+    var target = layout.vertices[arc.target];
+
+    var sourcePoint = undefined;
+    if (source.type === OCPNLayout.PLACE_TYPE) {
+        let center = new Point2D(source.x, source.y);
+        let p1 = new Point2D(source.x, source.y);
+        let p2 = new Point2D(target.x, target.y);
+        if (arc.path.length > 0) {
+            let startDummy = layout.vertices[arc.path[0]];
+            p2 = new Point2D(startDummy.x, startDummy.y);
+        }
+        // Construct the line.
+        sourcePoint = getPlaceIntersectionPoint(center, config.placeRadius, p1, p2);
+    } else {
+        let p1 = new Point2D(source.x, source.y);
+        let p2 = new Point2D(target.x, target.y);
+        if (arc.path.length > 0) {
+            let startDummy = layout.vertices[arc.path[0]];
+            p2 = new Point2D(startDummy.x, startDummy.y);
+        }
+        const halfWidth = (source.silent ? config.silentTransitionWidth : config.transitionWidth) / 2;
+        const halfHeight = config.transitionHeight / 2;
+        const topLeft = new Point2D(source.x - halfWidth, source.y - halfHeight);
+        const bottomRight = new Point2D(source.x + halfWidth, source.y + halfHeight);
+        // Construct the rectangle.
+        sourcePoint = getTransitionIntersectionPoint(p1, p2, topLeft, bottomRight);
+    }
     path += `M ${sourcePoint.x} ${sourcePoint.y}`;
     if (arc.path.length > 0) {
         let startDummy = layout.vertices[arc.path[0]];
@@ -179,19 +232,42 @@ function getArcPath(arcId: string, layout: OCPNLayout, config: OCPNConfig): stri
         // let dummyAdjust = layout.layerSizes.find(layerSize => layerSize.layer === endDummy.layer).size || 0;
         path += ` L ${startDummy.x} ${startDummy.y} L ${endDummy.x} ${endDummy.y}`;
     }
-    var targetPoint = getArcConnectionPoint(arcId, false, layout, config);
+    var targetPoint = undefined;
+    if (target.type === OCPNLayout.PLACE_TYPE) {
+        let center = new Point2D(target.x, target.y);
+        let p1 = new Point2D(source.x, source.y);
+        if (arc.path.length > 0) {
+            let endDummy = layout.vertices[arc.path[arc.path.length - 1]];
+            p1 = new Point2D(endDummy.x, endDummy.y);
+        }
+        let p2 = new Point2D(target.x, target.y);
+        // Construct the line.
+        targetPoint = getPlaceIntersectionPoint(center, config.placeRadius, p1, p2);
+    } else {
+        let p1 = new Point2D(source.x, source.y);
+        if (arc.path.length > 0) {
+            let endDummy = layout.vertices[arc.path[arc.path.length - 1]];
+            p1 = new Point2D(endDummy.x, endDummy.y);
+        }
+        let p2 = new Point2D(target.x, target.y);
+        const halfWidth = (target.silent ? config.silentTransitionWidth : config.transitionWidth) / 2;
+        const halfHeight = config.transitionHeight / 2;
+        const topLeft = new Point2D(target.x - halfWidth, target.y - halfHeight);
+        const bottomRight = new Point2D(target.x + halfWidth, target.y + halfHeight);
+        // Construct the rectangle.
+        targetPoint = getTransitionIntersectionPoint(p1, p2, topLeft, bottomRight);
+    }
     path += ` L ${targetPoint.x} ${targetPoint.y}`;
     return path;
 }
 
-function getArcConnectionPoint(arcId: string, isSource: boolean, layout: OCPNLayout, config: OCPNConfig): { x: number, y: number } {
-    let arc = layout.arcs[arcId];
-    let vertexId = isSource ? arc.source : arc.target;
-    let vertex = layout.vertices[vertexId];
-    if (vertex.type === OCPNLayout.PLACE_TYPE) {
-        return { x: vertex.x, y: vertex.y + (config.placeRadius) * (isSource ? 1 : -1) };
-    } else if (vertex.type === OCPNLayout.TRANSITION_TYPE) {
-        return { x: vertex.x, y: vertex.y + (config.transitionHeight / 2) * (isSource ? 1 : -1) };
-    }
-    return { x: 0, y: 0 };
+function getPlaceIntersectionPoint(center: Point2D, r: number, p1: Point2D, p2: Point2D): { x: number, y: number } {
+    const point = Intersection.intersectCircleLine(center, r, p1, p2);
+    console.log(point);
+    return { x: point.points[0].x, y: point.points[0].y };
+}
+
+function getTransitionIntersectionPoint(p1: Point2D, p2: Point2D, topLeft: Point2D, bottomRight: Point2D): { x: number, y: number } {
+    const point = Intersection.intersectLineRectangle(p1, p2, topLeft, bottomRight);
+    return { x: point.points[0].x, y: point.points[0].y };
 }
