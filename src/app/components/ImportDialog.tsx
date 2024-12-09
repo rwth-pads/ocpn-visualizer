@@ -52,6 +52,7 @@ const ImportDialog: React.FC<ImportDialogProps> = ({ open, onClose, onDrop, onFi
                     <input
                         id="fileInput"
                         type="file"
+                        multiple={true}
                         accept=".json,.pnml"
                         onChange={onFileInputChange}
                         style={{ display: 'none' }}

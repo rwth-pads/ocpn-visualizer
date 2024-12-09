@@ -226,6 +226,13 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             </ConfigOption>
                             <ConfigOption label="Sources and sinks" darkMode={darkMode}>
                                 Right-click places to add / remove sources and sinks. {/* See ...\Components\D3\index.html as example. */}
+                                <br />
+                                <button
+                                    onClick={() => { console.log("TODO: Reset sources and sinks"); }}
+                                    className={`custom-configuration-button${darkMode ? ' dark' : ' light'}`}
+                                >
+                                    Reset
+                                </button>
                             </ConfigOption>
                             <ConfigOption label="Indicate sources and sinks" darkMode={darkMode}>
                                 <input

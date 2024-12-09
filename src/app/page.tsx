@@ -95,68 +95,73 @@ const Home = () => {
     }
 
     // TODO: allow for importing multiple OCPNs. Currently only supports importing one OCPN at a time
-    const handleFileImport = async (file: File) => {
+    const handleFileImport = async (files: FileList) => {
         if (isImporting) return;
         setIsImporting(true);
 
-        const reader = new FileReader();
-        reader.onload = async (e: ProgressEvent<FileReader>) => {
-            const content = e.target?.result;
-            try {
-                let ocpn: ObjectCentricPetriNet | null = null;
-                if (file.name.endsWith('.json')) {
-                    ocpn = ObjectCentricPetriNet.fromJSON(JSON.parse(content as string));
-                } else if (file.name.endsWith('.pnml')) {
-                    ocpn = await ObjectCentricPetriNet.fromPNML(content as string);
-                }
-                if (ocpn) {
-                    if (importedObjects.some(existingOCPN => existingOCPN.equals(ocpn))) {
-                        setImportError('OCPN Already imported');
-                    } else {
-                        setImportedObjects(prev => {
-                            const newImportedObjects = [...prev, ocpn];
-                            setSelectedOCPN(newImportedObjects.length - 1);
-                            let currentConfig = userConfig;
-                            // Get the included object types from the imported OCPN.
+        const newImportedObjects: ObjectCentricPetriNet[] = [];
+        const currentConfig = userConfig;
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+            reader.onload = async (e: ProgressEvent<FileReader>) => {
+                const content = e.target?.result;
+                try {
+                    let ocpn: ObjectCentricPetriNet | null = null;
+                    if (file.name.endsWith('.json')) {
+                        ocpn = ObjectCentricPetriNet.fromJSON(JSON.parse(content as string));
+                    } else if (file.name.endsWith('.pnml')) {
+                        ocpn = await ObjectCentricPetriNet.fromPNML(content as string);
+                    }
+                    if (ocpn) {
+                        newImportedObjects.push(ocpn);
+                        if (i === 0) {
+                            // Get the included object types from the first imported OCPN.
                             currentConfig.includedObjectTypes = Array.from(ocpn.objectTypes);
-                            // Get the sources and sinks from the imported OCPN.
+                            // Get the sources and sinks from the first imported OCPN.
                             currentConfig.sources = ocpn.places.filter(place => place.initial).map(place => place.id);
                             currentConfig.sinks = ocpn.places.filter(place => place.final).map(place => place.id);
-                            // Get the type to color mapping from the imported OCPN.
+                            // Get the type to color mapping from the first imported OCPN.
                             currentConfig.typeColorMapping = new Map<string, string>();
                             currentConfig.includedObjectTypes.forEach((ot, index) => {
                                 currentConfig.typeColorMapping.set(ot, COLORS_ARRAY[index % COLORS_ARRAY.length]);
                             });
-                            // Update the user config settings based on the imported OCPN.
+                        }
+                    } else {
+                        setImportError(`Unsupported file type: ${file.name}`);
+                    }
+                } catch (error) {
+                    setImportError(`Error importing file: ${error}`);
+                } finally {
+                    if (i === files.length - 1) {
+                        setImportedObjects(prev => {
+                            const updatedImportedObjects = [...prev, ...newImportedObjects];
+                            setSelectedOCPN(updatedImportedObjects.length - newImportedObjects.length);
                             setUserConfig(currentConfig);
                             handleImportClose();
-                            return newImportedObjects;
+                            setIsImporting(false);
+                            return updatedImportedObjects;
                         });
                     }
-                } else {
-                    setImportError(`Unsupported file type: ${file.name}`);
                 }
-            } catch (error) {
-                setImportError(`Error importing file: ${error}`);
-            } finally {
-                setIsImporting(false);
-            }
+            };
+            reader.readAsText(file);
         }
-        reader.readAsText(file);
     };
 
     const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            handleFileImport(file);
+        const files = event.target.files;
+        if (files) {
+            handleFileImport(files);
         }
     };
 
     const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
-        const file = event.dataTransfer.files?.[0];
-        if (file) {
-            handleFileImport(file);
+        const files = event.dataTransfer.files;
+        if (files) {
+            handleFileImport(files);
         }
     };
 
