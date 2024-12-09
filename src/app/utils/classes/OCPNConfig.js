@@ -12,7 +12,7 @@ class OCPNConfig {
         objectAttractionRangeMin = 1,
         objectAttractionRangeMax = 2,
         direction = "TB",
-        placeRadius = 5,
+        placeRadius = 2.5,
         customTransitionWidth = false,
         transitionWidth = 30,
         silentTransitionWidth = 10,
@@ -29,9 +29,9 @@ class OCPNConfig {
         transitionBorderSize = 0.3,
         svgBackgroundColor = "#ffffff",
         combineArcs = false,
-        arcSize = 0.5,
+        arcSize = 0.8,
         indicateArcWeight = false,
-        arrowHeadSize = 5,
+        arrowHeadSize = 3,
         arcDefaultColor = "#000000",
     ) {
         this.includedObjectTypes = includedObjectTypes;
