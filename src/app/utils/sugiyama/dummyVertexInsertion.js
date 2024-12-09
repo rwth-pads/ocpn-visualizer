@@ -41,6 +41,7 @@ function insertDummyVertices(ocpn) {
                 // Add the dummy to the layout.
                 ocpn.layout.vertices[dummy.id] = dummy;
                 ocpn.layout.layering[curLayer].push(dummy.id);
+                // TODO: Maybe insert the dummy at the index of its upper neighbor.
                 // Add the dummy to the layering.
                 dummyCount++;
             }
@@ -56,6 +57,7 @@ function insertDummyVertices(ocpn) {
             // Create two new arcs for markingType1 conflicts in the vertexPositioning step.
             let arc1Id = ObjectCentricPetriNet.generateArcId();
             let arc2Id = ObjectCentricPetriNet.generateArcId();
+            // Arc 1: upper -> dummies[0]
             ocpn.layout.arcs[arc1Id] = {
                 source: upper,
                 target: dummies[0],
@@ -66,6 +68,7 @@ function insertDummyVertices(ocpn) {
                 type1: false,
                 original: false,
             };
+            // Arc 2: dummies[dummies.length - 1] -> lower
             ocpn.layout.arcs[arc2Id] = {
                 source: dummies[dummies.length - 1],
                 target: lower,

@@ -176,7 +176,7 @@ class OCPNLayout {
             return [lower];
         } else {
             Object.values(this.arcs).forEach(arc => {
-                if (arc.original) {
+                if (arc.original) { // Otherwise it is split into a dummy path.
                     if (arc.path.length == 0) {
                         if (arc.source === vertexId) {
                             neighbors.push(arc.target);
@@ -197,7 +197,8 @@ class OCPNLayout {
         // maximal 2 arcs if one of the arcs was reversed.
         const arcs = [];
         Object.values(this.arcs).forEach(arc => {
-            if (arc.source === sourceId && arc.target === targetId) {
+            if (arc.source === sourceId && arc.target === targetId
+                || arc.source === targetId && arc.target === sourceId) {
                 arcs.push(arc);
             }
         });
