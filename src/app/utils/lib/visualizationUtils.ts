@@ -14,7 +14,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
     svg.append('defs').append('marker')
         .attr('id', 'arrowhead')
         .attr('viewBox', '0 0 10 10')
-        .attr('refX', 10)
+        .attr('refX', config.arrowHeadSize + 5)
         .attr('refY', 5)
         .attr('markerWidth', config.arrowHeadSize)
         .attr('markerHeight', config.arrowHeadSize)
@@ -26,10 +26,6 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
     for (const arcId in layout.arcs) {
         const arc = layout.arcs[arcId];
         var path = getArcPath(arcId, layout, config);
-        // console.log(`Source: ${arc.source}, Target: ${arc.target}`);
-        // console.log(`Source: ${layout.vertices[arc.source].x}, ${layout.vertices[arc.source].y}`);
-        // console.log(`Target: ${layout.vertices[arc.target].x}, ${layout.vertices[arc.target].y}`);
-        // console.log("\t", path);
         var ot = arc.objectType;
         var color = config.typeColorMapping.get(ot) || config.arcDefaultColor;
         g.append('path')
@@ -196,58 +192,61 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
 function getArcPath(arcId: string, layout: OCPNLayout, config: OCPNConfig): string {
     var path = '';
     var arc = layout.arcs[arcId];
-    console.log(arc);
     var source = layout.vertices[arc.source];
     var target = layout.vertices[arc.target];
+    let upperDummyAdjust = 0;
+    let lowerDummyAdjust = 0;
 
     var sourcePoint = undefined;
     if (source.type === OCPNLayout.PLACE_TYPE) {
+        // Update the upper adjustment for the dummy.
+        upperDummyAdjust = config.placeRadius;
         let center = new Point2D(source.x, source.y);
         let p1 = new Point2D(source.x, source.y);
         let p2 = new Point2D(target.x, target.y);
         if (arc.path.length > 0) {
             let startDummy = layout.vertices[arc.path[0]];
-            p2 = new Point2D(startDummy.x, startDummy.y);
+            p2 = new Point2D(startDummy.x, startDummy.y - upperDummyAdjust);
         }
         // Construct the line.
-        sourcePoint = getPlaceIntersectionPoint(center, config.placeRadius, p1, p2);
+        sourcePoint = getPlaceIntersectionPoint(center, config.placeRadius, p1, p2, source.x, source.y + config.placeRadius);
     } else {
+        // Update the upper adjustment for the dummy.
+        upperDummyAdjust = config.transitionHeight / 2;
         let p1 = new Point2D(source.x, source.y);
         let p2 = new Point2D(target.x, target.y);
         if (arc.path.length > 0) {
             let startDummy = layout.vertices[arc.path[0]];
-            p2 = new Point2D(startDummy.x, startDummy.y);
+            p2 = new Point2D(startDummy.x, startDummy.y - upperDummyAdjust);
         }
         const halfWidth = (source.silent ? config.silentTransitionWidth : config.transitionWidth) / 2;
         const halfHeight = config.transitionHeight / 2;
         const topLeft = new Point2D(source.x - halfWidth, source.y - halfHeight);
         const bottomRight = new Point2D(source.x + halfWidth, source.y + halfHeight);
         // Construct the rectangle.
-        sourcePoint = getTransitionIntersectionPoint(p1, p2, topLeft, bottomRight);
+        sourcePoint = getTransitionIntersectionPoint(p1, p2, topLeft, bottomRight, source.x, source.y + halfHeight);
     }
     path += `M ${sourcePoint.x} ${sourcePoint.y}`;
-    if (arc.path.length > 0) {
-        let startDummy = layout.vertices[arc.path[0]];
-        let endDummy = layout.vertices[arc.path[arc.path.length - 1]];
-        // let dummyAdjust = layout.layerSizes.find(layerSize => layerSize.layer === endDummy.layer).size || 0;
-        path += ` L ${startDummy.x} ${startDummy.y} L ${endDummy.x} ${endDummy.y}`;
-    }
     var targetPoint = undefined;
     if (target.type === OCPNLayout.PLACE_TYPE) {
+        // Update the lower adjustment for the dummy.
+        lowerDummyAdjust = config.placeRadius;
         let center = new Point2D(target.x, target.y);
         let p1 = new Point2D(source.x, source.y);
         if (arc.path.length > 0) {
             let endDummy = layout.vertices[arc.path[arc.path.length - 1]];
-            p1 = new Point2D(endDummy.x, endDummy.y);
+            p1 = new Point2D(endDummy.x, endDummy.y + lowerDummyAdjust);
         }
         let p2 = new Point2D(target.x, target.y);
         // Construct the line.
-        targetPoint = getPlaceIntersectionPoint(center, config.placeRadius, p1, p2);
+        targetPoint = getPlaceIntersectionPoint(center, config.placeRadius, p1, p2, target.x, target.y - config.placeRadius);
     } else {
+        // Update the lower adjustment for the dummy.
+        lowerDummyAdjust = config.transitionHeight / 2;
         let p1 = new Point2D(source.x, source.y);
         if (arc.path.length > 0) {
             let endDummy = layout.vertices[arc.path[arc.path.length - 1]];
-            p1 = new Point2D(endDummy.x, endDummy.y);
+            p1 = new Point2D(endDummy.x, endDummy.y + lowerDummyAdjust);
         }
         let p2 = new Point2D(target.x, target.y);
         const halfWidth = (target.silent ? config.silentTransitionWidth : config.transitionWidth) / 2;
@@ -255,19 +254,37 @@ function getArcPath(arcId: string, layout: OCPNLayout, config: OCPNConfig): stri
         const topLeft = new Point2D(target.x - halfWidth, target.y - halfHeight);
         const bottomRight = new Point2D(target.x + halfWidth, target.y + halfHeight);
         // Construct the rectangle.
-        targetPoint = getTransitionIntersectionPoint(p1, p2, topLeft, bottomRight);
+        targetPoint = getTransitionIntersectionPoint(p1, p2, topLeft, bottomRight, target.x, target.y - halfHeight);
+    }
+    // If the arc has path points, add them to the path.
+    for (let i = 0; i < arc.path.length; i++) {
+        let dummy = layout.vertices[arc.path[i]];
+        if (i === 0) {
+            dummy.y -= upperDummyAdjust;
+        }
+        if (i === arc.path.length - 1) {
+            dummy.y += lowerDummyAdjust
+        }
+        path += ` L ${dummy.x}, ${dummy.y}`;
     }
     path += ` L ${targetPoint.x} ${targetPoint.y}`;
     return path;
 }
 
-function getPlaceIntersectionPoint(center: Point2D, r: number, p1: Point2D, p2: Point2D): { x: number, y: number } {
+function getPlaceIntersectionPoint(center: Point2D, r: number, p1: Point2D, p2: Point2D, x: number, y: number): { x: number, y: number } {
     const point = Intersection.intersectCircleLine(center, r, p1, p2);
-    console.log(point);
-    return { x: point.points[0].x, y: point.points[0].y };
+    if (point.status === 'Intersection') {
+        return { x: point.points[0].x, y: point.points[0].y };
+    } else {
+        return { x: x, y: y };
+    }
 }
 
-function getTransitionIntersectionPoint(p1: Point2D, p2: Point2D, topLeft: Point2D, bottomRight: Point2D): { x: number, y: number } {
+function getTransitionIntersectionPoint(p1: Point2D, p2: Point2D, topLeft: Point2D, bottomRight: Point2D, x: number, y: number): { x: number, y: number } {
     const point = Intersection.intersectLineRectangle(p1, p2, topLeft, bottomRight);
-    return { x: point.points[0].x, y: point.points[0].y };
+    if (point.status === 'Intersection') {
+        return { x: point.points[0].x, y: point.points[0].y };  
+    } else {
+        return { x: x, y: y };
+    }
 }

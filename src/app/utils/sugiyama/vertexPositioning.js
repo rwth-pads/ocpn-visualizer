@@ -274,7 +274,7 @@ function placeBlock(ocpn, layering, v, x, pos, roots, sink, shift, aligns, confi
 
 function alignAssignments(layouts) {
     console.log("Aligning the four layouts to the one with the smallest width (height)...");
-
+    console.log(layouts);
     // Determine minimum and maximum coordinates for each layout.
     const minMax = layouts.map(coords => {
         const values = Object.values(coords);
