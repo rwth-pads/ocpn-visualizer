@@ -16,7 +16,6 @@ function positionVertices(ocpn, config) {
     markType1Conflicts(ocpn);
     const layouts = [];
     console.log("Computing the four alignments...");
-    console.log(ocpn.layout.layering);
     for (const verticalDir in [0, 1]) { // 0: down, 1: up
         for (const horizontalDir in [0, 1]) { // 0: left, 1: right
             console.log(`${verticalDir == 0 ? "Down" : "Up"} - ${horizontalDir == 0 ? "Leftmost" : "Rightmost"}`);
@@ -90,12 +89,7 @@ function positionVerticesToAlignmentType(ocpn, config) {
 
             // Align each vertex vertically with its median neighbor where possible.
             let [roots, aligns] = verticalAlignment(ocpn, currentLayering, pos, verticalDir == 0);
-            // console.log("Current Layering:");
-            // console.log(currentLayering);
-            console.log("Roots");
-            console.log(roots);
-            console.log("Aligns");
-            console.log(aligns);
+
             // Determine coordinates subject to the current alignment.
             let [coords, maxCoord] = horizontalCompaction(ocpn, currentLayering, roots, aligns, pos, config);
 
@@ -109,12 +103,8 @@ function positionVerticesToAlignmentType(ocpn, config) {
             layouts.push(coords);
             layouts.push(coords);
             layouts.push(coords);
-            arraysByCoordinates(coords);
         }
     }
-    // console.log(ocpn.layout.layering);
-    // Align to assignment of smallest width (height).
-    // alignAssignments(layouts);
     // Set the actual coordinates to average median of aligned candidates.
     setCoordinates(ocpn, ocpn.layout.layering, layouts, config);
 }
@@ -219,6 +209,7 @@ function verticalAlignment(ocpn, layering, pos, down) {
         for (let k = 0; k < layer.length; k++) {
             const v = layer[k];
             var neighbors = down ? getUpperNeighbors(ocpn, v) : getLowerNeighbors(ocpn, v);
+            console.log(`Neighbors of ${v}: ${neighbors}`);
             neighbors.sort((a, b) => pos[a] - pos[b]);
             if (neighbors.length > 0) {
                 const lowerUpperMedians = [...new Set([Math.floor((neighbors.length - 1) / 2), Math.ceil((neighbors.length - 1) / 2)])];
@@ -272,29 +263,24 @@ function horizontalCompaction(ocpn, layering, roots, aligns, pos, config) {
 
     // Absolute coordinates.
     let xMax = 0;
-    // console.log("Coordinates: ", x);
-    // console.log("Shifts: ", shift);
-    // console.log("Roots: ", roots);
-    // console.log("Sink: ", sink);
+    let absX = {};
     for (let i = 0; i < layering.length; i++) {
         for (let j = 0; j < layering[i].length; j++) {
             let v = layering[i][j];
-            x[v] = x[roots[v]];
+            absX[v] = x[roots[v]];
             if (shift[sink[roots[v]]] < Infinity) {
-                x[v] = x[v] + shift[sink[roots[v]]];
-                console.log(`Shifting ${v} by ${shift[sink[roots[v]]]} for root ${roots[v]}`);
-                console.log(`x is now ${x[v]}`);
+                absX[v] = absX[v] + shift[sink[roots[v]]];
             }
-            xMax = Math.max(xMax, x[v]);
+            xMax = Math.max(xMax, absX[v]);
         }
     }
 
-    return [x, xMax];
+    return [absX, xMax];
 }
 
 
 function placeBlock(ocpn, layering, v, x, pos, roots, sink, shift, aligns, config) {
-    console.log(`Place block called for ${v}`);
+    console.log(`Place block called for ${v} with ${x[v]}`);
     if (x[v] == undefined) {
         console.log(`\tx is undefined for ${v} -> setting x to 0`);
         x[v] = 0;
@@ -308,9 +294,6 @@ function placeBlock(ocpn, layering, v, x, pos, roots, sink, shift, aligns, confi
                 const predecessor = layering[layer][pos[w] - 1];
                 // Get the root of the predecessor.
                 const u = roots[predecessor];
-                console.log(`\t\t${w} not at the beginning of the layer`);
-                console.log(`\t\tPredecessor of ${w} is ${predecessor} with root ${u}`);
-                console.log("\t\t", layering[layer]);
                 // Determine the coordinates of the predecessor's root. (Terminates once the vertex most to the left is reached.)
                 placeBlock(ocpn, layering, u, x, pos, roots, sink, shift, aligns, config); // TODO config
                 // The sink is the root vertex with the smallest x coordinate.
@@ -320,34 +303,12 @@ function placeBlock(ocpn, layering, v, x, pos, roots, sink, shift, aligns, confi
                 if (sink[v] != sink[u]) {
                     // Compute the seperation based on vertexSep and the type of the vertex.
                     let delta = config.vertexSep + Math.max(config.direction == "TB" ? config.transitionWidth : config.transitionHeight, config.placeRadius * 2);
-                    // TODO: Redo this part. It doesn't work since all sinks are places and hence lead to transitions overlapping.
-                    // Get the type of size of u.
-                    // if (ocpn.layout.vertices[v].type == OCPNLayout.PLACE_TYPE) {
-                    //     delta += config.placeRadius * 2;
-                    // } else if (ocpn.layout.vertices[v].type == OCPNLayout.TRANSITION_TYPE) {
-                    //     // TODO: add individual width (maybe height) for transitions based on the length of their label.
-                    //     delta += config.direction == "TB" ? config.transitionWidth : config.transitionHeight;
-                    // } else if (ocpn.layout.vertices[v].type == OCPNLayout.DUMMY_TYPE) {
-                    //     delta = config.dummySize;
-                    // }
                     shift[sink[u]] = Math.min(shift[sink[u]], x[v] - x[u] - delta); // TODO config
                 } else {
                     let delta = config.vertexSep + Math.max(config.direction == "TB" ? config.transitionWidth : config.transitionHeight, config.placeRadius * 2);
-                    // Get the type of size of u.
-                    // TODO: redo this part.
-                    // if (ocpn.layout.vertices[v].type == OCPNLayout.PLACE_TYPE) {
-                    //     delta += config.placeRadius * 2;
-                    // } else if (ocpn.layout.vertices[v].type == OCPNLayout.TRANSITION_TYPE) {
-                    //     // TODO: add individual width (maybe height) for transitions based on the length of their label.
-                    //     delta += config.direction == "TB" ? config.transitionWidth : config.transitionHeight;
-                    // } else if (ocpn.layout.vertices[v].type == OCPNLayout.DUMMY_TYPE) {
-                    //     delta = config.dummySize; // TODO check this. = not +=
-                    // }
                     // Maximum of own x and x of predecessor + minimum vertex separation.
                     x[v] = Math.max(x[v], x[u] + delta); // TODO config
                 }
-            } else {
-                console.log(`\t\t${w} at the beginning of the layer`);
             }
             w = aligns[w];
         } while (w != v);
