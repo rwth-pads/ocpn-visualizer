@@ -50,7 +50,7 @@ function adjustLayeringOrderByObjectCentrality(ocpn, config) {
         if (layerType === OCPNLayout.PLACE_TYPE) {
             // Sort the places according to the user defined object centrality.
             // Example: objectCentrality = { "A": 0, "B": 2, "C": 1 } -> [placeA, placeC, placeB]
-            let l = ocpn.layout.layering[i].sort((a, b) =>
+            ocpn.layout.layering[i].sort((a, b) =>
                 (objectCentrality[ocpn.layout.vertices[a].objectType] ?? 0)
                 - (objectCentrality[ocpn.layout.vertices[b].objectType] ?? 0));
         }
@@ -76,7 +76,7 @@ function upDownBarycenterBilayerSweep(ocpn, config) {
         layering = adjustEqualBarycenters(ocpn, layering) // Phase 2
         var currentScore = computeLayeringScore(ocpn, layering, config);
         console.log(`Sweep ${sweepCounter} score: ${currentScore}\nLayering:`);
-        console.log(layering);
+        // console.log(layering);
         // Check if the vertex order has improved.
         if (currentScore < bestScore) {
             bestScore = currentScore;
@@ -108,7 +108,6 @@ function upDownBarycenterBilayerSweep(ocpn, config) {
  */
 function singleUpDownSweep(ocpn, layering, config) {
     // Go down and up the layers and adjust the vertex order.
-    console.log("Before up-down sweep: ", layering);
     for (let dir = 0; dir < 2; dir++) {
         let start = dir == 0 ? 1 : layering.length - 2;
         for (let layer = start;
@@ -117,10 +116,9 @@ function singleUpDownSweep(ocpn, layering, config) {
             // Adjusts only the layering[layer] while keeping the other layers fixed.
 
             layering[layer] = modifiedBarycenterOrder(ocpn, layering, layer, dir == 0, config);
-            console.log(`Layer ${layer} after ${dir == 0 ? "down" : "up"} sweep: `, layering[layer]);
+            // console.log(`Layer ${layer} after ${dir == 0 ? "down" : "up"} sweep: `, layering[layer]);
         }
     }
-    console.log("After up-down sweep: ", layering);
     return layering;
 }
 
@@ -145,7 +143,7 @@ function modifiedBarycenterOrder(ocpn, layering, layer, down, config) {
     // The greater the barycenter value the more to the right the vertex is placed.
     // Equal barycenter values are sorted by the original order.
     let orderedLayer = layering[layer].sort((a, b) => barycenters[a] - barycenters[b]);
-    console.log(barycenters);
+    // console.log(barycenters);
     return orderedLayer;
 }
 
@@ -224,8 +222,8 @@ function transitionBarycenter(ocpn, transition, layering, layer, down) {
     // console.log(`Transition ${transition} neighbors: `, neighbors);
     // If there are no neighbors in the fixed layer, return the current index + 1.
     if (neighbors.length == 0) {
-        // return layering[layer].indexOf(transition) + 1;
-        return undefined; // Use the barycenter of its left neighbor (or 0 if none).
+        return layering[layer].indexOf(transition) + 1;
+        // return undefined; // Use the barycenter of its left neighbor (or 0 if none).
     }
 
     // Compute the barycenter value.

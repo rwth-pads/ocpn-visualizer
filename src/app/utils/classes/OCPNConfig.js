@@ -20,7 +20,7 @@ class OCPNConfig {
         dummySize = 2,
         layerSep = 20,
         vertexSep = 5, // For now bigger than any other size declaration to avoid overlapping. TODO
-        borderPaddingX = 10,
+        borderPaddingX = 30,
         borderPaddingY = 10,
         typeColorMapping = new Map(),
         defaultPlaceColor = "#000000",
@@ -33,6 +33,8 @@ class OCPNConfig {
         indicateArcWeight = false,
         arrowHeadSize = 3,
         arcDefaultColor = "#000000",
+        seeAlignmentType = false,
+        alignmentType = "downLeft" // downLeft, downRight, upLeft, upRight
     ) {
         this.includedObjectTypes = includedObjectTypes;
         // Cycle Breaking
@@ -69,6 +71,8 @@ class OCPNConfig {
         this.indicateArcWeight = indicateArcWeight;
         this.arrowHeadSize = arrowHeadSize;
         this.arcDefaultColor = arcDefaultColor;
+        this.seeAlignmentType = seeAlignmentType;
+        this.alignmentType = alignmentType;
     }
 }
 

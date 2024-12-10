@@ -86,14 +86,14 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                     .attr('fill', 'white');
             }
 
-            // g.append('text')
-            //     .attr('x', vertex.x)
-            //     .attr('y', vertex.y)
-            //     .attr('text-anchor', 'middle')
-            //     .attr('alignment-baseline', 'middle')
-            //     .attr('font-size', '3px')
-            //     .attr('fill', 'black')
-            //     .text(vertexId);
+            g.append('text')
+                .attr('x', vertex.x)
+                .attr('y', vertex.y)
+                .attr('text-anchor', 'middle')
+                .attr('alignment-baseline', 'middle')
+                .attr('font-size', '3px')
+                .attr('fill', 'black')
+                .text(vertexId);
         } else if (vertex.type === OCPNLayout.TRANSITION_TYPE) {
             const label = vertex.silent ? '𝜏' : vertex.label;
             // TODO: custom silent width (and height).
@@ -117,7 +117,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('alignment-baseline', 'middle')
                 .attr('font-size', '20px') // Initial font size
                 .attr('fill', 'black')
-                .text(label) // TODO: reset to label
+                .text(vertexId) // TODO: reset to label
                 .attr('user-select', 'none')
                 .attr('class', 'ocpntransition')
                 .attr('id', vertexId);
@@ -143,24 +143,24 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
 
             adjustFontSize();
         }
-        //  else if (vertex.type === OCPNLayout.DUMMY_TYPE) {
-        //     g.append('circle')
-        //         .attr('cx', vertex.x)
-        //         .attr('cy', vertex.y)
-        //         .attr('r', 2)
-        //         .attr('fill', 'red')
-        //         .attr('class', 'ocpndummy')
-        //         .attr('id', vertexId);
+        else if (vertex.type === OCPNLayout.DUMMY_TYPE) {
+            g.append('circle')
+                .attr('cx', vertex.x)
+                .attr('cy', vertex.y)
+                .attr('r', 2)
+                .attr('fill', 'red')
+                .attr('class', 'ocpndummy')
+                .attr('id', vertexId);
 
-        //     g.append('text')
-        //         .attr('x', vertex.x)
-        //         .attr('y', vertex.y)
-        //         .attr('text-anchor', 'middle')
-        //         .attr('alignment-baseline', 'middle')
-        //         .attr('font-size', '3px')
-        //         .attr('fill', 'black')
-        //         .text(vertexId);
-        // }
+            g.append('text')
+                .attr('x', vertex.x)
+                .attr('y', vertex.y)
+                .attr('text-anchor', 'middle')
+                .attr('alignment-baseline', 'middle')
+                .attr('font-size', '3px')
+                .attr('fill', 'black')
+                .text(vertexId);
+        }
 
         // g.append('circle')
         //     .attr('cx', vertex.x)
@@ -168,23 +168,6 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
         //     .attr('r', 0.4)
         //     .attr('fill', 'red')
     }
-
-    // Calculate the bounding box of the layout
-    const node = g.node();
-    if (!node) return;
-    const bbox = node.getBBox();
-    const width = svgRef.clientWidth;
-    const height = svgRef.clientHeight - 2 * config.borderPaddingX;
-
-    // Calculate scaling and translation to fit and center the layout with padding
-    const scale = Math.min((width - 2 * config.borderPaddingX) / bbox.width, (height - 2 * config.borderPaddingX) / bbox.height);
-    const translateX = (width - bbox.width * scale) / 2 - bbox.x * scale + config.borderPaddingX;
-    // const translateX = padding - bbox.x * scale;
-    const translateY = (height - bbox.height * scale) / 2 - bbox.y * scale + config.borderPaddingX;
-
-    // Apply transformations
-    g.attr('transform', `translate(${translateX}, ${translateY}) scale(${scale})`);
-    // TODO: d3 zoom and pan.
     console.timeEnd("Visualize OCPN");
     return svg;
 }
@@ -283,7 +266,7 @@ function getPlaceIntersectionPoint(center: Point2D, r: number, p1: Point2D, p2: 
 function getTransitionIntersectionPoint(p1: Point2D, p2: Point2D, topLeft: Point2D, bottomRight: Point2D, x: number, y: number): { x: number, y: number } {
     const point = Intersection.intersectLineRectangle(p1, p2, topLeft, bottomRight);
     if (point.status === 'Intersection') {
-        return { x: point.points[0].x, y: point.points[0].y };  
+        return { x: point.points[0].x, y: point.points[0].y };
     } else {
         return { x: x, y: y };
     }

@@ -2,7 +2,7 @@ import reverseCycles from './cycleBreaking';
 import assignLayers from './layerAssignment';
 import insertDummyVertices from './dummyVertexInsertion';
 import orderVertices from './vertexOrdering';
-import positionVertices from './vertexPositioning';
+import positioning from './vertexPositioning';
 import routeArcs from './arcRouting';
 import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 import OCPNLayout from '../classes/OCPNLayout';
@@ -44,7 +44,12 @@ async function sugiyama(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
     orderVertices(ocpn, config);
     // Vertex Positioning.
     console.log("Positioning vertices...");
-    positionVertices(ocpn, config);
+    console.log(ocpn.layout.layering);
+    if (config.seeAlignmentType) {
+        positioning.positionVerticesToAlignmentType(ocpn, config);
+    } else {
+        positioning.positionVertices(ocpn, config);
+    }
     // Route edges.
     console.log("Routing arcs...");
     routeArcs(ocpn);

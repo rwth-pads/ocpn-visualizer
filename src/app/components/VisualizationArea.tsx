@@ -86,18 +86,40 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
     }, []);
 
     useEffect(() => {
-        if (svgRef.current) {
+        if (svgRef.current && selectedOCPN) {
             const svg = d3.select(svgRef.current);
+
             svg.selectAll('.ocpntransition, .ocpnplace, .ocpnarc')
                 .on('contextmenu', handleRightClick);
 
             const zoom = d3.zoom<SVGSVGElement, unknown>()
                 .scaleExtent([0.5, 10])
                 .on('zoom', (event) => {
-                    svg.selectAll('g').attr('transform', event.transform);
+                    const g = svg.select('g');
+                    console.log("Zoom event: ", event.transform);
+                    console.log("Client Width: ", svgRef.current?.clientWidth);
+                    console.log("Client Height: ", svgRef.current?.clientHeight);
+                    console.log("G bbox: ",);
+                    const bbox = g.node()?.getBBox();
+                    const totalWidth = bbox ? bbox.width * event.transform.k : 0;
+                    const totalHeight = bbox ? bbox.height * event.transform.k : 0;
+                    console.log(`G size: ${totalWidth}, ${totalHeight}`);
+                    g.attr('transform', event.transform);
+                    // TODO: hide labels when not readable anymore.
                 });
 
             svg.call(zoom);
+
+            // // Initially zoom in/out out until the graph fits the svgRef.current?.clientWidht/Height.
+            // console.log("Initial zoom in/out");
+            // const g = svg.select('g');
+            // const bbox = g.node()?.getBBox();
+            // const totalWidth = bbox ? bbox.width : 0;
+            // const totalHeight = bbox ? bbox.height : 0;
+            // const widthRatio = svgRef.current?.clientWidth ? svgRef.current?.clientWidth / totalWidth : 1;
+            // const heightRatio = svgRef.current?.clientHeight ? svgRef.current?.clientHeight / totalHeight : 1;
+            // const initialScale = Math.min(widthRatio, heightRatio);
+            // svg.call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(initialScale));
         }
     }, [svgRef, selectedOCPN]);
 

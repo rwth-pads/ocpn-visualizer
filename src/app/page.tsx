@@ -85,6 +85,26 @@ const Home = () => {
                 // console.log("SVG exists");
                 d3.select(svgRef.current).selectAll('*').remove();
                 visualizeOCPN(ocpnLayout, userConfig, svgRef.current);
+                // Initially zoom in/out out until the graph fits the svgRef.current?.clientWidht/Height.
+                console.log("Initial zoom in/out");
+                const svg = d3.select(svgRef.current);
+                const g = svg.select('g');
+                const margin = userConfig.borderPaddingX;
+                const bbox = g.node()?.getBBox();
+                const totalWidth = bbox ? bbox.width : 0;
+                const totalHeight = bbox ? bbox.height : 0;
+                const widthRatio = svgRef.current?.clientWidth ? (svgRef.current?.clientWidth - margin) / totalWidth : 1;
+                const heightRatio = svgRef.current?.clientHeight ? (svgRef.current?.clientHeight - margin) / totalHeight : 1;
+                const initialScale = Math.min(widthRatio, heightRatio);
+                // Calculate the translation values
+                const translateX = (svgRef.current.clientWidth - totalWidth * initialScale) / 2 - bbox.x * initialScale;
+                const translateY = (svgRef.current.clientHeight - totalHeight * initialScale) / 2 - bbox.y * initialScale;
+
+                // Apply the transformations directly to the g element
+                g.attr('transform', `translate(${translateX}, ${translateY}) scale(${initialScale})`);
+
+                // Apply the zoom behavior
+                svg.call(d3.zoom<SVGSVGElement, unknown>().transform, d3.zoomIdentity.translate(translateX, translateY).scale(initialScale));
             } else {
                 // console.log("SVG does not exist");
             }
@@ -184,16 +204,6 @@ const Home = () => {
         setUserConfig(currentConfig);
     };
 
-    const resetZoom = (svg: React.RefObject<SVGSVGElement>) => {
-        // TODO: fix this.
-        if (svg.current) {
-            const svgSelection = d3.select(svg.current);
-            svgSelection.transition().duration(750).call(
-                d3.zoom<SVGSVGElement, unknown>().transform,
-                d3.zoomIdentity
-            );
-        }
-    };
 
     return (
         <CustomThemeProvider darkMode={darkMode}>
@@ -236,7 +246,8 @@ const Home = () => {
                         userConfig={userConfig}
                         setChange={setChanged}
                         darkMode={darkMode}
-                        svgRef={svgRef} />
+                        svgRef={svgRef}
+                    />
                     {/* <CenterButton
                         darkMode={darkMode}
                         centerVisualization={resetZoom}

@@ -16,9 +16,10 @@ function positionVertices(ocpn, config) {
     markType1Conflicts(ocpn);
     const layouts = [];
     console.log("Computing the four alignments...");
+    console.log(ocpn.layout.layering);
     for (const verticalDir in [0, 1]) { // 0: down, 1: up
         for (const horizontalDir in [0, 1]) { // 0: left, 1: right
-
+            console.log(`${verticalDir == 0 ? "Down" : "Up"} - ${horizontalDir == 0 ? "Leftmost" : "Rightmost"}`);
             // Reverse the outer and inner layers depending on the directions.
             let [currentLayering, pos] = transformLayering(clone2DArray(ocpn.layout.layering), verticalDir, horizontalDir);
 
@@ -37,8 +38,83 @@ function positionVertices(ocpn, config) {
             layouts.push(coords);
         }
     }
+    // console.log(ocpn.layout.layering);
     // Align to assignment of smallest width (height).
     alignAssignments(layouts);
+    // Set the actual coordinates to average median of aligned candidates.
+    setCoordinates(ocpn, ocpn.layout.layering, layouts, config);
+}
+
+function positionVerticesToAlignmentType(ocpn, config) {
+    // Mark type 1 conflicts in the OCPN given the layering.
+    markType1Conflicts(ocpn);
+    const layouts = [];
+    var vert = [];
+    var hor = [];
+    console.log(config.alignmentType);
+    switch (config.alignmentType) {
+        case "downLeft":
+            vert.push(0);
+            hor.push(0);
+            break;
+        case "downRight":
+            vert.push(0);
+            hor.push(1);
+            break;
+        case "upLeft":
+            vert.push(1);
+            hor.push(0);
+            break;
+        case "upRight":
+            vert.push(1);
+            hor.push(1);
+            break;
+        default:
+            vert.push(0);
+            hor.push(0);
+            vert.push(0);
+            hor.push(1);
+            vert.push(1);
+            hor.push(0);
+            vert.push(1);
+            hor.push(1);
+            break;
+    }
+    console.log(vert, hor);
+    for (const verticalDir of vert) { // 0: down, 1: up
+        for (const horizontalDir of hor) { // 0: left, 1: right
+            console.log(verticalDir, horizontalDir);
+            console.log(`${verticalDir == 0 ? "Down" : "Up"} - ${horizontalDir == 0 ? "Leftmost" : "Rightmost"}`);
+            // Reverse the outer and inner layers depending on the directions.
+            let [currentLayering, pos] = transformLayering(clone2DArray(ocpn.layout.layering), verticalDir, horizontalDir);
+
+            // Align each vertex vertically with its median neighbor where possible.
+            let [roots, aligns] = verticalAlignment(ocpn, currentLayering, pos, verticalDir == 0);
+            // console.log("Current Layering:");
+            // console.log(currentLayering);
+            console.log("Roots");
+            console.log(roots);
+            console.log("Aligns");
+            console.log(aligns);
+            // Determine coordinates subject to the current alignment.
+            let [coords, maxCoord] = horizontalCompaction(ocpn, currentLayering, roots, aligns, pos, config);
+
+            // If direction from right to left, flip coordinates back to original order.
+            if (horizontalDir == 1) {
+                for (let v in coords) {
+                    coords[v] = maxCoord - coords[v];
+                }
+            }
+            layouts.push(coords);
+            layouts.push(coords);
+            layouts.push(coords);
+            layouts.push(coords);
+            arraysByCoordinates(coords);
+        }
+    }
+    // console.log(ocpn.layout.layering);
+    // Align to assignment of smallest width (height).
+    // alignAssignments(layouts);
     // Set the actual coordinates to average median of aligned candidates.
     setCoordinates(ocpn, ocpn.layout.layering, layouts, config);
 }
@@ -59,13 +135,6 @@ function transformLayering(layering, verticalDir, horizontalDir) {
     if (horizontalDir == 1) {
         layering.forEach(layer => layer.reverse());
     }
-    // TODO: here is the error.
-    // Occurs because adjacent dummies do not necessarily have the same index in the layering.
-    // Solution: The whole layer from the dummy onwards has to be shifted to the right.
-    // Example:
-    //          [_, d, _, _, _] -> [_, s, d, _, _]
-    //          [_, _, d, _, _] -> [_, _, d, _, _]
-    // where s represents the shift.
     var pos = [];
     for (let i = 0; i < layering.length; i++) {
         for (let j = 0; j < layering[i].length; j++) {
@@ -203,12 +272,18 @@ function horizontalCompaction(ocpn, layering, roots, aligns, pos, config) {
 
     // Absolute coordinates.
     let xMax = 0;
+    // console.log("Coordinates: ", x);
+    // console.log("Shifts: ", shift);
+    // console.log("Roots: ", roots);
+    // console.log("Sink: ", sink);
     for (let i = 0; i < layering.length; i++) {
         for (let j = 0; j < layering[i].length; j++) {
             let v = layering[i][j];
             x[v] = x[roots[v]];
             if (shift[sink[roots[v]]] < Infinity) {
                 x[v] = x[v] + shift[sink[roots[v]]];
+                console.log(`Shifting ${v} by ${shift[sink[roots[v]]]} for root ${roots[v]}`);
+                console.log(`x is now ${x[v]}`);
             }
             xMax = Math.max(xMax, x[v]);
         }
@@ -219,7 +294,9 @@ function horizontalCompaction(ocpn, layering, roots, aligns, pos, config) {
 
 
 function placeBlock(ocpn, layering, v, x, pos, roots, sink, shift, aligns, config) {
+    console.log(`Place block called for ${v}`);
     if (x[v] == undefined) {
+        console.log(`\tx is undefined for ${v} -> setting x to 0`);
         x[v] = 0;
         var w = v;
         do {
@@ -231,6 +308,9 @@ function placeBlock(ocpn, layering, v, x, pos, roots, sink, shift, aligns, confi
                 const predecessor = layering[layer][pos[w] - 1];
                 // Get the root of the predecessor.
                 const u = roots[predecessor];
+                console.log(`\t\t${w} not at the beginning of the layer`);
+                console.log(`\t\tPredecessor of ${w} is ${predecessor} with root ${u}`);
+                console.log("\t\t", layering[layer]);
                 // Determine the coordinates of the predecessor's root. (Terminates once the vertex most to the left is reached.)
                 placeBlock(ocpn, layering, u, x, pos, roots, sink, shift, aligns, config); // TODO config
                 // The sink is the root vertex with the smallest x coordinate.
@@ -266,10 +346,24 @@ function placeBlock(ocpn, layering, v, x, pos, roots, sink, shift, aligns, confi
                     // Maximum of own x and x of predecessor + minimum vertex separation.
                     x[v] = Math.max(x[v], x[u] + delta); // TODO config
                 }
+            } else {
+                console.log(`\t\t${w} at the beginning of the layer`);
             }
             w = aligns[w];
         } while (w != v);
     }
+}
+
+function arraysByCoordinates(layout) {
+    // For each x coordinate, get the vertices with that x coordinate.
+    let coords = {};
+    for (let v in layout) {
+        if (coords[layout[v]] == undefined) {
+            coords[layout[v]] = [];
+        }
+        coords[layout[v]].push(v);
+    }
+    console.log(coords);
 }
 
 function alignAssignments(layouts) {
@@ -371,4 +465,4 @@ function getLowerNeighbors(ocpn, vertex) {
     return ocpn.layout.getLowerNeighbors(vertex);
 }
 
-export default positionVertices;
+export default { positionVertices, positionVerticesToAlignmentType };

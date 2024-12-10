@@ -46,6 +46,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
     const [arrowHeadSize, setArrowHeadSize] = useState(userConfig.arrowHeadSize ?? 5);
     const [arcDefaultColor, setArcDefaultColor] = useState(userConfig.arcDefaultColor ?? '#000000');
 
+    const [seeAlignmentType, setSeeAlignmentType] = useState(userConfig.seeAlignmentType ?? false);
+    const [alignmentType, setAlignmentType] = useState(userConfig.alignmentType ?? 'downLeft');
     interface SetUserConfig {
         <K extends keyof OCPNConfig>(value: OCPNConfig[K], attribute: K): void;
     }
@@ -149,6 +151,12 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                 break;
             case 'arcDefaultColor':
                 setArcDefaultColor(value);
+                break;
+            case 'seeAlignmentType':
+                setSeeAlignmentType(value);
+                break;
+            case 'alignmentType':
+                setAlignmentType(value);
                 break;
             default:
                 break;
@@ -272,6 +280,26 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
             </ConfigurationCategory >
             <ConfigurationCategory title="Sugiyama Configurations" darkMode={darkMode} categoryIndex={1}>
                 <div style={{ paddingLeft: '4%' }}>
+                    <ConfigOption label="See alignment type" darkMode={darkMode}>
+                        <input
+                            type="checkbox"
+                            className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
+                            checked={seeAlignmentType}
+                            onChange={handleInputChange('seeAlignmentType', true)}
+                        />
+                    </ConfigOption>
+                    <ConfigOption label="Alignment type" darkMode={darkMode}>
+                        <select
+                            className={`custom-configuration-select${darkMode ? ' dark' : ' light'}`}
+                            value={alignmentType}
+                            onChange={handleInputChange('alignmentType', true)}
+                        >
+                            <option value="downLeft">Down Left</option>
+                            <option value="downRight">Down Right</option>
+                            <option value="upLeft">Up Left</option>
+                            <option value="upRight">Up Right</option>
+                        </select>
+                    </ConfigOption>
                     <ConfigOption label="Flow direction" darkMode={darkMode}>
                         <select
                             className={`custom-configuration-select${darkMode ? ' dark' : ' light'}`}
