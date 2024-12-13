@@ -1,0 +1,147 @@
+{
+    "name": "Simple Cyclic OCPN",
+    "places": [
+        {
+            "name": "p1",
+            "objectType": "yellow",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "p2",
+            "objectType": "yellow",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "s1",
+            "objectType": "lightblue",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "s2",
+            "objectType": "lightblue",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "s3",
+            "objectType": "lightblue",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "o1",
+            "objectType": "darkblue",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "o2",
+            "objectType": "darkblue",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "o3",
+            "objectType": "darkblue",
+            "initial": false,
+            "final": true
+        }
+    ],
+    "transitions": [
+        {
+            "name": "t1",
+            "label": "t1",
+            "silent": false
+        },
+        {
+            "name": "t2",
+            "label": "t2",
+            "silent": false
+        },
+        {
+            "name": "t3",
+            "label": "t3",
+            "silent": false
+        }
+    ],
+    "arcs": [
+        {
+            "source": "s1",
+            "target": "t2",
+            "weight": 2,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t2",
+            "target": "s2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "s2",
+            "target": "t3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t3",
+            "target": "s3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "p1",
+            "target": "t3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t3",
+            "target": "p2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "o1",
+            "target": "t1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t1",
+            "target": "o2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "o2",
+            "target": "t3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t3",
+            "target": "o3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        }
+    ],
+    "properties": {
+        "creator": "Tobias Br.",
+        "description": "The OCPN used in the bachelor thesis 'Visualizing Object-Centric Petri Nets'",
+        "version": "1.0"
+    }
+}
