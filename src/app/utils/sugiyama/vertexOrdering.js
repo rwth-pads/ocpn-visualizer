@@ -139,12 +139,29 @@ function adjustEqualBarycenters(ocpn, layering) {
 function modifiedBarycenterOrder(ocpn, layering, layer, down, config) {
     // Compute the barycenter values for the current layer.
     var barycenters = computeModifiedBarycenters(ocpn, layering, layer, down, config);
+    var adjustedBarycenters = adjustNoNeighborsBarycenters(layering, layer, barycenters);
     // Sort the vertices in the layer according to the barycenter values.
     // The greater the barycenter value the more to the right the vertex is placed.
     // Equal barycenter values are sorted by the original order.
-    let orderedLayer = layering[layer].sort((a, b) => barycenters[a] - barycenters[b]);
+    let orderedLayer = layering[layer].sort((a, b) => adjustedBarycenters[a] - adjustedBarycenters[b]);
     // console.log(barycenters);
     return orderedLayer;
+}
+
+function adjustNoNeighborsBarycenters(layering, layer, barycenters) {
+    // Vertices with no neighbors have been assigned a barycenter value of -1.
+    // Assign the barycenter value of its next left neighbor with a valid barycenter value or 0 if none.
+    var adjustedBarycenters = {};
+    for (let i = 0; i < layering[layer].length; i++) {
+        let v = layering[layer][i];
+        if (barycenters[v] == -1) {
+            let leftNeighborBary = i == 0 ? 0 : barycenters[layering[layer][i - 1]];
+            adjustedBarycenters[v] = leftNeighborBary;
+        } else {
+            adjustedBarycenters[v] = barycenters[v];
+        }
+    }
+    return adjustedBarycenters;
 }
 
 function computeModifiedBarycenters(ocpn, layering, layer, down, config) {
@@ -190,8 +207,9 @@ function placeBarycenter(ocpn, place, layering, layer, down, config) {
 
     // If there are no neighbors in the fixed layer, return the current object barycenter.
     if (neighbors.length == 0) {
-        objectBarycenter = objectBarycenter == 0 ? layering[layer].indexOf(place) + 1 : objectBarycenter;
-        return objectBarycenter;
+        // objectBarycenter = objectBarycenter == 0 ? -1 : objectBarycenter;
+        // return objectBarycenter;
+        return -1;
     }
     barycenter = barycenter / neighbors.length;
     // If there are no places of the same object type in the layers above or below, return the computed barycenter.
@@ -222,7 +240,7 @@ function transitionBarycenter(ocpn, transition, layering, layer, down) {
     // console.log(`Transition ${transition} neighbors: `, neighbors);
     // If there are no neighbors in the fixed layer, return the current index + 1.
     if (neighbors.length == 0) {
-        return layering[layer].indexOf(transition) + 1;
+        return -1;
         // return undefined; // Use the barycenter of its left neighbor (or 0 if none).
     }
 
