@@ -42,11 +42,12 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
     const [transitionFillColor, setTransitionFillColor] = useState(userConfig.transitionFillColor ?? '#ffffff');
     const [transitionBorderSize, setTransitionBorderSize] = useState(userConfig.transitionBorderSize ?? 1);
     const [indicateArcWeight, setIndicateArcWeight] = useState(userConfig.indicateArcWeight ?? false);
+    const [indicateVariableArcs, setIndicateVariableArcs] = useState(userConfig.indicateVariableArcs ?? true);
     const [arcSize, setArcSize] = useState(userConfig.arcSize ?? 1);
     const [arrowHeadSize, setArrowHeadSize] = useState(userConfig.arrowHeadSize ?? 5);
     const [arcDefaultColor, setArcDefaultColor] = useState(userConfig.arcDefaultColor ?? '#000000');
     const [zoomVisibilityThreshhold, setZoomVisibilityThreshhold] = useState(userConfig.zoomVisibilityThreshhold ?? 3);
-    
+
     const [seeAlignmentType, setSeeAlignmentType] = useState(userConfig.seeAlignmentType ?? false);
     const [alignmentType, setAlignmentType] = useState(userConfig.alignmentType ?? 'downLeft');
     interface SetUserConfig {
@@ -143,6 +144,9 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                 break;
             case 'indicateArcWeight':
                 setIndicateArcWeight(value);
+                break;
+            case 'indicateVariableArcs':
+                setIndicateVariableArcs(value);
                 break;
             case 'arcSize':
                 setArcSize(value);
@@ -284,26 +288,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
             </ConfigurationCategory >
             <ConfigurationCategory title="Sugiyama Configurations" darkMode={darkMode} categoryIndex={1}>
                 <div style={{ paddingLeft: '4%' }}>
-                    <ConfigOption label="See alignment type" darkMode={darkMode}>
-                        <input
-                            type="checkbox"
-                            className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
-                            checked={seeAlignmentType}
-                            onChange={handleInputChange('seeAlignmentType', true)}
-                        />
-                    </ConfigOption>
-                    <ConfigOption label="Alignment type" darkMode={darkMode}>
-                        <select
-                            className={`custom-configuration-select${darkMode ? ' dark' : ' light'}`}
-                            value={alignmentType}
-                            onChange={handleInputChange('alignmentType', true)}
-                        >
-                            <option value="downLeft">Down Left</option>
-                            <option value="downRight">Down Right</option>
-                            <option value="upLeft">Up Left</option>
-                            <option value="upRight">Up Right</option>
-                        </select>
-                    </ConfigOption>
                     <ConfigOption label="Flow direction" darkMode={darkMode}>
                         <select
                             className={`custom-configuration-select${darkMode ? ' dark' : ' light'}`}
@@ -355,6 +339,27 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             value={maxBarycenterIterations}
                             onChange={handleInputChange('maxBarycenterIterations', true)}
                         />
+                        <ConfigOption label="Show alignment type" darkMode={darkMode}>
+                            <input
+                                type="checkbox"
+                                className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
+                                checked={seeAlignmentType}
+                                onChange={handleInputChange('seeAlignmentType', true)}
+                            />
+                        </ConfigOption>
+                        <ConfigOption label="Alignment type" darkMode={darkMode}>
+                            <select
+                                className={`custom-configuration-select${darkMode ? ' dark' : ' light'}`}
+                                value={alignmentType}
+                                onChange={handleInputChange('alignmentType', true)}
+                                disabled={!seeAlignmentType}
+                            >
+                                <option value="downLeft">Down Left</option>
+                                <option value="downRight">Down Right</option>
+                                <option value="upLeft">Up Left</option>
+                                <option value="upRight">Up Right</option>
+                            </select>
+                        </ConfigOption>
                     </ConfigOption>
                     <ConfigOption label="Combine long arcs" darkMode={darkMode}>
                         <input
@@ -527,6 +532,14 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleInputChange('indicateArcWeight', true)}
                         />
                     </ConfigOption>
+                    <ConfigOption label="Indicate variable arcs" darkMode={darkMode}>
+                        <input
+                            type='checkbox'
+                            className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
+                            checked={indicateVariableArcs}
+                            onChange={handleInputChange('indicateVariableArcs', true)}
+                        />
+                    </ConfigOption>
                     <ConfigOption label="Arc size" darkMode={darkMode}>
                         <input
                             type='range'
@@ -560,7 +573,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onBlur={handleColorBlur('arcDefaultColor')}
                         />
                     </ConfigOption>
-                    <ConfigOption label="Hide labels at zoom" darkMode={darkMode}>
+                    <ConfigOption label="Hide labels at zoom factor" darkMode={darkMode}>
                         <input
                             type='range'
                             className={`custom-range-input${darkMode ? ' dark' : ' light'}`}

@@ -46,7 +46,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
 
 
         // If the arc is variable make the path be a double line with a gap in between.
-        if (arc.variable) {
+        if (arc.variable && config.indicateVariableArcs) {
             g.append('path')
                 .attr('d', path)
                 .attr('stroke', config.svgBackgroundColor)

@@ -10,7 +10,7 @@ class OCPNConfig {
         maxBarycenterIterations = 6,
         objectAttraction = 0.1,
         objectAttractionRangeMin = 1,
-        objectAttractionRangeMax = 2,
+        objectAttractionRangeMax = 1,
         direction = "TB",
         placeRadius = 2.5,
         customTransitionWidth = false,
@@ -31,6 +31,7 @@ class OCPNConfig {
         combineArcs = false,
         arcSize = 0.8,
         indicateArcWeight = false,
+        indicateVariableArcs = true,
         arrowHeadSize = 3,
         arcDefaultColor = "#000000",
         seeAlignmentType = false,
@@ -70,6 +71,7 @@ class OCPNConfig {
         this.combineArcs = combineArcs;
         this.arcSize = arcSize;
         this.indicateArcWeight = indicateArcWeight;
+        this.indicateVariableArcs = indicateVariableArcs;
         this.arrowHeadSize = arrowHeadSize;
         this.arcDefaultColor = arcDefaultColor;
         this.zoomVisibilityThreshhold = zoomVisibilityThreshhold;
