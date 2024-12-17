@@ -339,27 +339,27 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             value={maxBarycenterIterations}
                             onChange={handleInputChange('maxBarycenterIterations', true)}
                         />
-                        <ConfigOption label="Show alignment type" darkMode={darkMode}>
-                            <input
-                                type="checkbox"
-                                className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
-                                checked={seeAlignmentType}
-                                onChange={handleInputChange('seeAlignmentType', true)}
-                            />
-                        </ConfigOption>
-                        <ConfigOption label="Alignment type" darkMode={darkMode}>
-                            <select
-                                className={`custom-configuration-select${darkMode ? ' dark' : ' light'}`}
-                                value={alignmentType}
-                                onChange={handleInputChange('alignmentType', true)}
-                                disabled={!seeAlignmentType}
-                            >
-                                <option value="downLeft">Down Left</option>
-                                <option value="downRight">Down Right</option>
-                                <option value="upLeft">Up Left</option>
-                                <option value="upRight">Up Right</option>
-                            </select>
-                        </ConfigOption>
+                    </ConfigOption>
+                    <ConfigOption label="Show alignment type" darkMode={darkMode}>
+                        <input
+                            type="checkbox"
+                            className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
+                            checked={seeAlignmentType}
+                            onChange={handleInputChange('seeAlignmentType', true)}
+                        />
+                    </ConfigOption>
+                    <ConfigOption label="Alignment type" darkMode={darkMode}>
+                        <select
+                            className={`custom-configuration-select${darkMode ? ' dark' : ' light'}`}
+                            value={alignmentType}
+                            onChange={handleInputChange('alignmentType', true)}
+                            disabled={!seeAlignmentType}
+                        >
+                            <option value="downLeft">Down Left</option>
+                            <option value="downRight">Down Right</option>
+                            <option value="upLeft">Up Left</option>
+                            <option value="upRight">Up Right</option>
+                        </select>
                     </ConfigOption>
                     <ConfigOption label="Combine long arcs" darkMode={darkMode}>
                         <input
