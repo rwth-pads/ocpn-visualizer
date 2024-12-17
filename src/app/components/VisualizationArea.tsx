@@ -98,16 +98,19 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                 .scaleExtent([minScaleValue, maxScaleValue])
                 .on('zoom', (event) => {
                     const g = svg.select('g');
-                    console.log("Zoom event: ", event.transform);
-                    console.log("Client Width: ", svgRef.current?.clientWidth);
-                    console.log("Client Height: ", svgRef.current?.clientHeight);
-                    console.log("G bbox: ",);
-                    const bbox = g.node()?.getBBox();
-                    const totalWidth = bbox ? bbox.width * event.transform.k : 0;
-                    const totalHeight = bbox ? bbox.height * event.transform.k : 0;
-                    console.log(`G size: ${totalWidth}, ${totalHeight}`);
                     g.attr('transform', event.transform);
-                    // TODO: hide labels when not readable anymore.
+                    // Hide labels when not readable anymore.
+                    const zoomLevel = event.transform.k;
+                    svg.selectAll('.ocpntransition.label').style('display', zoomLevel < userConfig.zoomVisibilityThreshhold ? 'none' : 'block');
+
+                    // console.log("Zoom event: ", event.transform);
+                    // console.log("Client Width: ", svgRef.current?.clientWidth);
+                    // console.log("Client Height: ", svgRef.current?.clientHeight);
+                    // console.log("G bbox: ",);
+                    // const bbox = g.node()?.getBBox();
+                    // const totalWidth = bbox ? bbox.width * event.transform.k : 0;
+                    // const totalHeight = bbox ? bbox.height * event.transform.k : 0;
+                    // console.log(`G size: ${totalWidth}, ${totalHeight}`);
                 });
 
             svg.call(zoom);

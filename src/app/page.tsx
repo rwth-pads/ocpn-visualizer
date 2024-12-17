@@ -100,18 +100,22 @@ const Home = () => {
                 // Calculate the translation values
                 const translateX = (svgRef.current.clientWidth - totalWidth * initialScale) / 2 - bbox.x * initialScale;
                 const translateY = (svgRef.current.clientHeight - totalHeight * initialScale) / 2 - bbox.y * initialScale;
-                
+
                 // Set the min and max zoom scale values.
                 let max = Math.max(ocpnLayout.layering.length, Math.max(...ocpnLayout.layering.map((layer: any[]) => layer.length)));
-                console.log(max);
                 setMinScaleValue(initialScale - 0.5);
                 setMaxScaleValue(initialScale * max);
 
                 // Apply the transformations directly to the g element
                 g.attr('transform', `translate(${translateX}, ${translateY}) scale(${initialScale})`);
-                
+
                 // Apply the zoom behavior
                 svg.call(d3.zoom<SVGSVGElement, unknown>().transform, d3.zoomIdentity.translate(translateX, translateY).scale(initialScale));
+
+                // Set initial visibility of transition labels
+                const zoomLevel = initialScale;
+                svg.selectAll('.ocpntransition.label').style('display', zoomLevel < userConfig.zoomVisibilityThreshhold ? 'none' : 'block');
+
                 console.log("Initial zoom in/out with scale: ", initialScale, " and translation (x,y): ", translateX, translateY);
             } else {
                 // console.log("SVG does not exist");

@@ -34,6 +34,7 @@ class OCPNConfig {
         arrowHeadSize = 3,
         arcDefaultColor = "#000000",
         seeAlignmentType = false,
+        zoomVisibilityThreshhold = 3,
         alignmentType = "downLeft" // downLeft, downRight, upLeft, upRight
     ) {
         this.includedObjectTypes = includedObjectTypes;
@@ -71,6 +72,7 @@ class OCPNConfig {
         this.indicateArcWeight = indicateArcWeight;
         this.arrowHeadSize = arrowHeadSize;
         this.arcDefaultColor = arcDefaultColor;
+        this.zoomVisibilityThreshhold = zoomVisibilityThreshhold;
         this.seeAlignmentType = seeAlignmentType;
         this.alignmentType = alignmentType;
     }

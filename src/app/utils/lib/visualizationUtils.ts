@@ -116,14 +116,14 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                     .attr('fill', 'white');
             }
 
-            g.append('text')
-                .attr('x', vertex.x)
-                .attr('y', vertex.y)
-                .attr('text-anchor', 'middle')
-                .attr('alignment-baseline', 'middle')
-                .attr('font-size', '3px')
-                .attr('fill', 'black')
-                .text(vertexId);
+            // g.append('text')
+            //     .attr('x', vertex.x)
+            //     .attr('y', vertex.y)
+            //     .attr('text-anchor', 'middle')
+            //     .attr('alignment-baseline', 'middle')
+            //     .attr('font-size', '3px')
+            //     .attr('fill', 'black')
+            //     .text(vertexId);
         } else if (vertex.type === OCPNLayout.TRANSITION_TYPE) {
             const label = vertex.silent ? '𝜏' : vertex.label;
             // TODO: custom silent width (and height).
@@ -147,9 +147,9 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('alignment-baseline', 'middle')
                 .attr('font-size', '20px') // Initial font size
                 .attr('fill', 'black')
-                .text(vertexId) // TODO: reset to label
+                .text(label) // TODO: reset to label
                 .attr('user-select', 'none')
-                .attr('class', 'ocpntransition')
+                .attr('class', 'ocpntransition label')
                 .attr('id', vertexId);
 
             // Adjust the font size to fit within the rectangle
@@ -173,24 +173,24 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
 
             adjustFontSize();
         }
-        else if (vertex.type === OCPNLayout.DUMMY_TYPE) {
-            g.append('circle')
-                .attr('cx', vertex.x)
-                .attr('cy', vertex.y)
-                .attr('r', 2)
-                .attr('fill', 'red')
-                .attr('class', 'ocpndummy')
-                .attr('id', vertexId);
+        // else if (vertex.type === OCPNLayout.DUMMY_TYPE) {
+        //     g.append('circle')
+        //         .attr('cx', vertex.x)
+        //         .attr('cy', vertex.y)
+        //         .attr('r', 2)
+        //         .attr('fill', 'red')
+        //         .attr('class', 'ocpndummy')
+        //         .attr('id', vertexId);
 
-            g.append('text')
-                .attr('x', vertex.x)
-                .attr('y', vertex.y)
-                .attr('text-anchor', 'middle')
-                .attr('alignment-baseline', 'middle')
-                .attr('font-size', '3px')
-                .attr('fill', 'black')
-                .text(vertexId);
-        }
+        //     g.append('text')
+        //         .attr('x', vertex.x)
+        //         .attr('y', vertex.y)
+        //         .attr('text-anchor', 'middle')
+        //         .attr('alignment-baseline', 'middle')
+        //         .attr('font-size', '3px')
+        //         .attr('fill', 'black')
+        //         .text(vertexId);
+        // }
 
         // g.append('circle')
         //     .attr('cx', vertex.x)

@@ -45,7 +45,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
     const [arcSize, setArcSize] = useState(userConfig.arcSize ?? 1);
     const [arrowHeadSize, setArrowHeadSize] = useState(userConfig.arrowHeadSize ?? 5);
     const [arcDefaultColor, setArcDefaultColor] = useState(userConfig.arcDefaultColor ?? '#000000');
-
+    const [zoomVisibilityThreshhold, setZoomVisibilityThreshhold] = useState(userConfig.zoomVisibilityThreshhold ?? 3);
+    
     const [seeAlignmentType, setSeeAlignmentType] = useState(userConfig.seeAlignmentType ?? false);
     const [alignmentType, setAlignmentType] = useState(userConfig.alignmentType ?? 'downLeft');
     interface SetUserConfig {
@@ -151,6 +152,9 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                 break;
             case 'arcDefaultColor':
                 setArcDefaultColor(value);
+                break;
+            case 'zoomVisibilityThreshhold':
+                setZoomVisibilityThreshhold(value);
                 break;
             case 'seeAlignmentType':
                 setSeeAlignmentType(value);
@@ -554,6 +558,18 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             value={arcDefaultColor}
                             onChange={handleColorChange('arcDefaultColor')}
                             onBlur={handleColorBlur('arcDefaultColor')}
+                        />
+                    </ConfigOption>
+                    <ConfigOption label="Hide labels at zoom" darkMode={darkMode}>
+                        <input
+                            type='range'
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
+                            min={0}
+                            max={10}
+                            step={0.1}
+                            value={zoomVisibilityThreshhold}
+                            onChange={handleInputChange('zoomVisibilityThreshhold')}
+                            onMouseUp={handleMouseUp('zoomVisibilityThreshhold')}
                         />
                     </ConfigOption>
                 </div>
