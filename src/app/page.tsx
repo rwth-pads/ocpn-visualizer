@@ -10,6 +10,7 @@ import CenterButton from './components/CenterButton';
 import { SelectChangeEvent } from '@mui/material/Select';
 import ImportDialog from './components/ImportDialog';
 import ConfigurationSidebar from './components/ConfigurationSidebar';
+import LegendComponent from './components/LegendComponent';
 import ObjectCentricPetriNet from './utils/classes/ObjectCentricPetriNet';
 import OCPNConfig from './utils/classes/OCPNConfig';
 import ApplySugiyamaButton from './components/ApplySugiyamaButton';
@@ -34,6 +35,7 @@ const Home = () => {
     const [isImporting, setIsImporting] = useState(false);
     const [minScaleValue, setMinScaleValue] = useState(0.5);
     const [maxScaleValue, setMaxScaleValue] = useState(10);
+    const [legendOpen, setLegendOpen] = useState(false);
 
     const svgRef = useRef<SVGSVGElement | null>(null);
     const previousOCPNRef = useRef<ObjectCentricPetriNet | null>(null);
@@ -262,9 +264,16 @@ const Home = () => {
                         minScaleValue={minScaleValue}
                         maxScaleValue={maxScaleValue}
                     />
+                    <LegendComponent
+                        darkMode={darkMode}
+                        userConfig={userConfig}
+                        ocpn={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
+                        legendOpen={legendOpen}
+                        setLegendOpen={setLegendOpen}
+                        svgRef={svgRef} />
                     {/* <CenterButton
                         darkMode={darkMode}
-                        centerVisualization={resetZoom}
+                        centerVisualization={() => console.log("Todo")}
                         svg={svgRef} /> */}
                 </Box>
             </Box>
@@ -275,7 +284,7 @@ const Home = () => {
                 onFileInputChange={handleFileInputChange}
                 importError={importError}
             />
-        </CustomThemeProvider>
+        </CustomThemeProvider >
     );
 };
 

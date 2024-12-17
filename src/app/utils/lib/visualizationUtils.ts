@@ -4,14 +4,12 @@ import OCPNLayout from '../classes/OCPNLayout';
 import OCPNConfig from '../classes/OCPNConfig';
 import { Point2D, Intersection } from 'kld-intersections';
 
-const COLORS_ARRAY = ['#99cefd', '#f5a800', '#002e57', 'red', 'green', 'purple', 'orange', 'yellow', 'pink', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'navy', 'olive', 'silver', 'aqua', 'fuchsia', 'gray', 'black'];
-
 export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgRef: SVGSVGElement | null) {
     console.time("Visualize OCPN");
     const svg = d3.select(svgRef);
     const g = svg.append('g');
 
-    // Define custom markers
+    // Define custom markers.
     const defineMarker = (color: string, id: string) => {
         svg.append('defs').append('marker')
             .attr('id', id)
@@ -33,7 +31,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
         var ot = arc.objectType;
         var color = config.typeColorMapping.get(ot) || config.arcDefaultColor;
         var strokeWidth = config.arcSize * (config.indicateArcWeight ? (arc.weight ?? 1) : 1);
-
+        var ot = ot.replace(' ', '');
         defineMarker(color, `arrowhead-${arcId}`);
 
         g.append('path')
@@ -41,7 +39,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             .attr('stroke', color)
             .attr('fill', 'none')
             .attr('id', arcId)
-            .attr('class', 'ocpnarc')
+            .attr('class', `ocpnarc ${ot}${arc.variable ? ' variable' : ''}`)
             .attr('stroke-width', strokeWidth);
 
 
@@ -52,7 +50,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('stroke', config.svgBackgroundColor)
                 .attr('fill', 'none')
                 .attr('id', `${arcId}-variable`)
-                .attr('class', 'ocpnarc')
+                .attr('class', `ocpnarc inner ${ot}${arc.variable ? ' variable' : ''}`)
                 .attr('stroke-width', strokeWidth * 0.4)
         }
 
@@ -63,7 +61,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             .attr('stroke-width', strokeWidth) // Set to adjust the arrowhead size based on stroke width.
             .attr('fill', 'none')
             .attr('id', `${arcId}-invisible`)
-            .attr('class', 'ocpnarc')
+            .attr('class', `ocpnarc ${arc.objectType}`)
             .attr('marker-end', arc.reversed ? null : `url(#arrowhead-${arcId})`)
             .attr('marker-start', arc.reversed ? `url(#arrowhead-${arcId})` : null);
     }
@@ -71,6 +69,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
     // Draw the places and transitions.
     for (const vertexId in layout.vertices) {
         const vertex = layout.vertices[vertexId];
+        const ot = vertex.objectType ? vertex.objectType.replace(' ', '') : '';
         if (vertex.type === OCPNLayout.PLACE_TYPE) {
             // TODO: if checkbox 'indicate sources and sinks' is checked, then add a source/sink indicator
             // otherwise, just draw a circle with fill color.
@@ -80,9 +79,9 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             g.append('circle')
                 .attr('cx', vertex.x)
                 .attr('cy', vertex.y)
-                .attr('r', config.placeRadius) // TODO: user defined radius
+                .attr('r', config.placeRadius)
                 .attr('id', vertexId)
-                .attr('class', 'ocpnplace')
+                .attr('class', `ocpnplace ${ot}`)
                 .attr('fill', fill);
             if (source && config.indicateSourcesSinks) {
                 g.append('text')
@@ -93,7 +92,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                     .attr('font-size', config.placeRadius) // Adjust font size as needed
                     .attr('fill', 'black')
                     .attr('id', vertexId)
-                    .attr('class', 'ocpnplace')
+                    .attr('class', `ocpnplace ${ot} label`)
                     .text('⯈');
             } else if (sink && config.indicateSourcesSinks) {
                 g.append('text')
@@ -104,14 +103,14 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                     .attr('font-size', config.placeRadius) // Adjust font size as needed
                     .attr('fill', 'black')
                     .attr('id', vertexId)
-                    .attr('class', 'ocpnplace')
+                    .attr('class', `ocpnplace ${ot} label`)
                     .text('■');
             } else if (config.indicateSourcesSinks) {
                 g.append('circle')
                     .attr('cx', vertex.x)
                     .attr('cy', vertex.y)
                     .attr('r', config.placeRadius - 0.5) // config.placeBorderSize) // TODO: user defined radius
-                    .attr('class', 'ocpnplace')
+                    .attr('class', `ocpnplace ${ot}`)
                     .attr('id', vertexId)
                     .attr('fill', 'white');
             }
@@ -131,12 +130,13 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             g.append('rect')
                 .attr('x', vertex.x - width / 2)
                 .attr('y', vertex.y - config.transitionHeight / 2)
-                .attr('width', width) // TODO: user defined width
-                .attr('height', config.transitionHeight) // TODO: user defined height
+                .attr('width', width)
+                .attr('height', config.transitionHeight)
                 .attr('fill', config.transitionFillColor)
                 .attr('stroke', config.transitionColor)
-                .attr('stroke-width', config.transitionBorderSize) // TODO: color based on transition type
+                .attr('stroke-width', config.transitionBorderSize)
                 .attr('class', 'ocpntransition')
+                .attr('adjacentObjectTypes', [].join(' ')) // TODO: add adjacent object types
                 .attr('id', vertexId);
 
             // Append the text element with an initial font size
@@ -150,6 +150,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .text(label) // TODO: reset to label
                 .attr('user-select', 'none')
                 .attr('class', 'ocpntransition label')
+                .attr('adjacentObjectTypes', [].join(' ')) // TODO: add adjacent object types
                 .attr('id', vertexId);
 
             // Adjust the font size to fit within the rectangle

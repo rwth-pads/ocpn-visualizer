@@ -1,0 +1,62 @@
+.legend-container {
+    position: absolute;
+    z-index: 2;
+    bottom: 3vh;
+    right: 2vw;
+    border-radius: 50%;
+    user-select: none;
+}
+.legend-container.dark {
+    background-color: #000;
+    color: white;
+}
+.legend-container.light {
+    background-color: lightgrey;
+    color: black;
+}
+.legend-container.hidden {
+    display: none;
+}
+.legend-container.open {
+    width: fit-content;
+    height: fit-content;
+    border-radius: 5px;
+    padding: 10px 14px;
+    max-height: 50vh;
+    max-width: 30vw;
+    overflow: auto;
+}
+.legend-container.open::-webkit-scrollbar {
+    width: 10px;
+}
+.legend-container.open.dark::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color:  rgb(55, 55, 55);
+}
+/* Styles for the legend toggle icon. */
+.legend-toggle-icon {
+    padding: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+}
+/* Styles for the titles*/
+.legend-title {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+/* Styling for object type button-like elements*/
+.legend-item {
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px 0px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.legend-item.dark {
+    background-color: rgb(33, 33, 33);
+}
+.legend-item.light {
+    background-color: #ffffff32;
+}

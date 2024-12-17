@@ -114,6 +114,13 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                 });
 
             svg.call(zoom);
+
+            // Ensure left-click events (clicks) propagate
+            svg.on('click', (event) => {
+                if (event.button === 0) {
+                    event.stopImmediatePropagation(); // Prevent D3 zoom interference
+                }
+            });
         }
     }, [svgRef, selectedOCPN, minScaleValue, maxScaleValue]);
 
