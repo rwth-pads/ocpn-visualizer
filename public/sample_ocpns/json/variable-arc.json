@@ -1,0 +1,34 @@
+{
+    "name": "Variable Arc",
+    "places": [
+        {
+            "name": "p",
+            "objectType": "order",
+            "initial": true,
+            "final": false
+        }
+    ],
+    "transitions": [
+        {
+            "name": "t",
+            "label": "Variable",
+            "properties": {
+                "cost": 5
+            },
+            "silent": false
+        }
+    ],
+    "arcs": [
+        {
+            "source": "p",
+            "target": "t",
+            "weight": 2,
+            "variable": true,
+            "properties": {}
+        }
+    ],
+    "properties": {
+        "creator": "Tobias Br.",
+        "version": "1.0"
+    }
+}

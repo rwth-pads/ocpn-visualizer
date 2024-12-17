@@ -52,6 +52,7 @@ class OCPNLayout {
                     target: arc.target.id,
                     reversed: false,
                     weight: arc.weight,
+                    variable: arc.variable,
                     path: [], // The path will contain the ids of the dummy vertices.
                     minLayer: -1,
                     maxLayer: -1,

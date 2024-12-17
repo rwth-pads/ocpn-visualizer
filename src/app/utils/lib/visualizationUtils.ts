@@ -11,34 +11,63 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
     const svg = d3.select(svgRef);
     const g = svg.append('g');
 
-    svg.append('defs').append('marker')
-        .attr('id', 'arrowhead')
-        .attr('viewBox', '0 0 10 10')
-        .attr('refX', config.arrowHeadSize + 5)
-        .attr('refY', 5)
-        .attr('markerWidth', config.arrowHeadSize)
-        .attr('markerHeight', config.arrowHeadSize)
-        .attr('orient', 'auto-start-reverse')
-        .append('path')
-        .attr('d', 'M 0 0 L 10 5 L 0 10 Z')
-        .attr('fill', 'context-stroke');
+    // Define custom markers
+    const defineMarker = (color: string, id: string) => {
+        svg.append('defs').append('marker')
+            .attr('id', id)
+            .attr('viewBox', '0 0 10 10')
+            .attr('refX', config.arrowHeadSize + 5)
+            .attr('refY', 5)
+            .attr('markerWidth', config.arrowHeadSize)
+            .attr('markerHeight', config.arrowHeadSize)
+            .attr('orient', 'auto-start-reverse')
+            .append('path')
+            .attr('d', 'M 0 0 L 10 5 L 0 10 Z')
+            .attr('fill', color);
+    };
 
+    // Draw the arcs.
     for (const arcId in layout.arcs) {
         const arc = layout.arcs[arcId];
         var path = getArcPath(arcId, layout, config);
         var ot = arc.objectType;
         var color = config.typeColorMapping.get(ot) || config.arcDefaultColor;
+        var strokeWidth = config.arcSize * (config.indicateArcWeight ? (arc.weight ?? 1) : 1);
+
+        defineMarker(color, `arrowhead-${arcId}`);
+
         g.append('path')
             .attr('d', path)
             .attr('stroke', color)
             .attr('fill', 'none')
             .attr('id', arcId)
             .attr('class', 'ocpnarc')
-            .attr('stroke-width', config.arcSize * (config.indicateArcWeight ? (arc.weight ?? 1) : 1))
-            .attr('marker-end', arc.reversed ? null : 'url(#arrowhead)')
-            .attr('marker-start', arc.reversed ? 'url(#arrowhead)' : null); // TODO: set fill for arrowhead but not for the path
+            .attr('stroke-width', strokeWidth);
+
+
+        // If the arc is variable make the path be a double line with a gap in between.
+        if (arc.variable) {
+            g.append('path')
+                .attr('d', path)
+                .attr('stroke', config.svgBackgroundColor)
+                .attr('fill', 'none')
+                .attr('id', `${arcId}-variable`)
+                .attr('class', 'ocpnarc')
+                .attr('stroke-width', strokeWidth * 0.4)
+        }
+
+        // Add an invisible path with the arrowheads.
+        g.append('path')
+            .attr('d', path)
+            .attr('stroke', 'none')
+            .attr('fill', 'none')
+            .attr('id', `${arcId}-invisible`)
+            .attr('class', 'ocpnarc')
+            .attr('marker-end', arc.reversed ? null : `url(#arrowhead-${arcId})`)
+            .attr('marker-start', arc.reversed ? `url(#arrowhead-${arcId})` : null);
     }
 
+    // Draw the places and transitions.
     for (const vertexId in layout.vertices) {
         const vertex = layout.vertices[vertexId];
         if (vertex.type === OCPNLayout.PLACE_TYPE) {
