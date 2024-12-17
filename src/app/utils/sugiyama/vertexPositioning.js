@@ -18,7 +18,7 @@ function positionVertices(ocpn, config) {
     console.log("Computing the four alignments...");
     for (const verticalDir in [0, 1]) { // 0: down, 1: up
         for (const horizontalDir in [0, 1]) { // 0: left, 1: right
-            console.log(`${verticalDir == 0 ? "Down" : "Up"} - ${horizontalDir == 0 ? "Leftmost" : "Rightmost"}`);
+            // console.log(`${verticalDir == 0 ? "Down" : "Up"} - ${horizontalDir == 0 ? "Leftmost" : "Rightmost"}`);
             // Reverse the outer and inner layers depending on the directions.
             let [currentLayering, pos] = transformLayering(clone2DArray(ocpn.layout.layering), verticalDir, horizontalDir);
 
@@ -50,7 +50,6 @@ function positionVerticesToAlignmentType(ocpn, config) {
     const layouts = [];
     var vert = [];
     var hor = [];
-    console.log(config.alignmentType);
     switch (config.alignmentType) {
         case "downLeft":
             vert.push(0);
@@ -79,11 +78,8 @@ function positionVerticesToAlignmentType(ocpn, config) {
             hor.push(1);
             break;
     }
-    console.log(vert, hor);
     for (const verticalDir of vert) { // 0: down, 1: up
         for (const horizontalDir of hor) { // 0: left, 1: right
-            console.log(verticalDir, horizontalDir);
-            console.log(`${verticalDir == 0 ? "Down" : "Up"} - ${horizontalDir == 0 ? "Leftmost" : "Rightmost"}`);
             // Reverse the outer and inner layers depending on the directions.
             let [currentLayering, pos] = transformLayering(clone2DArray(ocpn.layout.layering), verticalDir, horizontalDir);
 
@@ -209,7 +205,6 @@ function verticalAlignment(ocpn, layering, pos, down) {
         for (let k = 0; k < layer.length; k++) {
             const v = layer[k];
             var neighbors = down ? getUpperNeighbors(ocpn, v) : getLowerNeighbors(ocpn, v);
-            console.log(`Neighbors of ${v}: ${neighbors}`);
             neighbors.sort((a, b) => pos[a] - pos[b]);
             if (neighbors.length > 0) {
                 const lowerUpperMedians = [...new Set([Math.floor((neighbors.length - 1) / 2), Math.ceil((neighbors.length - 1) / 2)])];
@@ -280,9 +275,7 @@ function horizontalCompaction(ocpn, layering, roots, aligns, pos, config) {
 
 
 function placeBlock(ocpn, layering, v, x, pos, roots, sink, shift, aligns, config) {
-    console.log(`Place block called for ${v} with ${x[v]}`);
     if (x[v] == undefined) {
-        console.log(`\tx is undefined for ${v} -> setting x to 0`);
         x[v] = 0;
         var w = v;
         do {
@@ -324,12 +317,12 @@ function arraysByCoordinates(layout) {
         }
         coords[layout[v]].push(v);
     }
-    console.log(coords);
+    // console.log(coords);
 }
 
 function alignAssignments(layouts) {
     console.log("Aligning the four layouts to the one with the smallest width (height)...");
-    console.log(layouts);
+    // console.log(layouts);
     // Determine minimum and maximum coordinates for each layout.
     const minMax = layouts.map(coords => {
         const values = Object.values(coords);

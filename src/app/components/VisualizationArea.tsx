@@ -12,9 +12,11 @@ interface VisualizationAreaProps {
     setChange: (change: boolean) => void;
     darkMode: boolean;
     svgRef: React.RefObject<SVGSVGElement>;
+    minScaleValue: number;
+    maxScaleValue: number;
 }
 
-const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, userConfig, setChange, darkMode, svgRef }) => {
+const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, userConfig, setChange, darkMode, svgRef, minScaleValue, maxScaleValue }) => {
     const [vertexInfo, setVertexInfo] = useState<{
         visible: boolean, x: number, y: number, vertexId: string, vertexName: string, vertexType: string, objectType: string | null, isSource: boolean, isSink: boolean
     }>({ visible: false, x: 0, y: 0, vertexId: '', vertexName: '', vertexType: 'transition', objectType: null, isSource: false, isSink: false });
@@ -93,7 +95,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                 .on('contextmenu', handleRightClick);
 
             const zoom = d3.zoom<SVGSVGElement, unknown>()
-                .scaleExtent([0.5, 10])
+                .scaleExtent([minScaleValue, maxScaleValue])
                 .on('zoom', (event) => {
                     const g = svg.select('g');
                     console.log("Zoom event: ", event.transform);
@@ -109,19 +111,8 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                 });
 
             svg.call(zoom);
-
-            // // Initially zoom in/out out until the graph fits the svgRef.current?.clientWidht/Height.
-            // console.log("Initial zoom in/out");
-            // const g = svg.select('g');
-            // const bbox = g.node()?.getBBox();
-            // const totalWidth = bbox ? bbox.width : 0;
-            // const totalHeight = bbox ? bbox.height : 0;
-            // const widthRatio = svgRef.current?.clientWidth ? svgRef.current?.clientWidth / totalWidth : 1;
-            // const heightRatio = svgRef.current?.clientHeight ? svgRef.current?.clientHeight / totalHeight : 1;
-            // const initialScale = Math.min(widthRatio, heightRatio);
-            // svg.call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(initialScale));
         }
-    }, [svgRef, selectedOCPN]);
+    }, [svgRef, selectedOCPN, minScaleValue, maxScaleValue]);
 
     const toggleSource = (vertexId: string) => {
         let modifySink = false;

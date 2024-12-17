@@ -32,6 +32,8 @@ const Home = () => {
     const [userConfig, setUserConfig] = useState<OCPNConfig>(new OCPNConfig());
     const [changed, setChanged] = useState(false);
     const [isImporting, setIsImporting] = useState(false);
+    const [minScaleValue, setMinScaleValue] = useState(0.5);
+    const [maxScaleValue, setMaxScaleValue] = useState(10);
 
     const svgRef = useRef<SVGSVGElement | null>(null);
     const previousOCPNRef = useRef<ObjectCentricPetriNet | null>(null);
@@ -86,7 +88,6 @@ const Home = () => {
                 d3.select(svgRef.current).selectAll('*').remove();
                 visualizeOCPN(ocpnLayout, userConfig, svgRef.current);
                 // Initially zoom in/out out until the graph fits the svgRef.current?.clientWidht/Height.
-                console.log("Initial zoom in/out");
                 const svg = d3.select(svgRef.current);
                 const g = svg.select('g');
                 const margin = userConfig.borderPaddingX;
@@ -99,12 +100,19 @@ const Home = () => {
                 // Calculate the translation values
                 const translateX = (svgRef.current.clientWidth - totalWidth * initialScale) / 2 - bbox.x * initialScale;
                 const translateY = (svgRef.current.clientHeight - totalHeight * initialScale) / 2 - bbox.y * initialScale;
+                
+                // Set the min and max zoom scale values.
+                let max = Math.max(ocpnLayout.layering.length, Math.max(...ocpnLayout.layering.map((layer: any[]) => layer.length)));
+                console.log(max);
+                setMinScaleValue(initialScale - 0.5);
+                setMaxScaleValue(initialScale * max);
 
                 // Apply the transformations directly to the g element
                 g.attr('transform', `translate(${translateX}, ${translateY}) scale(${initialScale})`);
-
+                
                 // Apply the zoom behavior
                 svg.call(d3.zoom<SVGSVGElement, unknown>().transform, d3.zoomIdentity.translate(translateX, translateY).scale(initialScale));
+                console.log("Initial zoom in/out with scale: ", initialScale, " and translation (x,y): ", translateX, translateY);
             } else {
                 // console.log("SVG does not exist");
             }
@@ -247,6 +255,8 @@ const Home = () => {
                         setChange={setChanged}
                         darkMode={darkMode}
                         svgRef={svgRef}
+                        minScaleValue={minScaleValue}
+                        maxScaleValue={maxScaleValue}
                     />
                     {/* <CenterButton
                         darkMode={darkMode}
