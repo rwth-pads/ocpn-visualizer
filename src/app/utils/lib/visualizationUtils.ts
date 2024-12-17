@@ -60,6 +60,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
         g.append('path')
             .attr('d', path)
             .attr('stroke', 'none')
+            .attr('stroke-width', strokeWidth) // Set to adjust the arrowhead size based on stroke width.
             .attr('fill', 'none')
             .attr('id', `${arcId}-invisible`)
             .attr('class', 'ocpnarc')
