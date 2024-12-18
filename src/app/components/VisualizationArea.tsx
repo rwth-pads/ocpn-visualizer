@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Box from '@mui/material/Box';
 import VertexInfo from './VertexInfo';
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
 import OCPNConfig from '../utils/classes/OCPNConfig';
 import OCPNLayout from '../utils/classes/OCPNLayout';
 import * as d3 from 'd3';
+
+import './VisualizationArea.css';
 
 interface VisualizationAreaProps {
     selectedOCPN: ObjectCentricPetriNet | null;
@@ -153,26 +154,10 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
     };
 
     return (
-        <Box
-            sx={{
-                height: '90vh',
-                width: '100vw',
-                bgcolor: darkMode ? '#2b2a2a' : '#ffffff',
-                overflow: 'hidden',
-                userSelect: 'none',
-            }}>
-            <Box
+        <div className={`outer-visualization-container${darkMode ? ' dark' : ' light'}`}>
+            <div
                 ref={containerRef}
-                sx={{
-                    height: '88vh',
-                    width: '98vw',
-                    margin: '1vh 1vw',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    position: 'relative', // Ensure the parent container is positioned
-                    boxShadow: darkMode ? '0 0 10px 2.5px rgba(255, 255, 255, 0.5)' : '0 0 10px 5px rgba(0, 0, 0, 0.5)',
-                }}
+                className={`inner-visualization-container${darkMode ? ' dark' : ' light'}`}
             >
                 <svg
                     ref={svgRef}
@@ -197,8 +182,8 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                         />
                     </div>
                 )}
-            </Box>
-        </Box>
+            </div>
+        </div>
     );
 };
 

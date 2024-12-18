@@ -201,14 +201,14 @@ const Home = () => {
         }
     };
 
-    const handleSelectChange = (event: SelectChangeEvent<number | "default">) => {
+    const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
-        setSelectedOCPN(value === "default" ? null : value as number);
+        setSelectedOCPN(value === "default" ? null : parseInt(value));
         // Update the user config settings that are based on the OCPN.
         let currentConfig = userConfig;
-        let ocpn = importedObjects[value as number];
+        let ocpn = importedObjects[value as unknown as number];
         // Included object types
-        currentConfig.includedObjectTypes = Array.from(importedObjects[value as number].objectTypes);
+        currentConfig.includedObjectTypes = Array.from(importedObjects[parseInt(value)].objectTypes);
         // sources and sinks
         currentConfig.sources = ocpn.places.filter(place => place.initial).map(place => place.id);
         currentConfig.sinks = ocpn.places.filter(place => place.final).map(place => place.id);

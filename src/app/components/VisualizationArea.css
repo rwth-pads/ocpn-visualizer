@@ -1,0 +1,31 @@
+.outer-visualization-container {
+    position: relative;
+    height: 100%;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    user-select: none;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+.outer-visualization-container.dark {
+    background-color: #2b2a2a;
+}
+.outer-visualization-container.light {
+    background-color: #fff;
+}
+.inner-visualization-container {
+    width: 98vw;
+    margin: 1vh 1vw;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+}
+.inner-visualization-container.dark {
+    box-shadow: 0 0 10px 2.5px rgba(255,255,255, 0.5);
+}
+.inner-visualization-container.light {
+    box-shadow: 0 0 10px 2.5px rgba(0,0,0, 0.5);
+}

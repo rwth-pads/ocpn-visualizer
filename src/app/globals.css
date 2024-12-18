@@ -39,11 +39,11 @@ body {
 }
 
 .app-container {
-    height: 90vh;
+    display: flex;
+    flex: 1;
     width: 100%;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    top: 10vh;
+    position: relative;
     left: 0;
 }

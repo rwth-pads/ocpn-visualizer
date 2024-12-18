@@ -54,6 +54,7 @@
         width: 90vw;
         max-width: 90vw;
         left: 5vw;
+        top: 28vh;
     }
     .export-dialog-content {
         flex-direction: column;
