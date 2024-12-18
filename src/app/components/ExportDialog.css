@@ -1,12 +1,13 @@
 .export-dialog-container {
     position: absolute;
     top: 25.5vh;
+    left: 20vw;
     height: 40vh;
-    width: 58.7vw;
+    width: 60vw;
     max-height: 40vh;
-    max-width: 58.7vw;
+    max-width: 60vw;
     min-height: fit-content;
-    min-width: fit-content;
+    /* min-width: fit-content; */
     display: none;
     border-radius: 5px;
     user-select: none;
@@ -42,10 +43,21 @@
 /* Styles for export dialog content */
 .export-dialog-content {
     display: flex;
+    flex-direction: row;
     height: 50%;
     padding: 0 10%;
     justify-content: space-around;
     align-items: center;
+}
+@media (max-width: 900px) {
+    .export-dialog-container {
+        width: 90vw;
+        max-width: 90vw;
+        left: 5vw;
+    }
+    .export-dialog-content {
+        flex-direction: column;
+    }
 }
 .export-dialog-content-item {
     padding: 10px 14px;

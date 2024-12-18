@@ -1,12 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
-import Box from '@mui/material/Box';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import React, { useState, useEffect, useRef } from 'react';import useMediaQuery from '@mui/material/useMediaQuery';
 import CustomThemeProvider from './context/CustomThemeProvider';
 import Header from './components/Header';
 import VisualizationArea from './components/VisualizationArea';
-import CenterButton from './components/CenterButton';
 import { SelectChangeEvent } from '@mui/material/Select';
 import ImportDialog from './components/ImportDialog';
 import ExportDialog from './components/ExportDialog';
@@ -134,7 +131,6 @@ const Home = () => {
         }
     }
 
-    // TODO: allow for importing multiple OCPNs. Currently only supports importing one OCPN at a time
     const handleFileImport = async (files: FileList) => {
         if (isImporting) return;
         setIsImporting(true);
@@ -227,7 +223,7 @@ const Home = () => {
 
     return (
         <CustomThemeProvider darkMode={darkMode}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+            <div className={`app`}>
                 <Header
                     onMenuClick={handleMenuClick}
                     onImportClick={handleImportClick}
@@ -238,17 +234,7 @@ const Home = () => {
                     selectedOCPN={selectedOCPN}
                     handleSelectChange={handleSelectChange}
                 />
-                <Box
-                    sx={{
-                        height: '90vh',
-                        width: '100%',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        position: 'absolute',
-                        top: '10vh',
-                        left: 0,
-                    }}
-                >
+                <div className={`app-container`}>
                     <ConfigurationSidebar
                         isOpen={menuOpen}
                         currentOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
@@ -281,8 +267,8 @@ const Home = () => {
                         darkMode={darkMode}
                         centerVisualization={() => console.log("Todo")}
                         svg={svgRef} /> */}
-                </Box>
-            </Box>
+                </div>
+            </div>
             <ImportDialog
                 open={importDialogOpen}
                 onClose={handleImportClose}
