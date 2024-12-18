@@ -245,7 +245,7 @@ const Home = () => {
                         darkMode={darkMode}
                         menuOpen={menuOpen}
                         userConfig={userConfig}
-                        changed={changed}
+                        // changed={changed}
                         onClick={applyConfigChanges} />
                     <VisualizationArea
                         selectedOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
@@ -282,6 +282,7 @@ const Home = () => {
                 setExportDialogOpen={setExportDialogOpen}
                 exportPossible={selectedOCPN !== null ? true : false}
                 ocpn={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
+                userConfig={userConfig}
                 svgRef={svgRef}
             />
         </CustomThemeProvider >

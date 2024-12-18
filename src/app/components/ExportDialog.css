@@ -2,7 +2,7 @@
     position: absolute;
     top: 25.5vh;
     left: 20vw;
-    height: 40vh;
+    height: fit-content;
     width: 60vw;
     max-height: 40vh;
     max-width: 60vw;
@@ -44,7 +44,7 @@
 .export-dialog-content {
     display: flex;
     flex-direction: row;
-    height: 50%;
+    height: fit-content;
     padding: 0 10%;
     justify-content: space-around;
     align-items: center;
@@ -57,11 +57,12 @@
         top: 28vh;
     }
     .export-dialog-content {
-        flex-direction: column;
+        flex-wrap: wrap;
     }
 }
 .export-dialog-content-item {
     padding: 10px 14px;
+    margin: 10px 4px;
     border-radius: 5px;
     cursor: pointer;
 }
@@ -115,7 +116,7 @@
 }
 /* Styles for text content */
 .export-dialog-content-text {
-    padding: 0 5vw;
+    padding: 0 2.5vw;
     margin: 10px 0;
 }
 /* Styles for export not possible container */

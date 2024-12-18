@@ -5,6 +5,7 @@
     right: 2vw;
     border-radius: 50%;
     user-select: none;
+    overflow: hidden;
 }
 .legend-container.dark {
     background-color: #000;
@@ -48,6 +49,12 @@
     font-size: 1.2em;
     font-weight: bold;
     cursor: pointer;
+}
+.legend-toggle-icon.dark:hover {
+    background-color: #212121;
+}
+.legend-toggle-icon.light:hover {
+    background-color: #3e79aafd;
 }
 /* Styles for the titles*/
 .legend-title {

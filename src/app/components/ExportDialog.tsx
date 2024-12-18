@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-
-import './ExportDialog.css';
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
+import OCPNConfig from '../utils/classes/OCPNConfig';
+import './ExportDialog.css';
 
 interface ExportDialogProps {
     darkMode: boolean;
@@ -9,10 +9,11 @@ interface ExportDialogProps {
     setExportDialogOpen: (open: boolean) => void;
     exportPossible: boolean;
     ocpn: ObjectCentricPetriNet | null;
+    userConfig: OCPNConfig;
     svgRef: React.RefObject<SVGSVGElement>;
 }
 
-const ExportDialog: React.FC<ExportDialogProps> = ({ darkMode, exportDialogOpen, setExportDialogOpen, exportPossible, ocpn, svgRef }) => {
+const ExportDialog: React.FC<ExportDialogProps> = ({ darkMode, exportDialogOpen, setExportDialogOpen, exportPossible, ocpn, userConfig, svgRef }) => {
     const exportDialogRef = React.useRef<HTMLDivElement>(null);
 
     const handleClickOutside = (event: MouseEvent) => {
@@ -33,13 +34,49 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ darkMode, exportDialogOpen,
     }, [exportDialogOpen]);
 
     const exportAsPng = () => {
-        console.log('Exporting as .png');
-        // Export the SVG element as a PNG file.
-        // TODO: Implement this functionality.
-    }
+        // console.log('Exporting as .png');
+        const svgElement = svgRef.current;
+        if (svgElement) {
+            const svgData = new XMLSerializer().serializeToString(svgElement);
+            const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(svgBlob);
+
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = svgElement.clientWidth || 1000;
+                canvas.height = svgElement.clientHeight || 1000;
+                const ctx = canvas.getContext('2d');
+                if (ctx) {
+                    // Draw the SVG onto the canvas.
+                    ctx.fillStyle = userConfig.svgBackgroundColor ? userConfig.svgBackgroundColor : 'white';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+
+                    // Convert the canvas content to a PNG Blob.
+                    canvas.toBlob((blob) => {
+                        if (blob) {
+                            const a = document.createElement('a');
+                            const ocpnName = ocpn ? ocpn.name : 'ocpn';
+                            const fileName = `${ocpnName}.png`;
+                            a.href = URL.createObjectURL(blob);
+                            a.download = fileName;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                        }
+                    }, 'image/png');
+                }
+                URL.revokeObjectURL(url);
+            };
+            img.src = url;
+        }
+        // setExportDialogOpen(false);
+    };
 
     const exportAsSvg = () => {
-        console.log('Exporting as .svg');
+        // console.log('Exporting as .svg');
         // Export the SVG element as an SVG file.
         const svgElement = svgRef.current;
         if (svgElement) {
@@ -55,6 +92,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ darkMode, exportDialogOpen,
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
+        // setExportDialogOpen(false);
     }
 
     return (
