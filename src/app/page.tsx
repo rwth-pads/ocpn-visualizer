@@ -9,6 +9,7 @@ import VisualizationArea from './components/VisualizationArea';
 import CenterButton from './components/CenterButton';
 import { SelectChangeEvent } from '@mui/material/Select';
 import ImportDialog from './components/ImportDialog';
+import ExportDialog from './components/ExportDialog';
 import ConfigurationSidebar from './components/ConfigurationSidebar';
 import LegendComponent from './components/LegendComponent';
 import ObjectCentricPetriNet from './utils/classes/ObjectCentricPetriNet';
@@ -27,6 +28,7 @@ const Home = () => {
     const [darkMode, setDarkMode] = useState(prefersDarkMode);
     const [menuOpen, setMenuOpen] = useState(false);
     const [importDialogOpen, setImportDialogOpen] = useState(false);
+    const [exportDialogOpen, setExportDialogOpen] = useState(false);
     const [importedObjects, setImportedObjects] = useState<ObjectCentricPetriNet[]>([]);
     const [importError, setImportError] = useState<string | null>(null);
     const [selectedOCPN, setSelectedOCPN] = useState<number | null>(null);
@@ -61,6 +63,10 @@ const Home = () => {
     const handleImportClick = () => {
         setImportDialogOpen(true);
     };
+
+    const handleExportClick = () => {
+        setExportDialogOpen(true);
+    }
 
     const handleImportClose = () => {
         setImportDialogOpen(false);
@@ -225,7 +231,7 @@ const Home = () => {
                 <Header
                     onMenuClick={handleMenuClick}
                     onImportClick={handleImportClick}
-                    onExportClick={() => { }} // TODO: Implement export functionality
+                    onExportClick={handleExportClick}
                     onToggleDarkMode={handleToggleDarkMode}
                     darkMode={darkMode}
                     importedObjects={importedObjects}
@@ -283,6 +289,14 @@ const Home = () => {
                 onDrop={handleDrop}
                 onFileInputChange={handleFileInputChange}
                 importError={importError}
+            />
+            <ExportDialog
+                darkMode={darkMode}
+                exportDialogOpen={exportDialogOpen}
+                setExportDialogOpen={setExportDialogOpen}
+                exportPossible={selectedOCPN !== null ? true : false}
+                ocpn={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
+                svgRef={svgRef}
             />
         </CustomThemeProvider >
     );

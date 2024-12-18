@@ -1,0 +1,117 @@
+.export-dialog-container {
+    position: absolute;
+    top: 25.5vh;
+    height: 40vh;
+    width: 58.7vw;
+    max-height: 40vh;
+    max-width: 58.7vw;
+    min-height: fit-content;
+    min-width: fit-content;
+    display: none;
+    border-radius: 5px;
+    user-select: none;
+    padding: 1vw;
+}
+.export-dialog-container.show {
+    display: block;
+    justify-content: center;
+    flex-direction: row;
+    z-index: 1000;
+}
+
+.export-dialog-container.dark {
+    background-color: rgba(33, 33, 33, 0.9);
+    color: white;
+    box-shadow: 0 0 10px 5px rgba(33, 33, 33);
+}
+.export-dialog-container.light {
+    background-color: rgba(179, 179, 179, 0.9);
+    color: black;
+    box-shadow: 0 0 10px 5px rgb(179, 179, 179);
+}
+/* Styles for export dialog header */
+.export-dialog-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    /* font-weight: bold; */
+}
+/* Styles for export dialog content */
+.export-dialog-content {
+    display: flex;
+    height: 50%;
+    padding: 0 10%;
+    justify-content: space-around;
+    align-items: center;
+}
+.export-dialog-content-item {
+    padding: 10px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.export-dialog-content-item.dark {
+    background-color: rgb(43, 42, 42);
+    border: solid 1px rgb(78, 76, 76);
+}
+.export-dialog-content-item.dark:hover {
+    border: solid 1px #fff;
+}
+.export-dialog-content-item.dark:active {
+    background-color: rgb(66, 66, 66);
+}
+.export-dialog-content-item.light {
+    background-color: rgba(62, 121, 170, 0.992);
+    border: solid 1px rgba(55, 94, 126, 0.992);
+}
+.export-dialog-content-item.light:hover {
+    border: solid 1px #fff;
+}
+.export-dialog-content-item.light:active {
+    background-color: rgba(62, 121, 170, 0.534);
+}
+/* Styles for export dialog footer */
+.export-dialog-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+.export-dialog-close-button {
+    cursor: pointer;
+    padding: 10px 14px;
+    border-radius: 5px;
+}
+.export-dialog-close-button.dark {
+    background-color: rgb(43, 42, 42);
+    border: solid 1px rgb(78, 76, 76);
+
+}
+.export-dialog-close-button.dark:hover {
+    /* background-color: rgb(66, 66, 66); */
+    border: solid 1px #fff;
+}
+.export-dialog-close-button.light {
+    background-color: rgba(62, 121, 170, 0.992);
+    border: solid 1px rgba(55, 94, 126, 0.992);
+}
+.export-dialog-close-button.light:hover {
+    /* background-color: rgba(62, 121, 170, 0.534); */
+    border: solid 1px #fff;
+}
+/* Styles for text content */
+.export-dialog-content-text {
+    padding: 0 5vw;
+    margin: 10px 0;
+}
+/* Styles for export not possible container */
+.export-dialog-not-possible-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2em;
+    font-weight: bold;
+}
