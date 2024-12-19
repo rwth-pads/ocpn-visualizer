@@ -68,8 +68,8 @@ const Home = () => {
     };
 
     const applyConfigChanges = () => {
-        setSugiyamaAppliedSwitch(!sugiyamaAppliedSwitch);
         handleVisualizationUpdate(null);
+        setSugiyamaAppliedSwitch(!sugiyamaAppliedSwitch);
     }
 
     const handleVisualizationUpdate = async (ocpn: ObjectCentricPetriNet | null) => {

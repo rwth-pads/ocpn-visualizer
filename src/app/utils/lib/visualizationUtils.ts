@@ -32,14 +32,12 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
         var color = config.typeColorMapping.get(ot) || config.arcDefaultColor;
         var strokeWidth = config.arcSize * (config.indicateArcWeight ? (arc.weight ?? 1) : 1);
         defineMarker(color, `arrowhead-${arcId}`);
-
-        // If the arc is variable make a wider red path around it for highlighting later on.
-        // First, to have it appear behind the actual arc.
-        // Initially set to display none. Will be shown when needed.
+        
         if (arc.variable) {
             g.append('path')
                 .attr('d', path)
                 .attr('stroke', config.variableArcIndicatorColor)
+                .attr('stroke-linecap', 'round')
                 .attr('fill', 'none')
                 .attr('id', arcId)
                 .attr('class', `ocpnarc variable indicator ${ot}`)
