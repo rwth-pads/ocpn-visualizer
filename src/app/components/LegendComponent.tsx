@@ -33,7 +33,7 @@ const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig,
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside, true);
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('mousedown', handleClickOutside, true);
         };
     }, []);
 

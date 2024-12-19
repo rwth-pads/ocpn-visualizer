@@ -24,12 +24,12 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ darkMode, exportDialogOpen,
 
     useEffect(() => {
         if (exportDialogOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
+            document.addEventListener('mousedown', handleClickOutside, true);
         } else {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('mousedown', handleClickOutside, true);
         }
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('mousedown', handleClickOutside, true);
         }
     }, [exportDialogOpen]);
 

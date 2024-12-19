@@ -49,6 +49,7 @@
     font-size: 1.2em;
     font-weight: bold;
     cursor: pointer;
+    align-items: center;
 }
 .legend-toggle-icon.dark:hover {
     background-color: #212121;

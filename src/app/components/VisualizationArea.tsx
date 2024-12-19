@@ -105,7 +105,8 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                         if (vertex.type === OCPNLayout.PLACE_TYPE) {
                             setCurrentHover(`${vertex.objectType}`);
                         } else {
-                            setCurrentHover(`${vertex.label}`);
+                            const label = vertex.silent ? '𝜏' : `${vertex.label}`;
+                            setCurrentHover(label);
                         }
                     } else {
                         // Arc.
