@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import CustomThemeProvider from './context/CustomThemeProvider';
 import Header from './components/Header';
 import VisualizationArea from './components/VisualizationArea';
 import ImportDialog from './components/ImportDialog';
@@ -225,7 +224,7 @@ const Home = () => {
 
 
     return (
-        <CustomThemeProvider darkMode={darkMode}>
+        <div>
             <div className={`app`}>
                 <Header
                     onMenuClick={handleMenuClick}
@@ -282,7 +281,7 @@ const Home = () => {
                 userConfig={userConfig}
                 svgRef={svgRef}
             />
-        </CustomThemeProvider >
+        </div>
     );
 };
 
