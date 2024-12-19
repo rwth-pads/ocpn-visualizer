@@ -63,7 +63,7 @@ const ImportDialog: React.FC<ImportDialogProps> = ({ darkMode, importDialogOpen,
             </div>
             {importError ? (
                 <div className={`import-dialog-error${darkMode ? ' dark' : ' light'}`}>
-                    {importError}
+                    Error importing file!
                 </div>
             ) : null}
             <hr />

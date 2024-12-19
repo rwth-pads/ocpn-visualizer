@@ -129,6 +129,7 @@ const Home = () => {
 
         const newImportedObjects: ObjectCentricPetriNet[] = [];
         const currentConfig = userConfig;
+        let errorOccurred = false;
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
@@ -136,11 +137,9 @@ const Home = () => {
             reader.onload = async (e: ProgressEvent<FileReader>) => {
                 const content = e.target?.result;
                 try {
-                    console.log("Importing file: ", file.name);
                     let ocpn: ObjectCentricPetriNet | null = null;
                     if (file.name.endsWith('.json')) {
                         ocpn = ObjectCentricPetriNet.fromJSON(JSON.parse(content as string));
-                        console.log("Imported OCPN: ", ocpn);
                     } else if (file.name.endsWith('.pnml')) {
                         ocpn = await ObjectCentricPetriNet.fromPNML(content as string);
                     }
@@ -160,11 +159,13 @@ const Home = () => {
                         }
                     } else {
                         setImportError(`Unsupported file type: ${file.name}`);
+                        errorOccurred = true;
                     }
                 } catch (error) {
                     setImportError(`Error importing file: ${error}`);
+                    errorOccurred = true;
                 } finally {
-                    if (i === files.length - 1) {
+                    if (i === files.length - 1 && !errorOccurred) {
                         setImportedObjects(prev => {
                             const updatedImportedObjects = [...prev, ...newImportedObjects];
                             setSelectedOCPN(updatedImportedObjects.length - newImportedObjects.length);
@@ -173,6 +174,8 @@ const Home = () => {
                             setIsImporting(false);
                             return updatedImportedObjects;
                         });
+                    } else if (i === files.length - 1) {
+                        setIsImporting(false);
                     }
                 }
             };

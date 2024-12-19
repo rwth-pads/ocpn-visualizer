@@ -13,7 +13,7 @@
     color: #fff;
 }
 .header-container {
-    height: 10vh;
+    height: 7vh;
     display: grid;
     grid-template-columns: 1fr 4fr 10fr 2fr 2fr 1fr;
 }

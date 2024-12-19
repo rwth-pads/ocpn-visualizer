@@ -74,3 +74,13 @@
 .import-dialog-close-button.light:hover {
     border: solid 1px #fff;
 }
+.import-dialog-error {
+    color: white;
+    background-color: rgba(107, 7, 7, 0.406);
+    margin-bottom: 10px;
+    border: solid 2px red;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px;
+    margin: 15px 2.5vw;
+}
