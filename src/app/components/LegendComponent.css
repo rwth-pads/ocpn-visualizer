@@ -61,6 +61,7 @@
 .legend-title {
     font-size: 1.2em;
     font-weight: bold;
+    cursor: pointer;
 }
 /* Styling for object type button-like elements*/
 .legend-item {
@@ -74,6 +75,12 @@
 .legend-item.dark {
     background-color: rgb(33, 33, 33);
 }
+.legend-item.dark.active {
+    background-color: rgba(255, 255, 255, 0.3);
+}
 .legend-item.light {
-    background-color: #ffffff32;
+    background-color: #002e57;
+}
+.legend-item.light.active {
+    background-color: #002e57c1;
 }

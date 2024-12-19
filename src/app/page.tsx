@@ -34,6 +34,7 @@ const Home = () => {
     const [maxScaleValue, setMaxScaleValue] = useState(10);
     const [legendOpen, setLegendOpen] = useState(false);
     const [currentHover, setCurrentHover] = useState<string>('');
+    const [sugiyamaAppliedSwitch, setSugiyamaAppliedSwitch] = useState(false);
 
     const svgRef = useRef<SVGSVGElement | null>(null);
     const previousOCPNRef = useRef<ObjectCentricPetriNet | null>(null);
@@ -67,6 +68,7 @@ const Home = () => {
     };
 
     const applyConfigChanges = () => {
+        setSugiyamaAppliedSwitch(!sugiyamaAppliedSwitch);
         handleVisualizationUpdate(null);
     }
 
@@ -266,6 +268,7 @@ const Home = () => {
                         ocpn={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
                         legendOpen={legendOpen}
                         setLegendOpen={setLegendOpen}
+                        sugiyamaAppliedSwitch={sugiyamaAppliedSwitch}
                         svgRef={svgRef} />
                 </div>
             </div>

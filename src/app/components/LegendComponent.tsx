@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, use } from 'react';
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
 import OCPNConfig from '../utils/classes/OCPNConfig';
 import { select } from 'd3-selection';
@@ -11,21 +11,30 @@ interface LegendComponentProps {
     ocpn: ObjectCentricPetriNet | null;
     legendOpen: boolean;
     setLegendOpen: (open: boolean) => void;
+    sugiyamaAppliedSwitch: boolean;
     svgRef: React.RefObject<SVGSVGElement>;
 }
 
-const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig, ocpn, legendOpen, setLegendOpen, svgRef }) => {
+const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig, ocpn, legendOpen, setLegendOpen, sugiyamaAppliedSwitch, svgRef }) => {
     const legendRef = useRef<HTMLDivElement>(null);
     const shown = ocpn !== null ? '' : ' hidden';
 
     const [selectedObjectTypes, setSelectedObjectTypes] = useState(userConfig.includedObjectTypes);
+    const [activeObjectTypes, setActiveObjectTypes] = useState(new Set(userConfig.includedObjectTypes));
+    const [allSelected, setAllSelected] = useState(true);
+
+    useEffect(() => {
+        setAllSelected(true);
+        setSelectedObjectTypes(userConfig.includedObjectTypes);
+        setActiveObjectTypes(new Set(userConfig.includedObjectTypes));
+    }, [userConfig.includedObjectTypes, sugiyamaAppliedSwitch]);
     
     const handleClickOutside = (event: MouseEvent) => {
         if (legendRef.current && !legendRef.current.contains(event.target as Node)) {
             setLegendOpen(false);
         }
     };
-    
+
     useEffect(() => {
         if (legendOpen) {
             document.addEventListener('mousedown', handleClickOutside, true);
@@ -36,88 +45,64 @@ const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig,
             document.removeEventListener('mousedown', handleClickOutside, true);
         };
     }, [legendOpen]);
-    
+
     useEffect(() => {
-        setSelectedObjectTypes(userConfig.includedObjectTypes);
-        // setActiveObjectTypes(userConfig.includedObjectTypes);
-        // setInactiveObjectTypes([]);
-    }, [userConfig.includedObjectTypes]);
+        const svg = select(svgRef.current);
+        svg.selectAll('.ocpnarc, .ocpnplace, .ocpntransition').style('opacity', 0.2);
+        activeObjectTypes.forEach(objectType => {
+            const ot = objectType.replace(' ', '');
+            svg.selectAll(`.${ot}`).style('opacity', 1);
+            svg.selectAll('.ocpntransition')
+                .filter(function () {
+                    const adjacentObjectTypes = select(this).attr('adjacentObjectTypes');
+                    return adjacentObjectTypes ? adjacentObjectTypes.split(' ').includes(objectType) : false;
+                })
+                .style('opacity', 1);
+        });
+    }, [activeObjectTypes]);
+
+    const handleLegendItemClick = (objectType: string) => {
+        const newActiveObjectTypes = new Set(activeObjectTypes);
+        if (newActiveObjectTypes.has(objectType)) {
+            newActiveObjectTypes.delete(objectType);
+        } else {
+            newActiveObjectTypes.add(objectType);
+        }
+        setActiveObjectTypes(newActiveObjectTypes);
+    };
 
 
-    // const toggleObjectType = (objectType: string) => {
-    //     if (activeObjectTypes.includes(objectType)) {
-    //         setActiveObjectTypes(activeObjectTypes.filter(ot => ot !== objectType));
-    //         setInactiveObjectTypes([...inactiveObjectTypes, objectType]);
-    //     } else {
-    //         setInactiveObjectTypes([...inactiveObjectTypes, objectType]);
-    //         setActiveObjectTypes([...activeObjectTypes, objectType]);
-    //     }
-    // }
+    const toggleAll = () => {
+        if (allSelected) {
+            setActiveObjectTypes(new Set());
+        } else {
+            setActiveObjectTypes(new Set(selectedObjectTypes));
+        }
 
-    // useEffect(() => {
-    //     const svg = select(svgRef.current);
-    //     svg.selectAll('.ocpnarc, .ocpnplace, .ocpntransition').style('opacity', userConfig.highlightOpacity);
-    //     activeObjectTypes.forEach((objectType: string) => {
-    //         svg.selectAll(`.${objectType}`).style('opacity', 1);
-    //         svg.selectAll('.ocpntransition')
-    //             .filter(function () {
-    //                 const adjacentObjectTypes = select(this).attr('adjacentObjectTypes');
-    //                 return adjacentObjectTypes ? adjacentObjectTypes.split(' ').includes(objectType) : false;
-    //             })
-    //             .style('opacity', 1);
-    //     });
-    // }, [activeObjectTypes, inactiveObjectTypes]);
-
-    // const handleObjectTypeMouseEnter = (objectType: string) => {
-    //     const svg = select(svgRef.current);
-    //     var ot = objectType ? objectType.replace(' ', '') : '';
-    //     svg.selectAll('.ocpnarc, .ocpnplace, .ocpntransition').style('opacity', userConfig.highlightOpacity);
-    //     svg.selectAll(`.${ot}`).style('opacity', 1);
-    //     // Highlight all transitions where the ot is in their attribute: adjacentObjectTypes.
-    //     svg.selectAll('.ocpntransition')
-    //         .filter(function () {
-    //             const adjacentObjectTypes = select(this).attr('adjacentObjectTypes');
-    //             return adjacentObjectTypes ? adjacentObjectTypes.split(' ').includes(objectType) : false;
-    //         })
-    //         .style('opacity', 1);
-    // }
-
-    // const handleObjectTypeMouseLeave = (objectType: string) => {
-    //     // Reset the opacity of all places and transitions to 1.
-    //     const svg = select(svgRef.current);
-    //     svg.selectAll('*').style('opacity', 1);
-    // }
-
-    // const handleVariableArcsMouseEnter = () => {
-    //     // Highlight variable arcs by setting red stroke.
-    //     const svg = select(svgRef.current);
-    //     svg.selectAll('.ocpnarc.variable.inner')
-    //         // .attr('stroke-width', 2)
-    //         .attr('stroke', 'red');
-    // }
-
-    // const handleVariableArcsMouseLeave = () => {
-    //     // Reset style of all variable arcs.
-    //     const svg = select(svgRef.current);
-    //     svg.selectAll('.ocpnarc.variable.inner')
-    //         .attr('stroke', userConfig.svgBackgroundColor);
-    // }
+        setAllSelected(!allSelected);
+    }
 
     return (
         <div
             ref={legendRef}
-            onClick={() => { setLegendOpen(true); console.log(selectedObjectTypes); }}
+            onClick={() => {
+                if (!legendOpen) {
+                    setLegendOpen(true)
+                }
+            }}
             className={`legend-container${darkMode ? ' dark' : ' light'}${shown}${legendOpen ? ' open' : ''}`}>
             {legendOpen ? (
                 <div className="legend-content">
-                    <div className={`legend-title${darkMode ? ' dark' : ' light'}`}>
-                        Object Types
+                    <div
+                        onClick={toggleAll}
+                        className={`legend-title${darkMode ? ' dark' : ' light'}`}>
+                        Toggle all object types
                     </div>
                     {selectedObjectTypes.map((objectType: string) => (
                         <div
                             key={objectType}
-                            className={`legend-item${darkMode ? ' dark' : ' light'} active`}
-                            onClick={() => console.log(objectType)}
+                            className={`legend-item${darkMode ? ' dark' : ' light'}${activeObjectTypes.has(objectType) ? ' active' : ''}`}
+                            onClick={() => handleLegendItemClick(objectType)}
                             style={{ color: userConfig.typeColorMapping.get(objectType) }}
                         >
                             {objectType}
@@ -126,7 +111,7 @@ const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig,
                     <hr />
                     <div
                         className={`legend-item${darkMode ? ' dark' : ' light'}`}
-                        onClick={() => console.log('TODO: Implement variable arcs')}
+                        onClick={() => console.log('TODO: Implement this')}
                     >
                         Variable arcs
                     </div>
