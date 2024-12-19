@@ -22,13 +22,15 @@ const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig,
     const [selectedObjectTypes, setSelectedObjectTypes] = useState(userConfig.includedObjectTypes);
     const [activeObjectTypes, setActiveObjectTypes] = useState(new Set(userConfig.includedObjectTypes));
     const [allSelected, setAllSelected] = useState(true);
+    const [indicateVariableArcs, setIndicateVariableArcs] = useState(userConfig.indicateVariableArcs);
 
     useEffect(() => {
         setAllSelected(true);
         setSelectedObjectTypes(userConfig.includedObjectTypes);
         setActiveObjectTypes(new Set(userConfig.includedObjectTypes));
+        setIndicateVariableArcs(userConfig.indicateVariableArcs);
     }, [userConfig.includedObjectTypes, sugiyamaAppliedSwitch]);
-    
+
     const handleClickOutside = (event: MouseEvent) => {
         if (legendRef.current && !legendRef.current.contains(event.target as Node)) {
             setLegendOpen(false);
@@ -48,7 +50,7 @@ const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig,
 
     useEffect(() => {
         const svg = select(svgRef.current);
-        svg.selectAll('.ocpnarc, .ocpnplace, .ocpntransition').style('opacity', 0.2);
+        svg.selectAll('.ocpnarc, .ocpnplace, .ocpntransition').style('opacity', userConfig.highlightOpacity);
         activeObjectTypes.forEach(objectType => {
             const ot = objectType.replace(' ', '');
             svg.selectAll(`.${ot}`).style('opacity', 1);
@@ -61,6 +63,13 @@ const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig,
         });
     }, [activeObjectTypes]);
 
+
+    useEffect(() => {
+        const svg = select(svgRef.current);
+        svg.selectAll('.ocpnarc.variable.indicator')
+            .style('display', indicateVariableArcs ? 'block' : 'none');
+    }, [indicateVariableArcs]);
+
     const handleLegendItemClick = (objectType: string) => {
         const newActiveObjectTypes = new Set(activeObjectTypes);
         if (newActiveObjectTypes.has(objectType)) {
@@ -72,7 +81,7 @@ const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig,
     };
 
 
-    const toggleAll = () => {
+    const toggleAllObjectTypes = () => {
         if (allSelected) {
             setActiveObjectTypes(new Set());
         } else {
@@ -80,6 +89,10 @@ const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig,
         }
 
         setAllSelected(!allSelected);
+    }
+
+    const toggleVariableArcs = () => {
+        setIndicateVariableArcs(!indicateVariableArcs);
     }
 
     return (
@@ -94,7 +107,18 @@ const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig,
             {legendOpen ? (
                 <div className="legend-content">
                     <div
-                        onClick={toggleAll}
+                        onClick={() => setLegendOpen(false)}
+                        className={`legend-title${darkMode ? ' dark' : ' light'}`}>
+                        Highlight
+                    </div>
+                    <div
+                        className={`legend-item${darkMode ? ' dark' : ' light'}${indicateVariableArcs ? ' active' : ''}`}
+                        onClick={toggleVariableArcs}
+                    >
+                        Variable arcs
+                    </div>
+                    <div
+                        onClick={toggleAllObjectTypes}
                         className={`legend-title${darkMode ? ' dark' : ' light'}`}>
                         Toggle all object types
                     </div>
@@ -108,13 +132,7 @@ const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig,
                             {objectType}
                         </div>
                     ))}
-                    <hr />
-                    <div
-                        className={`legend-item${darkMode ? ' dark' : ' light'}`}
-                        onClick={() => console.log('TODO: Implement this')}
-                    >
-                        Variable arcs
-                    </div>
+
                 </div>
             ) : (
                 <span className={`legend-toggle-icon${darkMode ? ' dark' : ' light'}`}>

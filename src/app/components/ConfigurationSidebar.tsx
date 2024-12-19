@@ -47,6 +47,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
     const [arcDefaultColor, setArcDefaultColor] = useState(userConfig.arcDefaultColor ?? '#000000');
     const [zoomVisibilityThreshhold, setZoomVisibilityThreshhold] = useState(userConfig.zoomVisibilityThreshhold ?? 0);
     const [highlightOpacity, setHighlightOpacity] = useState(userConfig.highlightOpacity ?? 0.2);
+    const [variableArcIndicatorColor, setVariableArcIndicatorColor] = useState(userConfig.variableArcIndicatorColor ?? 'red');
+    const [variableArcIndicatorSize, setVariableArcIndicatorSize] = useState(userConfig.variableArcIndicatorSize ?? 3);
 
     const [seeAlignmentType, setSeeAlignmentType] = useState(userConfig.seeAlignmentType ?? false);
     const [alignmentType, setAlignmentType] = useState(userConfig.alignmentType ?? 'downLeft');
@@ -162,6 +164,12 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                 break;
             case 'highlightOpacity':
                 setHighlightOpacity(value);
+                break;
+            case 'variableArcIndicatorColor':
+                setVariableArcIndicatorColor(value);
+                break;
+            case 'variableArcIndicatorSize':
+                setVariableArcIndicatorSize(value);
                 break;
             case 'seeAlignmentType':
                 setSeeAlignmentType(value);
@@ -595,6 +603,27 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             value={highlightOpacity}
                             onChange={handleInputChange('highlightOpacity')}
                             onMouseUp={handleMouseUp('highlightOpacity')}
+                        />
+                    </ConfigOption>
+                    <ConfigOption label="Variable arc indicator color" darkMode={darkMode}>
+                        <input
+                            type='color'
+                            className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
+                            value={variableArcIndicatorColor}
+                            onChange={handleColorChange('variableArcIndicatorColor')}
+                            onBlur={handleColorBlur('variableArcIndicatorColor')}
+                        />
+                    </ConfigOption>
+                    <ConfigOption label="Variable arc indicator size" darkMode={darkMode}>
+                        <input
+                            type='range'
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
+                            min={1.1}
+                            max={10.1}
+                            step={1}
+                            value={variableArcIndicatorSize}
+                            onChange={handleInputChange('variableArcIndicatorSize')}
+                            onMouseUp={handleMouseUp('variableArcIndicatorSize')}
                         />
                     </ConfigOption>
                 </div>

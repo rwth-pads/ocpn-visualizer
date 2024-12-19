@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+import { select} from 'd3-selection';
 // import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 import OCPNLayout from '../classes/OCPNLayout';
 import OCPNConfig from '../classes/OCPNConfig';
@@ -6,7 +6,7 @@ import { Point2D, Intersection } from 'kld-intersections';
 
 export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgRef: SVGSVGElement | null) {
     console.time("Visualize OCPN");
-    const svg = d3.select(svgRef);
+    const svg = select(svgRef);
     const g = svg.append('g');
 
     // Define custom markers.
@@ -28,11 +28,24 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
     for (const arcId in layout.arcs) {
         const arc = layout.arcs[arcId];
         var path = getArcPath(arcId, layout, config);
-        var ot = arc.objectType;
+        var ot = arc.objectType.replace(' ', '');
         var color = config.typeColorMapping.get(ot) || config.arcDefaultColor;
         var strokeWidth = config.arcSize * (config.indicateArcWeight ? (arc.weight ?? 1) : 1);
-        var ot = ot.replace(' ', '');
         defineMarker(color, `arrowhead-${arcId}`);
+
+        // If the arc is variable make a wider red path around it for highlighting later on.
+        // First, to have it appear behind the actual arc.
+        // Initially set to display none. Will be shown when needed.
+        if (arc.variable) {
+            g.append('path')
+                .attr('d', path)
+                .attr('stroke', config.variableArcIndicatorColor)
+                .attr('fill', 'none')
+                .attr('id', arcId)
+                .attr('class', `ocpnarc variable indicator ${ot}`)
+                .attr('stroke-width', strokeWidth * config.variableArcIndicatorSize)
+                .attr('display', config.indicateVariableArcs ? 'block' : 'none');
+        }
 
         g.append('path')
             .attr('d', path)
@@ -61,7 +74,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             .attr('stroke-width', strokeWidth) // Set to adjust the arrowhead size based on stroke width.
             .attr('fill', 'none')
             .attr('id', `${arcId}-invisible`)
-            .attr('class', `ocpnarc ${arc.objectType}`)
+            .attr('class', `ocpnarc ${ot}`)
             .attr('marker-end', arc.reversed ? null : `url(#arrowhead-${arcId})`)
             .attr('marker-start', arc.reversed ? `url(#arrowhead-${arcId})` : null);
     }

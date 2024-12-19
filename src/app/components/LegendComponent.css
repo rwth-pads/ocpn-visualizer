@@ -10,10 +10,12 @@
 .legend-container.dark {
     background-color: #000;
     color: white;
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3);
 }
 .legend-container.light {
-    background-color: lightgrey;
-    color: black;
+    background-color: rgb(148, 148, 148);
+    color: #fff;
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3);
 }
 .legend-container.hidden {
     display: none;
@@ -59,7 +61,7 @@
 }
 /* Styles for the titles*/
 .legend-title {
-    font-size: 1.2em;
+    /* font-size: 1.2em; */
     font-weight: bold;
     cursor: pointer;
 }
@@ -69,17 +71,23 @@
     border-radius: 5px;
     cursor: pointer;
     margin: 10px 0px;
-    font-size: 1.2em;
-    font-weight: bold;
+    /* font-size: 1.2em; */
+    /* font-weight: bold; */
 }
 .legend-item.dark {
     background-color: rgb(33, 33, 33);
+}
+.legend-item.dark:hover {
+    box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.7);
 }
 .legend-item.dark.active {
     background-color: rgba(255, 255, 255, 0.3);
 }
 .legend-item.light {
     background-color: #002e57;
+}
+.legend-item.light:hover {
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.7);
 }
 .legend-item.light.active {
     background-color: #002e57c1;
