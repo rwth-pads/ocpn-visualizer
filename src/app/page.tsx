@@ -12,7 +12,7 @@ import ObjectCentricPetriNet from './utils/classes/ObjectCentricPetriNet';
 import OCPNConfig from './utils/classes/OCPNConfig';
 import ApplySugiyamaButton from './components/ApplySugiyamaButton';
 import { visualizeOCPN } from './utils/lib/visualizationUtils';
-import * as d3 from 'd3';
+import { select, zoom, zoomIdentity } from 'd3';
 
 import './components/ConfigurationSidebar.css';
 import sugiyama from './utils/sugiyama/sugiyama';
@@ -82,10 +82,10 @@ const Home = () => {
             }
             if (svgRef.current) {
                 // console.log("SVG exists");
-                d3.select(svgRef.current).selectAll('*').remove();
+                select(svgRef.current).selectAll('*').remove();
                 visualizeOCPN(ocpnLayout, userConfig, svgRef.current);
                 // Initially zoom in/out out until the graph fits the svgRef.current?.clientWidht/Height.
-                const svg = d3.select(svgRef.current);
+                const svg = select(svgRef.current);
                 const g = svg.select('g');
                 const margin = userConfig.borderPaddingX;
                 const bbox = (g.node() as SVGGraphicsElement)?.getBBox();
@@ -107,7 +107,7 @@ const Home = () => {
                 g.attr('transform', `translate(${translateX}, ${translateY}) scale(${initialScale})`);
 
                 // Apply the zoom behavior
-                svg.call(d3.zoom<SVGSVGElement, unknown>().transform, d3.zoomIdentity.translate(translateX, translateY).scale(initialScale));
+                svg.call(zoom<SVGSVGElement, unknown>().transform, zoomIdentity.translate(translateX, translateY).scale(initialScale));
 
                 // Set initial visibility of transition labels
                 const zoomLevel = initialScale;
