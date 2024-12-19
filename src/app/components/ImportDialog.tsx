@@ -76,7 +76,7 @@ const ImportDialog: React.FC<ImportDialogProps> = ({ darkMode, importDialogOpen,
                     )}
                 </div>
             )}
-            <hr />
+
             <div className={`import-dialog-footer${darkMode ? ' dark' : ' light'}`}>
                 <span
                     className={`import-dialog-close-button${darkMode ? ' dark' : ' light'}`}

@@ -49,7 +49,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('d', path)
                 .attr('stroke', config.svgBackgroundColor)
                 .attr('fill', 'none')
-                .attr('id', `${arcId}-variable`)
+                .attr('id', arcId)
                 .attr('class', `ocpnarc inner ${ot}${arc.variable ? ' variable' : ''}`)
                 .attr('stroke-width', strokeWidth * 0.4)
         }

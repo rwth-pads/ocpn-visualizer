@@ -10,6 +10,7 @@ import LegendComponent from './components/LegendComponent';
 import ObjectCentricPetriNet from './utils/classes/ObjectCentricPetriNet';
 import OCPNConfig from './utils/classes/OCPNConfig';
 import ApplySugiyamaButton from './components/ApplySugiyamaButton';
+import HoverLegend from './components/HoverLegend';
 import { visualizeOCPN } from './utils/lib/visualizationUtils';
 import { select, zoom, zoomIdentity } from 'd3';
 
@@ -32,6 +33,7 @@ const Home = () => {
     const [minScaleValue, setMinScaleValue] = useState(0.5);
     const [maxScaleValue, setMaxScaleValue] = useState(10);
     const [legendOpen, setLegendOpen] = useState(false);
+    const [currentHover, setCurrentHover] = useState<string>('');
 
     const svgRef = useRef<SVGSVGElement | null>(null);
     const previousOCPNRef = useRef<ObjectCentricPetriNet | null>(null);
@@ -246,6 +248,9 @@ const Home = () => {
                         darkMode={darkMode}
                         menuOpen={menuOpen}
                         onClick={applyConfigChanges} />
+                    <HoverLegend
+                        darkMode={darkMode}
+                        currentHover={currentHover} />
                     <VisualizationArea
                         selectedOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
                         userConfig={userConfig}
@@ -253,6 +258,7 @@ const Home = () => {
                         svgRef={svgRef}
                         minScaleValue={minScaleValue}
                         maxScaleValue={maxScaleValue}
+                        setCurrentHover={setCurrentHover}
                     />
                     <LegendComponent
                         darkMode={darkMode}

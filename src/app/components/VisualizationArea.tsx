@@ -15,9 +15,10 @@ interface VisualizationAreaProps {
     svgRef: React.RefObject<SVGSVGElement>;
     minScaleValue: number;
     maxScaleValue: number;
+    setCurrentHover: (hover: string) => void;
 }
 
-const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, userConfig, darkMode, svgRef, minScaleValue, maxScaleValue }) => {
+const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, userConfig, darkMode, svgRef, minScaleValue, maxScaleValue, setCurrentHover }) => {
     const [vertexInfo, setVertexInfo] = useState<{
         visible: boolean, x: number, y: number, vertexId: string, vertexName: string, vertexType: string, objectType: string | null, isSource: boolean, isSink: boolean
     }>({ visible: false, x: 0, y: 0, vertexId: '', vertexName: '', vertexType: 'transition', objectType: null, isSource: false, isSink: false });
@@ -93,7 +94,30 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
             const svg = select(svgRef.current);
 
             svg.selectAll('.ocpntransition, .ocpnplace, .ocpnarc')
-                .on('contextmenu', handleRightClick);
+                .on('contextmenu', handleRightClick)
+                .on('mouseover', (event) => {
+                    const target = event.target as HTMLElement;
+                    const elementId = target.id;
+                    // Differentiate between places, transitions, and arcs.
+                    const vertex = selectedOCPN.layout.vertices[elementId];
+                    if (vertex) {
+                        // Place or transition.
+                        if (vertex.type === OCPNLayout.PLACE_TYPE) {
+                            setCurrentHover(`${vertex.objectType}`);
+                        } else {
+                            setCurrentHover(`${vertex.label}`);
+                        }
+                    } else {
+                        // Arc.
+                        const arc = selectedOCPN.layout.arcs[elementId];
+                        if (arc) {
+                            setCurrentHover(`${arc.objectType}`);
+                        }
+                    }
+                })
+                .on('mouseout', () => {
+                    setCurrentHover('');
+                });
 
             const zoomBehavior: ZoomBehavior<SVGSVGElement, unknown> = d3Zoom<SVGSVGElement, unknown>()
                 .scaleExtent([minScaleValue, maxScaleValue])
@@ -102,26 +126,11 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                     g.attr('transform', event.transform);
                     // Hide labels when not readable anymore.
                     const zoomLevel = event.transform.k;
-                    svg.selectAll('.ocpntransition.label').style('display', zoomLevel < userConfig.zoomVisibilityThreshhold ? 'none' : 'block');
-
-                    // console.log("Zoom event: ", event.transform);
-                    // console.log("Client Width: ", svgRef.current?.clientWidth);
-                    // console.log("Client Height: ", svgRef.current?.clientHeight);
-                    // console.log("G bbox: ",);
-                    // const bbox = g.node()?.getBBox();
-                    // const totalWidth = bbox ? bbox.width * event.transform.k : 0;
-                    // const totalHeight = bbox ? bbox.height * event.transform.k : 0;
-                    // console.log(`G size: ${totalWidth}, ${totalHeight}`);
+                    svg.selectAll('.ocpntransition.label')
+                        .style('display', zoomLevel < userConfig.zoomVisibilityThreshhold ? 'none' : 'block');
                 });
 
             svg.call(zoomBehavior);
-
-            // Ensure left-click events (clicks) propagate
-            svg.on('click', (event) => {
-                if (event.button === 0) {
-                    event.stopImmediatePropagation(); // Prevent D3 zoom interference
-                }
-            });
         }
     }, [svgRef, selectedOCPN, minScaleValue, maxScaleValue]);
 
