@@ -177,7 +177,6 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                 {vertexInfo.visible && (
                     <div ref={vertexInfoRef} style={{ position: 'absolute', left: vertexInfo.x, top: vertexInfo.y }}>
                         <VertexInfo
-                            userConfig={userConfig}
                             vertexId={vertexInfo.vertexId}
                             vertexName={vertexInfo.vertexName}
                             vertexType={vertexInfo.vertexType}

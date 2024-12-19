@@ -31,11 +31,15 @@ const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig,
     };
 
     useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside, true);
+        if (legendOpen) {
+            document.addEventListener('mousedown', handleClickOutside, true);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside, true);
+        }
         return () => {
             document.removeEventListener('mousedown', handleClickOutside, true);
         };
-    }, []);
+    }, [legendOpen]);
 
     const handleObjectTypeMouseEnter = (objectType: string) => {
         const svg = select(svgRef.current);
