@@ -23,12 +23,12 @@ const ImportDialog: React.FC<ImportDialogProps> = ({ darkMode, importDialogOpen,
 
     useEffect(() => {
         if (importDialogOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
+            document.addEventListener('mousedown', handleClickOutside, true); // Use capturing phase
         } else {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('mousedown', handleClickOutside, true); // Use capturing phase
         }
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('mousedown', handleClickOutside, true); // Use capturing phase
         }
     }, [importDialogOpen]);
 
@@ -76,7 +76,6 @@ const ImportDialog: React.FC<ImportDialogProps> = ({ darkMode, importDialogOpen,
                     )}
                 </div>
             )}
-
             <div className={`import-dialog-footer${darkMode ? ' dark' : ' light'}`}>
                 <span
                     className={`import-dialog-close-button${darkMode ? ' dark' : ' light'}`}
