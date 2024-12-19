@@ -7,10 +7,9 @@ interface DraggableListButtonProps {
     buttonLabel: string;
     darkMode: boolean;
     userConfig: OCPNConfig;
-    setChange: (change: boolean) => void;
 }
 
-const DraggableListButton: React.FC<DraggableListButtonProps> = ({ buttonLabel, darkMode, userConfig, setChange }) => {
+const DraggableListButton: React.FC<DraggableListButtonProps> = ({ buttonLabel, darkMode, userConfig }) => {
     const mode = darkMode ? ' dark' : ' light';
     const [listOpen, setListOpen] = useState(false);
     const listRef = useRef<HTMLUListElement>(null);
@@ -65,7 +64,6 @@ const DraggableListButton: React.FC<DraggableListButtonProps> = ({ buttonLabel, 
 
             userConfig.objectCentrality = newObjectCentrality;
             console.log(userConfig.objectCentrality);
-            setChange(true);
         };
 
         const handleDragOver = (e: DragEvent) => {
@@ -106,7 +104,7 @@ const DraggableListButton: React.FC<DraggableListButtonProps> = ({ buttonLabel, 
             list.removeEventListener('dragend', handleDragEnd);
             list.removeEventListener('dragover', handleDragOver);
         };
-    }, [draggedItem, userConfig, setChange]);
+    }, [draggedItem, userConfig]);
 
     return (
         <div className="draggable-list-container">

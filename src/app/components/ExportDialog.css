@@ -19,6 +19,9 @@
     flex-direction: row;
     z-index: 1000;
 }
+.export-dialog-container.show.not-possible {
+    height: 30vh;
+}
 
 .export-dialog-container.dark {
     background-color: rgba(33, 33, 33, 0.9);

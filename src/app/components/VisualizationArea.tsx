@@ -3,21 +3,21 @@ import VertexInfo from './VertexInfo';
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
 import OCPNConfig from '../utils/classes/OCPNConfig';
 import OCPNLayout from '../utils/classes/OCPNLayout';
-import * as d3 from 'd3';
+import { select } from 'd3-selection';
+import { zoom as d3Zoom, ZoomBehavior } from 'd3-zoom';
 
 import './VisualizationArea.css';
 
 interface VisualizationAreaProps {
     selectedOCPN: ObjectCentricPetriNet | null;
     userConfig: OCPNConfig;
-    setChange: (change: boolean) => void;
     darkMode: boolean;
     svgRef: React.RefObject<SVGSVGElement>;
     minScaleValue: number;
     maxScaleValue: number;
 }
 
-const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, userConfig, setChange, darkMode, svgRef, minScaleValue, maxScaleValue }) => {
+const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, userConfig, darkMode, svgRef, minScaleValue, maxScaleValue }) => {
     const [vertexInfo, setVertexInfo] = useState<{
         visible: boolean, x: number, y: number, vertexId: string, vertexName: string, vertexType: string, objectType: string | null, isSource: boolean, isSink: boolean
     }>({ visible: false, x: 0, y: 0, vertexId: '', vertexName: '', vertexType: 'transition', objectType: null, isSource: false, isSink: false });
@@ -90,12 +90,12 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
 
     useEffect(() => {
         if (svgRef.current && selectedOCPN) {
-            const svg = d3.select(svgRef.current);
+            const svg = select(svgRef.current);
 
             svg.selectAll('.ocpntransition, .ocpnplace, .ocpnarc')
                 .on('contextmenu', handleRightClick);
 
-            const zoom = d3.zoom<SVGSVGElement, unknown>()
+            const zoomBehavior: ZoomBehavior<SVGSVGElement, unknown> = d3Zoom<SVGSVGElement, unknown>()
                 .scaleExtent([minScaleValue, maxScaleValue])
                 .on('zoom', (event) => {
                     const g = svg.select('g');
@@ -114,7 +114,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                     // console.log(`G size: ${totalWidth}, ${totalHeight}`);
                 });
 
-            svg.call(zoom);
+            svg.call(zoomBehavior);
 
             // Ensure left-click events (clicks) propagate
             svg.on('click', (event) => {
@@ -136,7 +136,6 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
             modifySink = true;
         }
         setVertexInfo(prev => ({ ...prev, isSource: !prev.isSource, isSink: modifySink ? false : prev.isSink }));
-        setChange(true);
     };
 
     const toggleSink = (vertexId: string) => {
@@ -150,7 +149,6 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
             modifySource = true;
         }
         setVertexInfo(prev => ({ ...prev, isSink: !prev.isSink, isSource: modifySource ? false : prev.isSource }));
-        setChange(true);
     };
 
     return (

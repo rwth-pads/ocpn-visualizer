@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';import useMediaQuery from '@mui/material/useMediaQuery';
+import React, { useState, useEffect, useRef } from 'react';
 import CustomThemeProvider from './context/CustomThemeProvider';
 import Header from './components/Header';
 import VisualizationArea from './components/VisualizationArea';
-import { SelectChangeEvent } from '@mui/material/Select';
 import ImportDialog from './components/ImportDialog';
 import ExportDialog from './components/ExportDialog';
 import ConfigurationSidebar from './components/ConfigurationSidebar';
@@ -21,8 +20,7 @@ import sugiyama from './utils/sugiyama/sugiyama';
 const COLORS_ARRAY = ['#99cefd', '#f5a800', '#002e57', 'red', 'green', 'purple', 'orange', 'yellow', 'pink', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'navy', 'olive', 'silver', 'aqua', 'fuchsia', 'gray', 'black'];
 
 const Home = () => {
-    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-    const [darkMode, setDarkMode] = useState(prefersDarkMode);
+    const [darkMode, setDarkMode] = useState(true);
     const [menuOpen, setMenuOpen] = useState(false);
     const [importDialogOpen, setImportDialogOpen] = useState(false);
     const [exportDialogOpen, setExportDialogOpen] = useState(false);
@@ -30,7 +28,6 @@ const Home = () => {
     const [importError, setImportError] = useState<string | null>(null);
     const [selectedOCPN, setSelectedOCPN] = useState<number | null>(null);
     const [userConfig, setUserConfig] = useState<OCPNConfig>(new OCPNConfig());
-    const [changed, setChanged] = useState(false);
     const [isImporting, setIsImporting] = useState(false);
     const [minScaleValue, setMinScaleValue] = useState(0.5);
     const [maxScaleValue, setMaxScaleValue] = useState(10);
@@ -38,10 +35,6 @@ const Home = () => {
 
     const svgRef = useRef<SVGSVGElement | null>(null);
     const previousOCPNRef = useRef<ObjectCentricPetriNet | null>(null);
-
-    useEffect(() => {
-        setDarkMode(prefersDarkMode);
-    }, [prefersDarkMode]);
 
     useEffect(() => {
         if (selectedOCPN !== null) {
@@ -72,7 +65,6 @@ const Home = () => {
 
     const applyConfigChanges = () => {
         handleVisualizationUpdate(null);
-        setChanged(false);
     }
 
     const handleVisualizationUpdate = async (ocpn: ObjectCentricPetriNet | null) => {
@@ -96,7 +88,7 @@ const Home = () => {
                 const svg = d3.select(svgRef.current);
                 const g = svg.select('g');
                 const margin = userConfig.borderPaddingX;
-                const bbox = g.node()?.getBBox();
+                const bbox = (g.node() as SVGGraphicsElement)?.getBBox();
                 const totalWidth = bbox ? bbox.width : 0;
                 const totalHeight = bbox ? bbox.height : 0;
                 const widthRatio = svgRef.current?.clientWidth ? (svgRef.current?.clientWidth - margin) / totalWidth : 1;
@@ -239,18 +231,14 @@ const Home = () => {
                         isOpen={menuOpen}
                         currentOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
                         userConfig={userConfig}
-                        setChange={setChanged}
                         darkMode={darkMode} />
                     <ApplySugiyamaButton
                         darkMode={darkMode}
                         menuOpen={menuOpen}
-                        userConfig={userConfig}
-                        // changed={changed}
                         onClick={applyConfigChanges} />
                     <VisualizationArea
                         selectedOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
                         userConfig={userConfig}
-                        setChange={setChanged}
                         darkMode={darkMode}
                         svgRef={svgRef}
                         minScaleValue={minScaleValue}
@@ -263,10 +251,6 @@ const Home = () => {
                         legendOpen={legendOpen}
                         setLegendOpen={setLegendOpen}
                         svgRef={svgRef} />
-                    {/* <CenterButton
-                        darkMode={darkMode}
-                        centerVisualization={() => console.log("Todo")}
-                        svg={svgRef} /> */}
                 </div>
             </div>
             <ImportDialog

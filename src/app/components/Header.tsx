@@ -1,12 +1,8 @@
 import React from 'react';
 import { ChangeEvent } from 'react';
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
-import OCPNConfig from '../utils/classes/OCPNConfig';
-
 
 import './Header.css';
-
-const ITEM_HEIGHT = 48;
 
 interface HeaderProps {
     onMenuClick: () => void;
@@ -41,8 +37,6 @@ const Header: React.FC<HeaderProps> = ({
                             width="24"
                             height="24"
                             viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
                         >
                             <rect y="4" width="24" height="2" fill="currentColor" />
                             <rect y="11" width="24" height="2" fill="currentColor" />

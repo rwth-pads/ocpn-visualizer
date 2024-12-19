@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
 import OCPNConfig from '../utils/classes/OCPNConfig';
-import * as d3 from 'd3';
+import { select } from 'd3-selection';
 
 import './LegendComponent.css';
 
@@ -38,7 +38,7 @@ const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig,
     }, []);
 
     const handleObjectTypeMouseEnter = (objectType: string) => {
-        const svg = d3.select(svgRef.current);
+        const svg = select(svgRef.current);
         var ot = objectType ? objectType.replace(' ', '') : '';
         svg.selectAll('.ocpnarc, .ocpnplace, .ocpntransition').style('opacity', 0.1);
         svg.selectAll(`.${ot}`).style('opacity', 1);
@@ -47,21 +47,20 @@ const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig,
 
     const handleObjectTypeMouseLeave = (objectType: string) => {
         // Reset the opacity of all places and transitions to 1.
-        const svg = d3.select(svgRef.current);
+        const svg = select(svgRef.current);
         svg.selectAll('*').style('opacity', 1);
     }
 
-
     const handleVariableArcsMouseEnter = () => {
         // Highlight variable arcs by setting red stroke.
-        const svg = d3.select(svgRef.current);
+        const svg = select(svgRef.current);
         svg.selectAll('.ocpnarc.variable.inner')
             .attr('stroke', 'red');
     }
 
     const handleVariableArcsMouseLeave = () => {
         // Reset style of all variable arcs.
-        const svg = d3.select(svgRef.current);
+        const svg = select(svgRef.current);
         svg.selectAll('.ocpnarc.variable.inner')
             .attr('stroke', userConfig.svgBackgroundColor);
     }
@@ -101,8 +100,6 @@ const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig,
                     !
                 </span>
             )}
-
-
         </div>
     );
 };

@@ -12,11 +12,10 @@ interface ConfigurationSidebarProps {
     isOpen: boolean;
     currentOCPN: ObjectCentricPetriNet | null;
     userConfig: OCPNConfig;
-    setChange: (change: boolean) => void;
     darkMode: boolean;
 }
 
-const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, currentOCPN, userConfig, setChange, darkMode }) => {
+const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, currentOCPN, userConfig, darkMode }) => {
     const mode = darkMode ? 'dark' : 'light';
     const sidebarClass = isOpen ? "sidebar open " + mode : "sidebar " + mode;
     // TODO: use effect on config options that depend on the current OCPN.
@@ -172,7 +171,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         if (change) {
             setUserConfig(value, attribute);
         }
-        setChange(currentOCPN !== null);
     };
 
     const handleInputChange = (attribute: keyof OCPNConfig, change = false) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -207,7 +205,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         const color = e.target.value;
         setCurrentTypeColor(color);
         userConfig.typeColorMapping.set(currentTypeKey, color);
-        setChange(true);
         console.log(`${currentTypeKey}: ${color}`);
     }
     // console.log("Sidebar Init, ", userConfig);
@@ -230,14 +227,13 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                                 darkMode={darkMode}
                                 currentOCPN={currentOCPN}
                                 userConfig={userConfig}
-                                setChange={setChange} />
+                            />
                             {/* one select for object types + transition, one select which vertex -> highlict hovered vertex */}
                             <ConfigOption label="Adjust initial order" darkMode={darkMode}>
                                 <DraggableListButton
                                     buttonLabel="Drag and drop to reorder"
                                     darkMode={darkMode}
                                     userConfig={userConfig}
-                                    setChange={setChange}
                                 />
                             </ConfigOption>
                             <ConfigOption label="Sources and sinks" darkMode={darkMode}>

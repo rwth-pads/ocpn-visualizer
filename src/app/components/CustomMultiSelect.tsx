@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
 import OCPNConfig from '../utils/classes/OCPNConfig';
-import './multiSelect.css';
+import './CustomMultiSelect.css';
 
 interface CustomMultiSelectProps {
     darkMode: boolean;
     currentOCPN: ObjectCentricPetriNet;
     userConfig: OCPNConfig;
-    setChange: (change: boolean) => void;
 }
 
-const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode, currentOCPN, userConfig, setChange }) => {
+const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode, currentOCPN, userConfig }) => {
     const mode = darkMode ? ' dark' : ' light';
     const VISIBLEOBJECTTYPES = 2;
     const MIN_FOR_SEARCH = 2;
@@ -33,7 +32,6 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode, current
             const sinkObjectType = currentOCPN.places.find(place => place.id === sink)?.objectType;
             return selectedObjectTypes.includes(sinkObjectType);
         });
-        setChange(true);
         // console.log('Included object types: ', userConfig.includedObjectTypes);
     }, [selectedObjectTypes]);
 
