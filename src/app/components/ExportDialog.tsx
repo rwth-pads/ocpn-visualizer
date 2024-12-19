@@ -98,7 +98,8 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ darkMode, exportDialogOpen,
     return (
         <div
             ref={exportDialogRef}
-            className={`export-dialog-container${darkMode ? ' dark' : ' light'}${exportDialogOpen ? ' show' : ''}${exportPossible ? '' : ' not-possible'}`}>
+            className={`export-dialog-container${darkMode ? ' dark' : ' light'}${exportDialogOpen ? ' show' : ''}${exportPossible ? '' : ' not-possible'}`}
+        >
             {exportPossible ? (
                 <>
                     <div className={`export-dialog-header${darkMode ? ' dark' : ' light'}`}>

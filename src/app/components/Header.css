@@ -17,6 +17,15 @@
     display: grid;
     grid-template-columns: 1fr 4fr 10fr 2fr 2fr 1fr;
 }
+.header-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* Align the heading to the left. Important that it is underneath the .header-item styles. */
+.item2 {
+    justify-content: left;
+}
 @media (max-width: 900px) {
     .header-container {
         height: fit-content;
@@ -34,6 +43,7 @@
     }
     .item2 {
         grid-area: item2;
+        justify-content: center; /* Recenter the title */
     }
     .item3 {
         grid-area: item3;
@@ -47,11 +57,6 @@
     .item6 {
         grid-area: item6;
     }
-}
-.header-item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 .sidebar-toggle-container {
     border-radius: 50%;

@@ -1,0 +1,76 @@
+.import-dialog-container {
+    position: absolute;
+    top: 25.5vh;
+    left: 20vw;
+    height: fit-content;
+    width: 60vw;
+    max-height: 40vh;
+    max-width: 60vw;
+    min-height: fit-content;
+    display: none;
+    border-radius: 5px;
+    user-select: none;
+    padding: 1vw;
+}
+.import-dialog-container.show {
+    display: block;
+    justify-content: center;
+    flex-direction: row;
+    z-index: 1000;
+}
+.import-dialog-container.dark {
+    background-color: rgba(33, 33, 33);
+    color: white;
+    box-shadow: 0 0 10px 5px rgba(33, 33, 33);
+}
+.import-dialog-container.light {
+    background-color: rgba(179, 179, 179);
+    color: white;
+    box-shadow: 0 0 10px 5px rgb(179, 179, 179);
+}
+.import-dialog-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+.import-dialog-content-text {
+    margin: 10px 0;
+}
+.import-dialog-drop-area {
+    border: 2px dashed;
+    border-radius: 5px;
+    padding: 5vw;
+    margin: 15px 2.5vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+}
+.import-dialog-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+.import-dialog-close-button {
+    cursor: pointer;
+    padding: 10px 14px;
+    border-radius: 5px;
+}
+.import-dialog-close-button.dark {
+    background-color: rgb(43, 42, 42);
+    border: solid 1px rgb(78, 76, 76);
+}
+.import-dialog-close-button.dark:hover {
+    border: solid 1px #fff;
+}
+.import-dialog-close-button.light {
+    background-color: rgba(62, 121, 170, 0.992);
+    border: solid 1px rgba(55, 94, 126, 0.992);
+}
+.import-dialog-close-button.light:hover {
+    border: solid 1px #fff;
+}

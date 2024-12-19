@@ -1,69 +1,81 @@
-import React from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
+import React, { useEffect } from 'react';
+
+import './ImportDialog.css';
 
 interface ImportDialogProps {
-    open: boolean;
+    darkMode: boolean;
+    importDialogOpen: boolean;
     onClose: () => void;
     onDrop: (event: React.DragEvent<HTMLDivElement>) => void;
     onFileInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     importError: string | null;
 }
 
-const ImportDialog: React.FC<ImportDialogProps> = ({ open, onClose, onDrop, onFileInputChange, importError }) => {
+const ImportDialog: React.FC<ImportDialogProps> = ({ darkMode, importDialogOpen, onClose, onDrop, onFileInputChange, importError }) => {
+    const importDialogRef = React.useRef<HTMLDivElement>(null);
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (importDialogRef.current && !importDialogRef.current.contains(event.target as Node)) {
+            onClose();
+        }
+    };
+
+    useEffect(() => {
+        if (importDialogOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, [importDialogOpen]);
+
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-            <DialogTitle sx={{ textAlign: 'center', bgcolor: 'background.default', color: 'primary.main' }}>
+        <div
+            ref={importDialogRef}
+            className={`import-dialog-container${darkMode ? ' dark' : ' light'}${importDialogOpen ? ' show' : ''}`}
+        >
+            <div className={`import-dialog-header${darkMode ? ' dark' : ' light'}`}>
                 Import File
-                <Box sx={{ borderBottom: 2, borderColor: 'primary.main', mt: 1 }} />
-            </DialogTitle>
-            <DialogContent sx={{ bgcolor: 'background.default', color: 'primary.main' }}>
-                <Typography variant="body1" sx={{ mb: 2, color: 'primary.main' }}>
-                    Please select a .json or .pnml file to import an Object-Centric Petri Net:
-                </Typography>
-                <Box
-                    onDrop={onDrop}
-                    onDragOver={(e) => e.preventDefault()}
-                    onClick={() => document.getElementById('fileInput')?.click()}
-                    sx={{
-                        border: '2px dashed',
-                        borderColor: 'primary.main',
-                        borderRadius: 1,
-                        p: 2,
-                        textAlign: 'center',
-                        cursor: 'pointer',
-                        flexGrow: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: '200px', // Increased height
-                        color: 'primary.main'
-                    }}
+            </div>
+            <hr />
+            <div className={`import-dialog-content-text${darkMode ? ' dark' : ' light'}`}>
+                Please select a .json or .pnml file to import an Object-Centric Petri Net:
+            </div>
+            <div
+                onDrop={onDrop}
+                onDragOver={(e) => e.preventDefault()}
+                onClick={() => document.getElementById('fileInput')?.click()}
+                className={`import-dialog-drop-area${darkMode ? ' dark' : ' light'}`}
+            >
+                <div className={`import-dialog-drop-area-text${darkMode ? ' dark' : ' light'}`}>
+                    Drag and drop a file here or click to select.
+                </div>
+                <input
+                    id='fileInput'
+                    type='file'
+                    multiple={true}
+                    accept='.json,.pnml'
+                    onChange={onFileInputChange}
+                    style={{ display: 'none' }}
+                />
+            </div>
+            {importError ? (
+                <div className={`import-dialog-error${darkMode ? ' dark' : ' light'}`}>
+                    {importError}
+                </div>
+            ) : null}
+            <hr />
+            <div className={`import-dialog-footer${darkMode ? ' dark' : ' light'}`}>
+                <span
+                    className={`import-dialog-close-button${darkMode ? ' dark' : ' light'}`}
+                    onClick={onClose}
                 >
-                    <Typography variant="body1" sx={{ mb: 2, color: 'primary.main' }}>
-                        Drag and drop file here or click to select
-                    </Typography>
-                    <input
-                        id="fileInput"
-                        type="file"
-                        multiple={true}
-                        accept=".json,.pnml"
-                        onChange={onFileInputChange}
-                        style={{ display: 'none' }}
-                    />
-                </Box>
-                {importError && <Alert severity="error" sx={{ mt: 2, color: 'text.primary' }}>{importError}</Alert>}
-            </DialogContent>
-            <DialogActions sx={{ bgcolor: 'background.default', color: 'primary.main' }}>
-                <Button onClick={onClose} color="inherit">Cancel</Button>
-            </DialogActions>
-        </Dialog>
+                    Cancel
+                </span>
+            </div>
+        </div>
     );
 };
 

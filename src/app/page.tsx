@@ -136,9 +136,11 @@ const Home = () => {
             reader.onload = async (e: ProgressEvent<FileReader>) => {
                 const content = e.target?.result;
                 try {
+                    console.log("Importing file: ", file.name);
                     let ocpn: ObjectCentricPetriNet | null = null;
                     if (file.name.endsWith('.json')) {
                         ocpn = ObjectCentricPetriNet.fromJSON(JSON.parse(content as string));
+                        console.log("Imported OCPN: ", ocpn);
                     } else if (file.name.endsWith('.pnml')) {
                         ocpn = await ObjectCentricPetriNet.fromPNML(content as string);
                     }
@@ -254,7 +256,8 @@ const Home = () => {
                 </div>
             </div>
             <ImportDialog
-                open={importDialogOpen}
+                darkMode={darkMode}
+                importDialogOpen={importDialogOpen}
                 onClose={handleImportClose}
                 onDrop={handleDrop}
                 onFileInputChange={handleFileInputChange}
