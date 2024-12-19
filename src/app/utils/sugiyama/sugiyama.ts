@@ -19,6 +19,8 @@ async function sugiyama(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
     // console.log("sugiyama ocpn: ", ocpn);
     if (!(ocpn instanceof ObjectCentricPetriNet)) {
         console.log("The input is not an Object Centric Petri Net.");
+        console.log(ocpn);
+        console.log(typeof ocpn);
         return undefined;
     }
     // console.log("Sugiyama config: ", config);

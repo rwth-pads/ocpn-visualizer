@@ -17,7 +17,7 @@ import { select, zoom, zoomIdentity } from 'd3';
 import './components/ConfigurationSidebar.css';
 import sugiyama from './utils/sugiyama/sugiyama';
 
-const COLORS_ARRAY = ['#99cefd', '#f5a800', '#002e57', 'red', 'green', 'purple', 'orange', 'yellow', 'pink', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'navy', 'olive', 'silver', 'aqua', 'fuchsia', 'gray', 'black'];
+const COLORS_ARRAY = ['#99cefd', '#f5a800', '#002e57', 'green', 'purple', 'orange', 'yellow', 'pink', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'navy', 'olive', 'silver', 'aqua', 'fuchsia', 'gray', 'black'];
 
 const Home = () => {
     const [darkMode, setDarkMode] = useState(true);

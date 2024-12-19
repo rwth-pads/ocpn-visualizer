@@ -13,7 +13,7 @@ class ObjectCentricPetriNet {
     static DEFAULT_ARC_WEIGHT = 1; // Default weight of an arc.
     static DEFAULT_ARC_VARIABLE = false; // Default variable property of an arc.
     static DEFAULT_ARC_REVERSED = false; // Default reversed property of an arc.
-    
+
     static placeCounter = 0; // Static counter for generating unique place ids.
     static transitionCounter = 0; // Static counter for generating unique transition ids.
     static dummyCounter = 0; // Static counter for generating unique dummy node ids.
@@ -168,6 +168,12 @@ class ObjectCentricPetriNet {
         for (const arc of arcs) {
             arc.source.outArcs.push(arc);
             arc.target.inArcs.push(arc);
+            // Add the adjacentObjectTypes to the transitions.
+            if (arc.source instanceof ObjectCentricPetriNet.Transition) {
+                arc.source.adjacentObjectTypes.add(arc.target.objectType);
+            } else if (arc.target instanceof ObjectCentricPetriNet.Transition) {
+                arc.target.adjacentObjectTypes.add(arc.source.objectType);
+            }
         }
 
         // Get the object types of the places.
@@ -229,6 +235,12 @@ class ObjectCentricPetriNet {
         for (const arc of arcs) {
             arc.source.outArcs.push(arc);
             arc.target.inArcs.push(arc);
+            // Add the adjacentObjectTypes to the transitions.
+            if (arc.source instanceof ObjectCentricPetriNet.Transition) {
+                arc.source.adjacentObjectTypes.add(arc.target.objectType);
+            } else if (arc.target instanceof ObjectCentricPetriNet.Transition) {
+                arc.target.adjacentObjectTypes.add(arc.source.objectType);
+            }
         }
 
         // Get the object types of the OCPN.
@@ -354,14 +366,16 @@ class ObjectCentricPetriNet {
          * @param {*} outArcs The set of arcs that have the transition as source.
          * @param {*} properties Additional properties of the transition.
          * @param {*} silent Boolean that determines whether the transition is silent.
+         * @param {*} adjacentObjectTypes The object types adjacent to the transition.
          */
-        constructor(name, label = null, inArcs = [], outArcs = [], properties = {}, silent = false) {
+        constructor(name, label = null, inArcs = [], outArcs = [], properties = {}, silent = false, adjacentObjectTypes = new Set()) {
             this.id = ObjectCentricPetriNet.generateTransitionId();
             this.name = name;
             this.label = label;
             this.inArcs = inArcs;
             this.outArcs = outArcs;
             this.silent = silent;
+            this.adjacentObjectTypes = adjacentObjectTypes;
             this.layer = -1;
             this.pos = -1;
             this.x = undefined;

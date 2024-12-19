@@ -46,6 +46,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
     const [arrowHeadSize, setArrowHeadSize] = useState(userConfig.arrowHeadSize ?? 5);
     const [arcDefaultColor, setArcDefaultColor] = useState(userConfig.arcDefaultColor ?? '#000000');
     const [zoomVisibilityThreshhold, setZoomVisibilityThreshhold] = useState(userConfig.zoomVisibilityThreshhold ?? 0);
+    const [highlightOpacity, setHighlightOpacity] = useState(userConfig.highlightOpacity ?? 0.2);
 
     const [seeAlignmentType, setSeeAlignmentType] = useState(userConfig.seeAlignmentType ?? false);
     const [alignmentType, setAlignmentType] = useState(userConfig.alignmentType ?? 'downLeft');
@@ -158,6 +159,9 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                 break;
             case 'zoomVisibilityThreshhold':
                 setZoomVisibilityThreshhold(value);
+                break;
+            case 'highlightOpacity':
+                setHighlightOpacity(value);
                 break;
             case 'seeAlignmentType':
                 setSeeAlignmentType(value);
@@ -579,6 +583,18 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             value={zoomVisibilityThreshhold}
                             onChange={handleInputChange('zoomVisibilityThreshhold')}
                             onMouseUp={handleMouseUp('zoomVisibilityThreshhold')}
+                        />
+                    </ConfigOption>
+                    <ConfigOption label="Highlight opacity" darkMode={darkMode}>
+                        <input
+                            type='range'
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
+                            min={0}
+                            max={1}
+                            step={0.05}
+                            value={highlightOpacity}
+                            onChange={handleInputChange('highlightOpacity')}
+                            onMouseUp={handleMouseUp('highlightOpacity')}
                         />
                     </ConfigOption>
                 </div>
