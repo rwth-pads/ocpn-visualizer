@@ -9,9 +9,10 @@ interface ImportDialogProps {
     onDrop: (event: React.DragEvent<HTMLDivElement>) => void;
     onFileInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     importError: string | null;
+    failedFiles: string[];
 }
 
-const ImportDialog: React.FC<ImportDialogProps> = ({ darkMode, importDialogOpen, onClose, onDrop, onFileInputChange, importError }) => {
+const ImportDialog: React.FC<ImportDialogProps> = ({ darkMode, importDialogOpen, onClose, onDrop, onFileInputChange, importError, failedFiles }) => {
     const importDialogRef = React.useRef<HTMLDivElement>(null);
 
     const handleClickOutside = (event: MouseEvent) => {
@@ -61,11 +62,20 @@ const ImportDialog: React.FC<ImportDialogProps> = ({ darkMode, importDialogOpen,
                     style={{ display: 'none' }}
                 />
             </div>
-            {importError ? (
+            {importError && (
                 <div className={`import-dialog-error${darkMode ? ' dark' : ' light'}`}>
-                    Error importing file!
+                    <span id='import-error-general'>
+                        Error importing file{failedFiles.length > 1 ? 's' : ''}:
+                    </span>
+                    {failedFiles.length > 0 && (
+                        <ul>
+                            {failedFiles.map((fileName, index) => (
+                                <li key={index}>{fileName}</li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
-            ) : null}
+            )}
             <hr />
             <div className={`import-dialog-footer${darkMode ? ' dark' : ' light'}`}>
                 <span

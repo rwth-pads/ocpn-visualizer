@@ -26,6 +26,7 @@ const Home = () => {
     const [exportDialogOpen, setExportDialogOpen] = useState(false);
     const [importedObjects, setImportedObjects] = useState<ObjectCentricPetriNet[]>([]);
     const [importError, setImportError] = useState<string | null>(null);
+    const [failedFiles, setFailedFiles] = useState<string[]>([]);
     const [selectedOCPN, setSelectedOCPN] = useState<number | null>(null);
     const [userConfig, setUserConfig] = useState<OCPNConfig>(new OCPNConfig());
     const [isImporting, setIsImporting] = useState(false);
@@ -61,6 +62,7 @@ const Home = () => {
     const handleImportClose = () => {
         setImportDialogOpen(false);
         setImportError(null);
+        setFailedFiles([]);
     };
 
     const applyConfigChanges = () => {
@@ -130,6 +132,7 @@ const Home = () => {
         const newImportedObjects: ObjectCentricPetriNet[] = [];
         const currentConfig = userConfig;
         let errorOccurred = false;
+        const failedFilesList: string[] = [];
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
@@ -159,10 +162,12 @@ const Home = () => {
                         }
                     } else {
                         setImportError(`Unsupported file type: ${file.name}`);
+                        failedFilesList.push(file.name);
                         errorOccurred = true;
                     }
                 } catch (error) {
                     setImportError(`Error importing file: ${error}`);
+                    failedFilesList.push(file.name);
                     errorOccurred = true;
                 } finally {
                     if (i === files.length - 1 && !errorOccurred) {
@@ -175,6 +180,7 @@ const Home = () => {
                             return updatedImportedObjects;
                         });
                     } else if (i === files.length - 1) {
+                        setFailedFiles(failedFilesList);
                         setIsImporting(false);
                     }
                 }
@@ -265,6 +271,7 @@ const Home = () => {
                 onDrop={handleDrop}
                 onFileInputChange={handleFileInputChange}
                 importError={importError}
+                failedFiles={failedFiles}
             />
             <ExportDialog
                 darkMode={darkMode}

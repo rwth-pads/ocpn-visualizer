@@ -83,4 +83,26 @@
     text-align: center;
     padding: 5px;
     margin: 15px 2.5vw;
+    max-height: 15vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#import-error-general {
+    font-size: 1.2em;
+}
+.import-dialog-error::-webkit-scrollbar {
+    width: 8px;
+}
+
+.import-dialog-error::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+.import-dialog-error::-webkit-scrollbar-thumb {
+    background: #b304045a;
+    border-radius: 10px;
+}
+
+.import-dialog-error::-webkit-scrollbar-thumb:hover {
+    background: #b30404;
 }
