@@ -114,19 +114,10 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                     .attr('id', vertexId)
                     .attr('fill', 'white');
             }
-
-            // g.append('text')
-            //     .attr('x', vertex.x)
-            //     .attr('y', vertex.y)
-            //     .attr('text-anchor', 'middle')
-            //     .attr('alignment-baseline', 'middle')
-            //     .attr('font-size', '3px')
-            //     .attr('fill', 'black')
-            //     .text(vertexId);
         } else if (vertex.type === OCPNLayout.TRANSITION_TYPE) {
             const label = vertex.silent ? '𝜏' : vertex.label;
-            // TODO: custom silent width (and height).
             let width = vertex.silent ? config.silentTransitionWidth : config.transitionWidth;
+            let ots = Array.from(vertex.adjacentObjectTypes);
             g.append('rect')
                 .attr('x', vertex.x - width / 2)
                 .attr('y', vertex.y - config.transitionHeight / 2)
@@ -136,7 +127,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('stroke', config.transitionColor)
                 .attr('stroke-width', config.transitionBorderSize)
                 .attr('class', 'ocpntransition')
-                .attr('adjacentObjectTypes', [].join(' ')) // TODO: add adjacent object types
+                .attr('adjacentObjectTypes', ots.join(' ')) // TODO: add adjacent object types
                 .attr('id', vertexId);
 
             // Append the text element with an initial font size
@@ -147,10 +138,10 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('alignment-baseline', 'middle')
                 .attr('font-size', '20px') // Initial font size
                 .attr('fill', 'black')
-                .text(label) // TODO: reset to label
+                .text(label)
                 .attr('user-select', 'none')
                 .attr('class', 'ocpntransition label')
-                .attr('adjacentObjectTypes', [].join(' ')) // TODO: add adjacent object types
+                .attr('adjacentObjectTypes', ots.join(' '))
                 .attr('id', vertexId);
 
             // Adjust the font size to fit within the rectangle
@@ -174,30 +165,6 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
 
             adjustFontSize();
         }
-        // else if (vertex.type === OCPNLayout.DUMMY_TYPE) {
-        //     g.append('circle')
-        //         .attr('cx', vertex.x)
-        //         .attr('cy', vertex.y)
-        //         .attr('r', 2)
-        //         .attr('fill', 'red')
-        //         .attr('class', 'ocpndummy')
-        //         .attr('id', vertexId);
-
-        //     g.append('text')
-        //         .attr('x', vertex.x)
-        //         .attr('y', vertex.y)
-        //         .attr('text-anchor', 'middle')
-        //         .attr('alignment-baseline', 'middle')
-        //         .attr('font-size', '3px')
-        //         .attr('fill', 'black')
-        //         .text(vertexId);
-        // }
-
-        // g.append('circle')
-        //     .attr('cx', vertex.x)
-        //     .attr('cy', vertex.y)
-        //     .attr('r', 0.4)
-        //     .attr('fill', 'red')
     }
     console.timeEnd("Visualize OCPN");
     return svg;

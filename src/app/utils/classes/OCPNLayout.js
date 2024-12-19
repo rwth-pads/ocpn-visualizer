@@ -41,7 +41,8 @@ class OCPNLayout {
                     y: undefined,
                     layer: -1,
                     pos: -1,
-                    type: OCPNLayout.TRANSITION_TYPE
+                    type: OCPNLayout.TRANSITION_TYPE,
+                    adjacentObjectTypes: new Set()
                 };
         });
 
@@ -60,6 +61,14 @@ class OCPNLayout {
                     original: true,
                     objectType: undefined,
                 };
+            }
+            // Add the object type to the adjacent transitions.
+            if (arc.source.objectType) {
+                let ot = arc.source.objectType.replace(' ', '');
+                this.vertices[arc.target.id].adjacentObjectTypes.add(ot);
+            } else {
+                let ot = arc.target.objectType.replace(' ', '');
+                this.vertices[arc.source.id].adjacentObjectTypes.add(ot);
             }
         });
     }

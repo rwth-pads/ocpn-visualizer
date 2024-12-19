@@ -46,7 +46,13 @@ const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig,
         var ot = objectType ? objectType.replace(' ', '') : '';
         svg.selectAll('.ocpnarc, .ocpnplace, .ocpntransition').style('opacity', 0.1);
         svg.selectAll(`.${ot}`).style('opacity', 1);
-        // TODO: set opacity of transitions that are connected to the object type to 1.
+        // Highlight all transitions where the ot is in their attribute: adjacentObjectTypes.
+        svg.selectAll('.ocpntransition')
+            .filter(function () {
+                const adjacentObjectTypes = select(this).attr('adjacentObjectTypes');
+                return adjacentObjectTypes ? adjacentObjectTypes.split(' ').includes(objectType) : false;
+            })
+            .style('opacity', 1);
     }
 
     const handleObjectTypeMouseLeave = (objectType: string) => {
