@@ -1,5 +1,4 @@
 import { select } from 'd3-selection';
-// import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 import OCPNLayout from '../classes/OCPNLayout';
 import OCPNConfig from '../classes/OCPNConfig';
 import { Point2D, Intersection } from 'kld-intersections';
@@ -105,7 +104,6 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             .attr('class', `ocpnarc ${ot}${arc.variable ? ' variable' : ''}`)
             .attr('mask', `url(#${maskId})`)
             .attr('stroke-width', strokeWidth);
-
 
         // If the arc is variable make the path be a double line with a gap in between.
         if (arc.variable && config.indicateVariableArcs) {
