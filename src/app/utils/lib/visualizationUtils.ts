@@ -1,4 +1,4 @@
-import { select} from 'd3-selection';
+import { select } from 'd3-selection';
 // import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 import OCPNLayout from '../classes/OCPNLayout';
 import OCPNConfig from '../classes/OCPNConfig';
@@ -31,8 +31,59 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
         var ot = arc.objectType.replace(' ', '');
         var color = config.typeColorMapping.get(ot) || config.arcDefaultColor;
         var strokeWidth = config.arcSize * (config.indicateArcWeight ? (arc.weight ?? 1) : 1);
+
+        // Define a combined mask for the arc that hides the parts of the arc that underlap with it's source and target.
+        const source = layout.vertices[arc.source]; // {name: 't3', label: 't3', x: 82.5, y: 87.5, type: ?, ...}
+        const target = layout.vertices[arc.target];
+        // console.log(source, target);
+        const maskId = `mask-${arcId}`;
+        const mask = svg.append('defs').append('mask').attr('id', maskId).attr('maskUnits', 'userSpaceOnUse');
+
+        // Add a white background to the mask.
+        mask.append('rect')
+            .attr('width', '100%')
+            .attr('height', '100%')
+            .attr('fill', 'white');
+
+        if (source.type === OCPNLayout.PLACE_TYPE) {
+            // Source is circle, target is rectangle.
+            console.log("Source is circle, target is rectangle");
+            mask.append('circle')
+                .attr('cx', source.x)
+                .attr('cy', source.y)
+                .attr('r', config.placeRadius)
+                .attr('fill', 'black');
+
+            let targetWidth = target.silent ? config.silentTransitionWidth : config.transitionWidth;
+
+            mask.append('rect')
+                .attr('x', target.x - targetWidth / 2)
+                .attr('y', target.y - config.transitionHeight / 2)
+                .attr('width', targetWidth)
+                .attr('height', config.transitionHeight)
+                .attr('fill', 'black');
+
+        } else if (source.type === OCPNLayout.TRANSITION_TYPE) {
+            // Source is rectangle, target is circle.
+            console.log("Source is rectangle, target is circle");
+            let sourceWidth = source.silent ? config.silentTransitionWidth : config.transitionWidth;
+
+            mask.append('rect')
+                .attr('x', source.x - sourceWidth / 2)
+                .attr('y', source.y - config.transitionHeight / 2)
+                .attr('width', sourceWidth)
+                .attr('height', config.transitionHeight)
+                .attr('fill', 'black');
+
+            mask.append('circle')
+                .attr('cx', target.x)
+                .attr('cy', target.y)
+                .attr('r', config.placeRadius)
+                .attr('fill', 'black');
+        }
+
         defineMarker(color, `arrowhead-${arcId}`);
-        
+
         if (arc.variable) {
             g.append('path')
                 .attr('d', path)
@@ -42,6 +93,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('id', arcId)
                 .attr('class', `ocpnarc variable indicator ${ot}`)
                 .attr('stroke-width', strokeWidth * config.variableArcIndicatorSize)
+                .attr('mask', `url(#${maskId})`)
                 .attr('display', config.indicateVariableArcs ? 'block' : 'none');
         }
 
@@ -51,6 +103,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             .attr('fill', 'none')
             .attr('id', arcId)
             .attr('class', `ocpnarc ${ot}${arc.variable ? ' variable' : ''}`)
+            .attr('mask', `url(#${maskId})`)
             .attr('stroke-width', strokeWidth);
 
 
@@ -62,6 +115,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('fill', 'none')
                 .attr('id', arcId)
                 .attr('class', `ocpnarc inner ${ot}${arc.variable ? ' variable' : ''}`)
+                .attr('mask', `url(#${maskId})`)
                 .attr('stroke-width', strokeWidth * 0.4)
         }
 
@@ -74,6 +128,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             .attr('id', `${arcId}-invisible`)
             .attr('class', `ocpnarc ${ot}`)
             .attr('marker-end', arc.reversed ? null : `url(#arrowhead-${arcId})`)
+            .attr('mask', `url(#${maskId})`)
             .attr('marker-start', arc.reversed ? `url(#arrowhead-${arcId})` : null);
     }
 
