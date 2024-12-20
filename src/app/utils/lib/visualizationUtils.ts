@@ -87,7 +87,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             g.append('path')
                 .attr('d', path)
                 .attr('stroke', config.variableArcIndicatorColor)
-                .attr('stroke-linecap', 'round')
+                // .attr('stroke-linecap', 'round')
                 .attr('fill', 'none')
                 .attr('id', arcId)
                 .attr('class', `ocpnarc variable indicator ${ot}`)
@@ -254,7 +254,7 @@ function getArcPath(arcId: string, layout: OCPNLayout, config: OCPNConfig): stri
             p2 = new Point2D(startDummy.x, startDummy.y - upperDummyAdjust);
         }
         // Construct the line.
-        sourcePoint = getPlaceIntersectionPoint(center, config.placeRadius, p1, p2, source.x, source.y + config.placeRadius);
+        sourcePoint = getPlaceIntersectionPoint(center, config.placeRadius * 0.8, p1, p2, source.x, source.y + config.placeRadius); // * 0.8 to not see white space between circle and line around the connection point.
     } else {
         // Update the upper adjustment for the dummy.
         upperDummyAdjust = config.transitionHeight / 2;
@@ -266,8 +266,8 @@ function getArcPath(arcId: string, layout: OCPNLayout, config: OCPNConfig): stri
         }
         const halfWidth = (source.silent ? config.silentTransitionWidth : config.transitionWidth) / 2;
         const halfHeight = config.transitionHeight / 2;
-        const topLeft = new Point2D(source.x - halfWidth, source.y - halfHeight);
-        const bottomRight = new Point2D(source.x + halfWidth, source.y + halfHeight);
+        const topLeft = new Point2D(source.x - halfWidth * 1.2, source.y - halfHeight * 1.2); // * 1.2 to not see white space between rectangle and line around the connection point.
+        const bottomRight = new Point2D(source.x + halfWidth * 0.8, source.y + halfHeight * 0.8); // * 0.8 to not see white space between rectangle and line around the connection point.
         // Construct the rectangle.
         sourcePoint = getTransitionIntersectionPoint(p1, p2, topLeft, bottomRight, source.x, source.y + halfHeight);
     }
