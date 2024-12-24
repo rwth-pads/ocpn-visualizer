@@ -19,12 +19,9 @@ async function sugiyama(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
     // console.log("sugiyama ocpn: ", ocpn);
     if (!(ocpn instanceof ObjectCentricPetriNet)) {
         console.log("The input is not an Object Centric Petri Net.");
-        console.log(ocpn);
-        console.log(typeof ocpn);
         return undefined;
     }
-    // console.log("Sugiyama config: ", config);
-    // console.log("Config type", typeof config);
+
     if (!(config instanceof OCPNConfig)) {
         console.log("The input is not an OCPNConfig.");
         return undefined;
@@ -43,10 +40,10 @@ async function sugiyama(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
     insertDummyVertices(ocpn);
     // Vertex Ordering.
     console.log("Ordering vertices...");
+    console.log("Initial Layering: ", ocpn.layout.layering);
     orderVertices(ocpn, config);
     // Vertex Positioning.
     console.log("Positioning vertices...");
-    console.log(ocpn.layout.layering);
     if (config.seeAlignmentType) {
         positioning.positionVerticesToAlignmentType(ocpn, config);
     } else {

@@ -92,7 +92,7 @@ const Home = () => {
                 // Initially zoom in/out out until the graph fits the svgRef.current?.clientWidht/Height.
                 const svg = select(svgRef.current);
                 const g = svg.select('g');
-                const margin = userConfig.borderPaddingX;
+                const margin = userConfig.borderPadding;
                 const bbox = (g.node() as SVGGraphicsElement)?.getBBox();
                 const totalWidth = bbox ? bbox.width : 0;
                 const totalHeight = bbox ? bbox.height : 0;
@@ -118,7 +118,7 @@ const Home = () => {
                 const zoomLevel = initialScale;
                 svg.selectAll('.ocpntransition.label').style('display', zoomLevel < userConfig.zoomVisibilityThreshhold ? 'none' : 'block');
 
-                console.log("Initial zoom in/out with scale: ", initialScale, " and translation (x,y): ", translateX, translateY);
+                // console.log("Initial zoom in/out with scale: ", initialScale, " and translation (x,y): ", translateX, translateY);
             } else {
                 // console.log("SVG does not exist");
             }

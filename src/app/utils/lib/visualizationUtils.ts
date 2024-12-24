@@ -13,10 +13,10 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
         svg.append('defs').append('marker')
             .attr('id', id)
             .attr('viewBox', '0 0 10 10')
-            .attr('refX', config.arrowHeadSize + 5)
+            .attr('refX', 8)
             .attr('refY', 5)
-            .attr('markerWidth', config.arrowHeadSize)
-            .attr('markerHeight', config.arrowHeadSize)
+            .attr('markerWidth', 3)
+            .attr('markerHeight', 3)
             .attr('orient', 'auto-start-reverse')
             .append('path')
             .attr('d', 'M 0 0 L 10 5 L 0 10 Z')
@@ -31,55 +31,52 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
         var color = config.typeColorMapping.get(ot) || config.arcDefaultColor;
         var strokeWidth = config.arcSize * (config.indicateArcWeight ? (arc.weight ?? 1) : 1);
 
-        // Define a combined mask for the arc that hides the parts of the arc that underlap with it's source and target.
-        const source = layout.vertices[arc.source]; // {name: 't3', label: 't3', x: 82.5, y: 87.5, type: ?, ...}
-        const target = layout.vertices[arc.target];
-        // console.log(source, target);
-        const maskId = `mask-${arcId}`;
-        const mask = svg.append('defs').append('mask').attr('id', maskId).attr('maskUnits', 'userSpaceOnUse');
+        // // Define a combined mask for the arc that hides the parts of the arc that underlap with it's source and target.
+        // const source = layout.vertices[arc.source]; // {name: 't3', label: 't3', x: 82.5, y: 87.5, type: ?, ...}
+        // const target = layout.vertices[arc.target];
+        // const maskId = `mask-${arcId}`;
+        // const mask = svg.append('defs').append('mask').attr('id', maskId).attr('maskUnits', 'userSpaceOnUse');
 
-        // Add a white background to the mask.
-        mask.append('rect')
-            .attr('width', '100%')
-            .attr('height', '100%')
-            .attr('fill', 'white');
+        // // Add a white background to the mask.
+        // mask.append('rect')
+        //     .attr('width', '100%')
+        //     .attr('height', '100%')
+        //     .attr('fill', 'white');
 
-        if (source.type === OCPNLayout.PLACE_TYPE) {
-            // Source is circle, target is rectangle.
-            console.log("Source is circle, target is rectangle");
-            mask.append('circle')
-                .attr('cx', source.x)
-                .attr('cy', source.y)
-                .attr('r', config.placeRadius)
-                .attr('fill', 'black');
+        // if (source.type === OCPNLayout.PLACE_TYPE) {
+        //     // Source is circle, target is rectangle.
+        //     mask.append('circle')
+        //         .attr('cx', source.x)
+        //         .attr('cy', source.y)
+        //         .attr('r', config.placeRadius)
+        //         .attr('fill', 'black');
 
-            let targetWidth = target.silent ? config.silentTransitionWidth : config.transitionWidth;
+        //     let targetWidth = target.silent ? config.silentTransitionWidth : config.transitionWidth;
 
-            mask.append('rect')
-                .attr('x', target.x - targetWidth / 2)
-                .attr('y', target.y - config.transitionHeight / 2)
-                .attr('width', targetWidth)
-                .attr('height', config.transitionHeight)
-                .attr('fill', 'black');
+        //     mask.append('rect')
+        //         .attr('x', target.x - targetWidth / 2)
+        //         .attr('y', target.y - config.transitionHeight / 2)
+        //         .attr('width', targetWidth)
+        //         .attr('height', config.transitionHeight)
+        //         .attr('fill', 'black');
 
-        } else if (source.type === OCPNLayout.TRANSITION_TYPE) {
-            // Source is rectangle, target is circle.
-            console.log("Source is rectangle, target is circle");
-            let sourceWidth = source.silent ? config.silentTransitionWidth : config.transitionWidth;
+        // } else if (source.type === OCPNLayout.TRANSITION_TYPE) {
+        //     // Source is rectangle, target is circle.
+        //     let sourceWidth = source.silent ? config.silentTransitionWidth : config.transitionWidth;
 
-            mask.append('rect')
-                .attr('x', source.x - sourceWidth / 2)
-                .attr('y', source.y - config.transitionHeight / 2)
-                .attr('width', sourceWidth)
-                .attr('height', config.transitionHeight)
-                .attr('fill', 'black');
+        //     mask.append('rect')
+        //         .attr('x', source.x - sourceWidth / 2)
+        //         .attr('y', source.y - config.transitionHeight / 2)
+        //         .attr('width', sourceWidth)
+        //         .attr('height', config.transitionHeight)
+        //         .attr('fill', 'black');
 
-            mask.append('circle')
-                .attr('cx', target.x)
-                .attr('cy', target.y)
-                .attr('r', config.placeRadius)
-                .attr('fill', 'black');
-        }
+        //     mask.append('circle')
+        //         .attr('cx', target.x)
+        //         .attr('cy', target.y)
+        //         .attr('r', config.placeRadius)
+        //         .attr('fill', 'black');
+        // }
 
         defineMarker(color, `arrowhead-${arcId}`);
 
@@ -92,7 +89,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('id', arcId)
                 .attr('class', `ocpnarc variable indicator ${ot}`)
                 .attr('stroke-width', strokeWidth * config.variableArcIndicatorSize)
-                .attr('mask', `url(#${maskId})`)
+                // .attr('mask', `url(#${maskId})`)
                 .attr('display', config.indicateVariableArcs ? 'block' : 'none');
         }
 
@@ -102,7 +99,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             .attr('fill', 'none')
             .attr('id', arcId)
             .attr('class', `ocpnarc ${ot}${arc.variable ? ' variable' : ''}`)
-            .attr('mask', `url(#${maskId})`)
+            // .attr('mask', `url(#${maskId})`)
             .attr('stroke-width', strokeWidth);
 
         // If the arc is variable make the path be a double line with a gap in between.
@@ -113,7 +110,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('fill', 'none')
                 .attr('id', arcId)
                 .attr('class', `ocpnarc inner ${ot}${arc.variable ? ' variable' : ''}`)
-                .attr('mask', `url(#${maskId})`)
+                // .attr('mask', `url(#${maskId})`)
                 .attr('stroke-width', strokeWidth * 0.4)
         }
 
@@ -126,7 +123,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             .attr('id', `${arcId}-invisible`)
             .attr('class', `ocpnarc ${ot}`)
             .attr('marker-end', arc.reversed ? null : `url(#arrowhead-${arcId})`)
-            .attr('mask', `url(#${maskId})`)
+            // .attr('mask', `url(#${maskId})`)
             .attr('marker-start', arc.reversed ? `url(#arrowhead-${arcId})` : null);
     }
 
@@ -154,7 +151,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                     .attr('text-anchor', 'middle')
                     .attr('alignment-baseline', 'middle')
                     .attr('font-size', config.placeRadius) // Adjust font size as needed
-                    .attr('fill', 'black')
+                    .attr('fill', config.transitionTextColor)
                     .attr('id', vertexId)
                     .attr('class', `ocpnplace ${ot} label`)
                     .text('⯈');
@@ -165,7 +162,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                     .attr('text-anchor', 'middle')
                     .attr('alignment-baseline', 'middle')
                     .attr('font-size', config.placeRadius) // Adjust font size as needed
-                    .attr('fill', 'black')
+                    .attr('fill', config.transitionTextColor)
                     .attr('id', vertexId)
                     .attr('class', `ocpnplace ${ot} label`)
                     .text('■');
@@ -178,6 +175,20 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                     .attr('id', vertexId)
                     .attr('fill', 'white');
             }
+
+            g.append('text')
+                .attr('x', vertex.x)
+                .attr('y', vertex.y)
+                .attr('text-anchor', 'middle')
+                .attr('alignment-baseline', 'middle')
+                .attr('font-size', config.placeRadius) // Adjust font size as needed
+                .attr('fill', config.transitionTextColor)
+                .attr('id', vertexId)
+                .attr('class', `ocpnplace ${ot} label`)
+                .text(vertexId);
+
+
+
         } else if (vertex.type === OCPNLayout.TRANSITION_TYPE) {
             const label = vertex.silent ? '𝜏' : vertex.label;
             let width = vertex.silent ? config.silentTransitionWidth : config.transitionWidth;
@@ -201,8 +212,8 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('text-anchor', 'middle')
                 .attr('alignment-baseline', 'middle')
                 .attr('font-size', '20px') // Initial font size
-                .attr('fill', 'black')
-                .text(label)
+                .attr('fill', config.transitionTextColor)
+                .text(vertexId)
                 .attr('user-select', 'none')
                 .attr('class', 'ocpntransition label')
                 .attr('adjacentObjectTypes', ots.join(' '))
@@ -266,7 +277,7 @@ function getArcPath(arcId: string, layout: OCPNLayout, config: OCPNConfig): stri
         }
         const halfWidth = (source.silent ? config.silentTransitionWidth : config.transitionWidth) / 2;
         const halfHeight = config.transitionHeight / 2;
-        const topLeft = new Point2D(source.x - halfWidth * 1.2, source.y - halfHeight * 1.2); // * 1.2 to not see white space between rectangle and line around the connection point.
+        const topLeft = new Point2D(source.x - halfWidth * 0.9, source.y - halfHeight * 0.9);
         const bottomRight = new Point2D(source.x + halfWidth * 0.8, source.y + halfHeight * 0.8); // * 0.8 to not see white space between rectangle and line around the connection point.
         // Construct the rectangle.
         sourcePoint = getTransitionIntersectionPoint(p1, p2, topLeft, bottomRight, source.x, source.y + halfHeight);

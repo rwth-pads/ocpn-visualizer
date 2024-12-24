@@ -8,9 +8,10 @@ import { clone2DArray, arraysEqual } from '../lib/arrays';
 function orderVertices(ocpn, config) {
     // Adjust the initial order within the layering according to the users object centrality.
     if (config.objectCentrality !== undefined) {
-        // console.log("Adjusting Initial Relative Order of Vertices...", config.objectCentrality);
+        console.log("Adjusting Initial Relative Order of Vertices...", config.objectCentrality);
         adjustLayeringOrderByObjectCentrality(ocpn, config);
     }
+    console.log("Initial Layering: ", ocpn.layout.layering);
     // Implementation of the barycenter method for vertex ordering.
     upDownBarycenterBilayerSweep(ocpn, config);
     // console.log("Best Layering: ", ocpn.layout.layering);
@@ -69,14 +70,14 @@ function upDownBarycenterBilayerSweep(ocpn, config) {
     computedLayerings.push(clone2DArray(layering));
     // Perform the barycenter method going up and down the layers.
     var sweepCounter = 1;
-    console.log("Initial layering: ", layering);
+    // console.log("Initial layering: ", layering);
     console.log("Initial score: ", bestScore);
     while (true) {
         layering = singleUpDownSweep(ocpn, layering, config); // Phase 1
         layering = adjustEqualBarycenters(ocpn, layering) // Phase 2
         var currentScore = computeLayeringScore(ocpn, layering, config);
         console.log(`Sweep ${sweepCounter} score: ${currentScore}\nLayering:`);
-        // console.log(layering);
+        console.log(layering);
         // Check if the vertex order has improved.
         if (currentScore < bestScore) {
             bestScore = currentScore;
@@ -133,18 +134,18 @@ function adjustEqualBarycenters(ocpn, layering) {
     return layering;
 }
 
-/**
- * TODO: change to modified barycenter instead of normal barycenter.
- */
 function modifiedBarycenterOrder(ocpn, layering, layer, down, config) {
     // Compute the barycenter values for the current layer.
     var barycenters = computeModifiedBarycenters(ocpn, layering, layer, down, config);
     var adjustedBarycenters = adjustNoNeighborsBarycenters(layering, layer, barycenters);
+    console.log(`Layer ${layer} barycenters: `, adjustedBarycenters);
     // Sort the vertices in the layer according to the barycenter values.
     // The greater the barycenter value the more to the right the vertex is placed.
     // Equal barycenter values are sorted by the original order.
-    let orderedLayer = layering[layer].sort((a, b) => adjustedBarycenters[a] - adjustedBarycenters[b]);
-    // console.log(barycenters);
+    let orderedLayer = layering[layer].sort((a, b) => {
+        const diff = adjustedBarycenters[a] - adjustedBarycenters[b];
+        return diff !== 0 ? diff : a.localeCompare(b);
+    });    // console.log(barycenters);
     return orderedLayer;
 }
 
@@ -247,7 +248,6 @@ function transitionBarycenter(ocpn, transition, layering, layer, down) {
     // Compute the barycenter value.
     var barycenter = 0;
     for (let i = 0; i < neighbors.length; i++) {
-        // TODO: object weight -> different weights for different object types.
         barycenter += layering[fixedLayer].indexOf(neighbors[i]) + 1;
     }
 
@@ -267,6 +267,10 @@ function dummyBarycenter(ocpn, dummy, layering, layer, down) {
     var d = ocpn.layout.vertices[dummy];
     var neighbor = down ? d.upper : d.lower;
     var index = layering[down ? layer - 1 : layer + 1].indexOf(neighbor) + 1;
+    // if dummy is outer dummy, and direction is up, use previously computed barycenter as well.
+    if (!down && ocpn.layout.vertices[d.lower].type !== OCPNLayout.DUMMY_TYPE) {
+        index = (index + layering[layer - 1].indexOf(d.upper) + 1) / 2;
+    }
     return index;
 }
 
@@ -283,7 +287,8 @@ function computeLayeringScore(ocpn, layering, config) {
     // Compute value that measures the quality of object attraction in the current layering.
     var objectAttractionCount = measureObjectAttractionCount(ocpn, layering, config);
     // Return combined score.  oa is always 0 currently -> only the crossing count is considered.
-    return (1 - config.objectAttraction) * crossingCount + config.objectAttraction * objectAttractionCount;
+    console.log(`Crossing Count: ${crossingCount}, Object Attraction Count: ${objectAttractionCount}`);
+    return crossingCount + objectAttractionCount;
 }
 
 /**

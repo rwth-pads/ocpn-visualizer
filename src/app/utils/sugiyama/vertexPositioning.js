@@ -350,7 +350,7 @@ function alignAssignments(layouts) {
 
 function setCoordinates(ocpn, layering, layouts, config) {
     console.log("Setting coordinates...");
-
+    const areaScaling = Math.max(layering.length / 10, 1);
     const layerHalfs = [];
     for (let i = 0; i < layering.length; i++) {
         let layerSize = 0;
@@ -371,7 +371,7 @@ function setCoordinates(ocpn, layering, layouts, config) {
         ocpn.layout.layerSizes.push({ layer: i, size: layerSize * 2 }); // TODO: to adjust the y coordinate of the lower dummy vertices to the bottom of the layer.
     }
 
-    var curSize = config.borderPaddingY; // TODO: check config.direciton influence.
+    var curSize = config.borderPadding; // TODO: check config.direciton influence.
     for (let i = 0; i < layering.length; i++) {
         for (let j = 0; j < layering[i].length; j++) {
             const v = layering[i][j];
@@ -380,10 +380,10 @@ function setCoordinates(ocpn, layering, layouts, config) {
             // Compute the average median of the four candidate coordinates.
             const medianCoord = (candidateCoords[1] + candidateCoords[2]) / 2;
             // Set the vertex coordinates.
-            ocpn.layout.vertices[v].x = medianCoord + config.borderPaddingX;
+            ocpn.layout.vertices[v].x = medianCoord + config.borderPadding;
             ocpn.layout.vertices[v].y = curSize + layerHalfs.find(l => l.layer == i).size;
         }
-        curSize = curSize + layerHalfs.find(l => l.layer == i).size * 2 + config.layerSep;
+        curSize = curSize + layerHalfs.find(l => l.layer == i).size * 2 + (config.layerSep * areaScaling);
     }
 }
 

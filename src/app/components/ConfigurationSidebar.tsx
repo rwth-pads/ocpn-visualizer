@@ -26,10 +26,8 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
     const [objectAttractionRangeMax, setObjectAttractionRangeMax] = useState(userConfig.objectAttractionRangeMax ?? 2);
     const maxLayers = 4; // TODO: get length of layering.
     const [maxBarycenterIterations, setMaxBarycenterIterations] = useState(userConfig.maxBarycenterIterations ?? 4);
-    const [combineArcs, setCombineArcs] = useState(userConfig.combineArcs ?? false);
     const [backgroundColor, setBackgroundColor] = useState(userConfig.svgBackgroundColor ?? '#ffffff');
     const [placeRadius, setPlaceRadius] = useState(userConfig.placeRadius ?? 5);
-    const [transitionCustomWidth, setTransitionCustomWidth] = useState(userConfig.transitionCustomWidth ?? false);
     const [transitionWidth, setTransitionWidth] = useState(userConfig.transitionWidth ?? 20);
     const [silentTransitionWidth, setSilentTransitionWidth] = useState(userConfig.silentTransitionWidth ?? 10);
     const [transitionHeight, setTransitionHeight] = useState(userConfig.transitionHeight ?? 10);
@@ -39,15 +37,15 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
     const [defaultPlaceColor, setDefaultPlaceColor] = useState(userConfig.defaultPlaceColor ?? '#000000');
     const [transitionColor, setTransitionColor] = useState(userConfig.transitionColor ?? '#000000');
     const [transitionFillColor, setTransitionFillColor] = useState(userConfig.transitionFillColor ?? '#ffffff');
+    const [transitionTextColor, setTransitionTextColor] = useState(userConfig.transitionTextColor ?? '#000');
     const [transitionBorderSize, setTransitionBorderSize] = useState(userConfig.transitionBorderSize ?? 1);
     const [indicateArcWeight, setIndicateArcWeight] = useState(userConfig.indicateArcWeight ?? false);
     const [indicateVariableArcs, setIndicateVariableArcs] = useState(userConfig.indicateVariableArcs ?? true);
     const [arcSize, setArcSize] = useState(userConfig.arcSize ?? 1);
-    const [arrowHeadSize, setArrowHeadSize] = useState(userConfig.arrowHeadSize ?? 5);
     const [arcDefaultColor, setArcDefaultColor] = useState(userConfig.arcDefaultColor ?? '#000000');
     const [zoomVisibilityThreshhold, setZoomVisibilityThreshhold] = useState(userConfig.zoomVisibilityThreshhold ?? 0);
     const [highlightOpacity, setHighlightOpacity] = useState(userConfig.highlightOpacity ?? 0.2);
-    const [variableArcIndicatorColor, setVariableArcIndicatorColor] = useState(userConfig.variableArcIndicatorColor ?? 'red');
+    const [variableArcIndicatorColor, setVariableArcIndicatorColor] = useState(userConfig.variableArcIndicatorColor ?? '#ff0000');
     const [variableArcIndicatorSize, setVariableArcIndicatorSize] = useState(userConfig.variableArcIndicatorSize ?? 3);
 
     const [seeAlignmentType, setSeeAlignmentType] = useState(userConfig.seeAlignmentType ?? false);
@@ -102,17 +100,11 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
             case 'maxBarycenterIterations':
                 setMaxBarycenterIterations(value);
                 break;
-            case 'combineArcs':
-                setCombineArcs(value);
-                break;
             case 'svgBackgroundColor':
                 setBackgroundColor(value);
                 break;
             case 'placeRadius':
                 setPlaceRadius(value);
-                break;
-            case 'transitionCustomWidth':
-                setTransitionCustomWidth(value);
                 break;
             case 'transitionWidth':
                 setTransitionWidth(value);
@@ -141,6 +133,9 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
             case 'transitionFillColor':
                 setTransitionFillColor(value);
                 break;
+            case 'transitionTextColor':
+                setTransitionTextColor(value);
+                break;
             case 'transitionBorderSize':
                 setTransitionBorderSize(value);
                 break;
@@ -152,9 +147,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                 break;
             case 'arcSize':
                 setArcSize(value);
-                break;
-            case 'arrowHeadSize':
-                setArrowHeadSize(value);
                 break;
             case 'arcDefaultColor':
                 setArcDefaultColor(value);
@@ -369,14 +361,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             <option value="upRight">Up Right</option>
                         </select>
                     </ConfigOption>
-                    <ConfigOption label="Combine long arcs" darkMode={darkMode}>
-                        <input
-                            type='checkbox'
-                            className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
-                            checked={combineArcs}
-                            onChange={handleInputChange('combineArcs', true)}
-                        />
-                    </ConfigOption>
                 </div>
             </ConfigurationCategory >
             <ConfigurationCategory title="Styling Configurations" darkMode={darkMode} categoryIndex={2}>
@@ -403,14 +387,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onMouseUp={handleMouseUp('placeRadius')}
                         />
                     </ConfigOption>
-                    <ConfigOption label="Custom transition width" darkMode={darkMode}>
-                        <input
-                            type='checkbox'
-                            className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
-                            checked={transitionCustomWidth}
-                            onChange={handleInputChange('transitionCustomWidth', true)}
-                        />
-                    </ConfigOption>
                     <ConfigOption label="Transition width" darkMode={darkMode}>
                         <input
                             type='range'
@@ -421,7 +397,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             step={1}
                             onChange={handleInputChange('transitionWidth')}
                             onMouseUp={handleMouseUp('transitionWidth')}
-                            disabled={transitionCustomWidth}
                         />
                     </ConfigOption>
                     <ConfigOption label="Silent transition width" darkMode={darkMode}>
@@ -515,9 +490,9 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                         <input
                             type='color'
                             className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
-                            value={transitionFillColor}
-                            onChange={() => { console.log('TODO: Transition text color changed') }}
-                            onBlur={() => { console.log('TODO: Transition text color changed') }}
+                            value={transitionTextColor}
+                            onChange={handleColorChange('transitionTextColor')}
+                            onBlur={handleColorBlur('transitionTextColor')}
                         />
                     </ConfigOption>
                     <ConfigOption label="Transition border size" darkMode={darkMode}>
@@ -558,18 +533,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             value={arcSize}
                             onChange={handleInputChange('arcSize')}
                             onMouseUp={handleMouseUp('arcSize')}
-                        />
-                    </ConfigOption>
-                    <ConfigOption label="Arrow head size" darkMode={darkMode}>
-                        <input
-                            type='range'
-                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
-                            min={2}
-                            max={20}
-                            step={1}
-                            value={arrowHeadSize}
-                            onChange={handleInputChange('arrowHeadSize')}
-                            onMouseUp={handleMouseUp('arrowHeadSize')}
                         />
                     </ConfigOption>
                     <ConfigOption label="Arc default color" darkMode={darkMode}>
