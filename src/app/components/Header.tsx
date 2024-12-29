@@ -52,7 +52,7 @@ const Header: React.FC<HeaderProps> = ({
                 <div className={'header-item item3'}>
                     <div className={`header-select-container${darkMode ? ' dark' : ' light'}`}>
                         <select
-                            className={`header-select${darkMode ? ' dark' : ' light'}`}
+                            className={`header-select${darkMode ? ' dark' : ' light'} select-dropdown`}
                             onChange={handleSelectChange}
                             value={selectedOCPN !== null ? selectedOCPN : 'default'}
                         >

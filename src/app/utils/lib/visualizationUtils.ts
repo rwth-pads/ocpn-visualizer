@@ -213,7 +213,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('alignment-baseline', 'middle')
                 .attr('font-size', '20px') // Initial font size
                 .attr('fill', config.transitionTextColor)
-                .text(vertexId)
+                .text(vertexId) // TODO: reset to label
                 .attr('user-select', 'none')
                 .attr('class', 'ocpntransition label')
                 .attr('adjacentObjectTypes', ots.join(' '))
@@ -239,6 +239,24 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             };
 
             adjustFontSize();
+        } else {
+            g.append('circle')
+                .attr('cx', vertex.x)
+                .attr('cy', vertex.y)
+                .attr('r', config.placeRadius / 2)
+                .attr('fill', 'red')
+                .attr('id', vertexId)
+                .attr('class', 'ocpnvertex')
+                .attr('text-anchor', 'middle');
+
+            g.append('text')
+                .attr('x', vertex.x)
+                .attr('y', vertex.y)
+                .attr('text-anchor', 'middle')
+                .attr('alignment-baseline', 'middle')
+                .attr('font-size', config.placeRadius)
+                .text(vertexId);
+
         }
     }
     console.timeEnd("Visualize OCPN");

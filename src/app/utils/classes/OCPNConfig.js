@@ -24,7 +24,7 @@ class OCPNConfig {
         defaultPlaceColor = "#000000",
         transitionColor = "#000000",
         transitionFillColor = "#ffffff",
-        transitionTextColor = "#000",
+        transitionTextColor = "#000000",
         transitionBorderSize = 0.3,
         svgBackgroundColor = "#ffffff",
         arcSize = 0.8,

@@ -92,6 +92,8 @@
 }
 .header-select-container {
     justify-content: center;
+    max-width: 90vw;
+    overflow: hidden;
 }
 .header-select {
     font-size: 1.2em;
@@ -99,6 +101,9 @@
     border-radius: 5px;
     max-width: 40vw;
     align-content: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 @media (max-width: 900px) {
     .header-select {
@@ -118,6 +123,10 @@
 }
 .header-select.light:hover {
     border: solid 1px #fff;
+}
+.select-dropdown {
+    max-height: 10vh;
+    overflow-y: auto;
 }
 .header-button {
     font-size: 1.2em;
