@@ -355,3 +355,4 @@ class ObjectCentricPetriNet {
 
 // Export the ObjectCentricPetriNet class and its subclasses
 export default ObjectCentricPetriNet;
+export type { Place, Transition, Arc };
