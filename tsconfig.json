@@ -33,7 +33,8 @@
         "**/*.tsx",
         ".next/types/**/*.ts",
         "src/app/utils/sugiyama/sugiyama.ts",
-        "src/types/kld-intersections.d.ts"
+        "src/types/kld-intersections.d.ts",
+        "src/types/xml2json.d.ts"
     ],
     "exclude": [
         "node_modules"
