@@ -58,31 +58,6 @@ class ObjectCentricPetriNet {
     }
 
     /**
-     * Finds and returns a place, transition, or dummy node by its unique name.
-     *
-     * @param {string} name The unique name of the place, transition, or dummy node.
-     * @returns {Object|null} The element with the given name, or null if it does not exist.
-     */
-    findElementByName(name) {
-        for (let place of this.places) {
-            if (place.name === name) {
-                return place;
-            }
-        }
-        for (let transition of this.transitions) {
-            if (transition.name === name) {
-                return transition;
-            }
-        }
-        for (let dummy of this.dummyNodes) {
-            if (dummy.name === name) {
-                return dummy;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Gets the nodes of the OCPN.
      *
      * @returns The set of node names in the OCPN.
@@ -111,16 +86,6 @@ class ObjectCentricPetriNet {
             as.push({ source: upper, target: lower, reversed: rev });
         }
         return as;
-    }
-
-    /**
-     * Deletes the given arc from the OCPN.
-     * @param {ObjectCentricPetriNet.Arc} arc 
-     */
-    deleteArc(arc) {
-        this.arcs = this.arcs.filter(a => a !== arc);
-        arc.source.outArcs = arc.source.outArcs.filter(a => a !== arc);
-        arc.target.inArcs = arc.target.inArcs.filter(a => a !== arc);
     }
 
     /**
@@ -258,67 +223,6 @@ class ObjectCentricPetriNet {
         );
     }
 
-    /**
-     * Check for equality of two OCPNs, except the name and properties.
-     * 
-     * @param {ObjectCentricPetriNet} other The other OCPN to compare with.
-     * @returns {boolean} True if the OCPNs are equal, false otherwise.
-     */
-    equals(other) {
-        if (this.places.size !== other.places.size) return false;
-        if (this.transitions.size !== other.transitions.size) return false;
-        if (this.arcs.size !== other.arcs.size) return false;
-
-        const compareSets = (set1, set2, compareFunc) => {
-            if (set1.size !== set2.size) return false;
-            for (const item1 of set1) {
-                if (![...set2].some(item2 => compareFunc(item1, item2))) return false;
-            }
-            return true;
-        }
-
-        const comparePlaces = (p1, p2) =>
-            p1.name === p2.name &&
-            p1.objectType === p2.objectType &&
-            p1.initial === p2.initial &&
-            p1.final === p2.final;
-        const compareTransitions = (t1, t2) =>
-            t1.name === t2.name &&
-            t1.label === t2.label &&
-            t1.silent === t2.silent;
-        const compareArcs = (a1, a2) =>
-            a1.source.name === a2.source.name &&
-            a1.target.name === a2.target.name &&
-            a1.reversed === a2.reversed &&
-            a1.variable === a2.variable &&
-            a1.weight === a2.weight;
-
-        if (!compareSets(this.places, other.places, comparePlaces)) return false;
-        // console.log("Places are equal");
-        if (!compareSets(this.transitions, other.transitions, compareTransitions)) return false;
-        // console.log("Transitions are equal");
-        if (!compareSets(this.arcs, other.arcs, compareArcs)) return false;
-        // console.log("Arcs are equal");
-        return true;
-    }
-
-    /**
-     * Converts the OCPN to a string representation.
-     * 
-     * @returns {string} The string representation of the OCPN.
-     */
-    toString() {
-        const placesStr = Array.from(this.places).map(place => place.toString()).join('');
-        const transitionsStr = Array.from(this.transitions).map(transition => transition.toString()).join('');
-        const dummyNodesStr = Array.from(this.dummyNodes).map(dummyNode => dummyNode.toString()).join('');
-        const arcsStr = Array.from(this.arcs).map(arc => arc.toString()).join('');
-        const propertiesStr = Object.entries(this.properties)
-            .map(([key, value]) => `\t${key}: ${value}`)
-            .join('\n');
-
-        return `${this.name}\nPlaces:\n${placesStr}\nTransitions:\n${transitionsStr}\nDummy Nodes:\n${dummyNodesStr ? dummyNodesStr : "\tNo dummy Nodes yet!"}\nArcs:\n${arcsStr}\nProperties:\n${propertiesStr}`;
-    }
-
     static Place = class {
         /**
          * The constructor for the Place class.
@@ -343,15 +247,6 @@ class ObjectCentricPetriNet {
             this.pos = -1;
             this.x = undefined;
             this.y = undefined;
-        }
-
-        /**
-         * Converts the place to a string representation.
-         * 
-         * @returns {string} The string representation of the place.
-         */
-        toString() {
-            return `\tId: ${this.id}, Name: ${this.name}, ObjectType: ${this.objectType}\n`;
         }
     };
 
@@ -382,15 +277,6 @@ class ObjectCentricPetriNet {
             this.y = undefined;
             this.properties = properties;
         }
-
-        /**
-         * Converts the transition to a string representation.
-         * 
-         * @returns {string} The string representation of the transition.
-         */
-        toString() {
-            return `\tName: ${this.name}, Label: ${this.label}\n`;
-        }
     };
 
     static Arc = class {
@@ -417,24 +303,6 @@ class ObjectCentricPetriNet {
             this.weight = weight;
             this.variable = variable;
             this.properties = properties;
-        }
-
-        /**
-         * Sets the reversed property of the arc.
-         * 
-         * @param {boolean} reversed The new value of the reversed property.
-         */
-        setReverse(reversed) {
-            this.reversed = reversed;
-        }
-
-        /**
-         * Converts the arc to a string representation.
-         * 
-         * @returns {string} The string representation of the arc.
-         */
-        toString() {
-            return `\t${this.source.name} -> ${this.target.name}`;
         }
     };
 }
