@@ -1,5 +1,39 @@
-
 class OCPNConfig {
+    includedObjectTypes: string[];
+    sources: string[];
+    sinks: string[];
+    indicateSourcesSinks: boolean;
+    objectCentrality: { [key: string]: number } | undefined;
+    maxBarycenterIterations: number;
+    objectAttraction: number;
+    objectAttractionRangeMin: number;
+    objectAttractionRangeMax: number;
+    direction: string;
+    placeRadius: number;
+    transitionWidth: number;
+    silentTransitionWidth: number;
+    transitionHeight: number;
+    dummySize: number;
+    layerSep: number;
+    vertexSep: number;
+    borderPadding: number;
+    typeColorMapping: Map<string, string>;
+    defaultPlaceColor: string;
+    transitionColor: string;
+    transitionFillColor: string;
+    transitionTextColor: string;
+    transitionBorderSize: number;
+    svgBackgroundColor: string;
+    arcSize: number;
+    indicateArcWeight: boolean;
+    indicateVariableArcs: boolean;
+    arcDefaultColor: string;
+    seeAlignmentType: boolean;
+    zoomVisibilityThreshhold: number;
+    highlightOpacity: number;
+    variableArcIndicatorColor: string;
+    variableArcIndicatorSize: number;
+    alignmentType: string;
 
     constructor(
         includedObjectTypes = [],
