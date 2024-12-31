@@ -1,14 +1,62 @@
+import ObjectCentricPetriNet, { Transition, Place, Arc } from "./ObjectCentricPetriNet";
+import OCPNConfig from "./OCPNConfig";
+
+interface LayoutVertex {
+    name: string;
+    x: number | undefined;
+    y: number | undefined;
+    layer: number;
+    pos: number;
+    source: boolean | undefined;
+    sink: boolean | undefined;
+    type: number;
+    objectType: string | undefined; // Specific to places.
+    label: string | null; // Specific to transitions.
+    adjacentObjectTypes: Set<string> | undefined; // Specific to transitions.
+    silent: boolean | undefined; // Specific to transitions.
+    belongsTo: string | undefined; // Specific to dummy vertices.
+};
+
+interface LayoutArc {
+    source: string;
+    target: string;
+    reversed: boolean;
+    weight: number;
+    variable: boolean;
+    path: string[];
+    minLayer: number;
+    maxLayer: number;
+    type1: boolean;
+    original: boolean;
+    objectType: string | undefined;
+}
+
+interface SourceTargetArc {
+    source: string;
+    target: string;
+}
+
+interface LayerSize {
+    layer: number;
+    size: number;
+}
 
 class OCPNLayout {
     static PLACE_TYPE = 0;
     static TRANSITION_TYPE = 1;
     static DUMMY_TYPE = 2;
 
-    constructor(ocpn, config) {
+    vertices: { [key: string]: LayoutVertex };
+    arcs: { [key: string]: LayoutArc };
+    layering: string[][];
+    objectTypes: string[];
+    layerSizes: LayerSize[];
+
+    constructor(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
         this.vertices = {};
         this.arcs = {};
         this.layering = [];
-        this.objectTypes = config.includedObjectTypes; // TODO filter only user included subset.
+        this.objectTypes = config.includedObjectTypes;
         this.layerSizes = [];
 
         // Boolean to indicate whether certain vertices should be removed.
@@ -26,7 +74,11 @@ class OCPNLayout {
                     pos: -1,
                     source: place.initial,
                     sink: place.final,
-                    type: OCPNLayout.PLACE_TYPE
+                    type: OCPNLayout.PLACE_TYPE,
+                    label: null,
+                    adjacentObjectTypes: undefined,
+                    silent: undefined,
+                    belongsTo: undefined
                 };
             }
         });
@@ -42,7 +94,11 @@ class OCPNLayout {
                     layer: -1,
                     pos: -1,
                     type: OCPNLayout.TRANSITION_TYPE,
-                    adjacentObjectTypes: transition.adjacentObjectTypes
+                    adjacentObjectTypes: transition.adjacentObjectTypes,
+                    source: undefined,
+                    sink: undefined,
+                    objectType: undefined,
+                    belongsTo: undefined
                 };
         });
 
@@ -66,18 +122,18 @@ class OCPNLayout {
     }
 
     // Returns true if the transition is incident to an object type in the given set.
-    incidentToObjectType(transition, ot) {
+    incidentToObjectType(transition: Transition, ot: string[]) {
         let adjacent = false;
         // Check the inArcs.
         transition.inArcs.forEach(arc => {
-            let placeOt = arc.source.objectType;
+            let placeOt = (arc.source as Place).objectType;
             if (ot.includes(placeOt)) {
                 adjacent = true;
             }
         });
         // Check the outArcs.
         transition.outArcs.forEach(arc => {
-            let placeOt = arc.target.objectType;
+            let placeOt = (arc.target as Place).objectType;
             if (ot.includes(placeOt)) {
                 adjacent = true;
             }
@@ -86,12 +142,12 @@ class OCPNLayout {
     }
 
     // Returns true if the arc is adjacent to vertices in the layout.
-    adjacentVerticesInLayout(arc) {
+    adjacentVerticesInLayout(arc: Arc) {
         // Transitions and places have been filtered beforehand so this suffices.
         return this.vertices[arc.source.id] && this.vertices[arc.target.id];
     }
 
-    setArcDirection(arcId, reversed) {
+    setArcDirection(arcId: string, reversed: boolean) {
         this.arcs[arcId].reversed = reversed;
         if (reversed) {
             const tmp = this.arcs[arcId].source;
@@ -101,11 +157,11 @@ class OCPNLayout {
     }
 
 
-    getAllArcsBetweenRanks(lowerRank) {
+    getAllArcsBetweenRanks(lowerRank: number) {
         if (lowerRank + 1 >= this.layering.length) return [];
 
         const upperRank = lowerRank + 1;
-        const arcs = [];
+        const arcs: SourceTargetArc[] = [];
         Object.values(this.arcs).forEach(arc => {
             if (arc.original) {
                 if (arc.path.length > 0) {
@@ -136,10 +192,12 @@ class OCPNLayout {
         return arcs;
     }
 
-    getUpperNeighbors(vertexId) {
+    getUpperNeighbors(vertexId: string) {
         const vertex = this.vertices[vertexId];
-        const neighbors = [];
+        const neighbors: string[] = [];
         if (vertex.type === OCPNLayout.DUMMY_TYPE) {
+            if (!vertex.belongsTo) return;
+
             let arc = this.arcs[vertex.belongsTo];
             // arc.path.length > 0
             let idx = arc.path.indexOf(vertexId);
@@ -166,10 +224,12 @@ class OCPNLayout {
         return neighbors;
     }
 
-    getLowerNeighbors(vertexId) {
+    getLowerNeighbors(vertexId: string) {
         const vertex = this.vertices[vertexId];
-        const neighbors = [];
+        const neighbors: string[] = [];
         if (vertex.type === OCPNLayout.DUMMY_TYPE) {
+            if (!vertex.belongsTo) return;
+
             let arc = this.arcs[vertex.belongsTo];
             // arc.path.length > 0
             let idx = arc.path.indexOf(vertexId);
@@ -195,9 +255,9 @@ class OCPNLayout {
         return neighbors;
     }
 
-    getArcsBetween(sourceId, targetId) {
+    getArcsBetween(sourceId: string, targetId: string) {
         // maximal 2 arcs if one of the arcs was reversed.
-        const arcs = [];
+        const arcs: LayoutArc[] = [];
         Object.values(this.arcs).forEach(arc => {
             if (arc.source === sourceId && arc.target === targetId
                 || arc.source === targetId && arc.target === sourceId) {
