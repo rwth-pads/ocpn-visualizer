@@ -1,71 +1,37 @@
 import ObjectCentricPetriNet from "./ObjectCentricPetriNet";
 
 class OCPNGraph {
-    /**
-     * Class that represents the graph of an Object Centric Petri Net.
-     * 
-     * @param {ObjectCentricPetriNet} ocpn 
-     */
-    constructor(ocpn) {
+    nodes: string[];
+    arcs: { source: string, target: string, reversed: boolean }[];
+
+    constructor(ocpn: ObjectCentricPetriNet) {
         this.nodes = ocpn.getNodeIds();
         this.arcs = ocpn.getArcs();
     }
 
-    /**
-     * Gets the sink of a graph, if it exists.
-     * 
-     * @returns A sink of the graph.
-     */
     getSink() {
         return this.nodes.find(node => this.getOutDegree(node) === 0) || null;
     }
 
-    /**
-     * Gets the source of a graph, if it exists.
-     * 
-     * @returns A source of the graph.
-     */
     getSource() {
         return this.nodes.find(node => this.getInDegree(node) === 0) || null;
     }
 
-    /**
-     * Removes a node and its corresponding arcs from the graph.
-     * 
-     * @param {String} node The node to remove.
-     */
-    removeNode(node) {
+    removeNode(node: string) {
         this.nodes = this.nodes.filter(n => n !== node);
         this.arcs = this.arcs.filter(arc => arc.source !== node && arc.target !== node);
     }
 
-    /**
-     * Removes an array of nodes and their corresponding arcs from the graph.
-     * 
-     * @param {String[]} nodes 
-     */
-    removeNodes(nodes) {
+    removeNodes(nodes: string[]) {
         this.nodes = this.nodes.filter(n => !nodes.includes(n));
         this.arcs = this.arcs.filter(arc => !nodes.includes(arc.source) && !nodes.includes(arc.target));
     }
 
-    /**
-     * Gets the in degree of a node.
-     * 
-     * @param {String} node The id of the node.
-     * @returns The in degree of the node.
-     */
-    getInDegree(node) {
+    getInDegree(node: string) {
         return this.arcs.filter(arc => arc.target === node).length;
     }
 
-    /**
-     * Gets the out degree of a node.
-     * 
-     * @param {String} node The id of the node.
-     * @returns The out degree of the node.
-     */
-    getOutDegree(node) {
+    getOutDegree(node: string) {
         return this.arcs.filter(arc => arc.source === node).length;
     }
 
