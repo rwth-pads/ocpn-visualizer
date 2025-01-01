@@ -15,6 +15,8 @@ interface LayoutVertex {
     adjacentObjectTypes: Set<string> | undefined; // Specific to transitions.
     silent: boolean | undefined; // Specific to transitions.
     belongsTo: string | undefined; // Specific to dummy vertices.
+    upper: string | undefined; // Specific to dummy vertices.
+    lower: string | undefined; // Specific to dummy vertices.
 };
 
 interface LayoutArc {
@@ -78,7 +80,9 @@ class OCPNLayout {
                     label: null,
                     adjacentObjectTypes: undefined,
                     silent: undefined,
-                    belongsTo: undefined
+                    belongsTo: undefined,
+                    upper: undefined,
+                    lower: undefined
                 };
             }
         });
@@ -98,7 +102,9 @@ class OCPNLayout {
                     source: undefined,
                     sink: undefined,
                     objectType: undefined,
-                    belongsTo: undefined
+                    belongsTo: undefined,
+                    upper: undefined,
+                    lower: undefined
                 };
         });
 

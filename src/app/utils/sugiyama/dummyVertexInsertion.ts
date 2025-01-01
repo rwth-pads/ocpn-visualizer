@@ -9,7 +9,10 @@ import OCPNLayout from '../classes/OCPNLayout';
  * @param {*} layering Layering of the OCPN.
  * @returns The number of inserted dummy vertices and the layering as array of arrays.
  */
-function insertDummyVertices(ocpn) {
+function insertDummyVertices(ocpn: ObjectCentricPetriNet) {
+    if (!ocpn.layout) {
+        return;
+    }
     var dummyCount = 0;
     // console.log("Dummy Insertion: ", ocpn);
     for (const [arcId, arc] of Object.entries(ocpn.layout.arcs)) {
@@ -44,6 +47,12 @@ function insertDummyVertices(ocpn) {
                     pos: -1,
                     upper: undefined, // The id of the vertex above the dummy.
                     lower: undefined, // The id of the vertex below the dummy.
+                    name: '',
+                    source: undefined,
+                    sink: undefined,
+                    label: null,
+                    adjacentObjectTypes: undefined,
+                    silent: undefined
                 };
                 dummies.push(dummy.id);
                 // Add the dummy to the layout.
@@ -56,7 +65,7 @@ function insertDummyVertices(ocpn) {
                 dummyCount++;
             }
             // Sort dummies by ascending layer.
-            dummies.sort((a, b) => ocpn.layout.vertices[a].layer - ocpn.layout.vertices[b].layer);
+            dummies.sort((a, b) => (ocpn.layout?.vertices[a]?.layer ?? 0) - (ocpn.layout?.vertices[b]?.layer ?? 0));
             // Set the upper and lower vertex of the dummies.
             for (let i = 0; i < dummies.length; i++) {
                 let curDummy = dummies[i];
@@ -77,6 +86,9 @@ function insertDummyVertices(ocpn) {
                 maxLayer: sourceLayer + 1,
                 type1: false,
                 original: false,
+                weight: arc.weight, 
+                variable: arc.variable, 
+                objectType: objectType
             };
             // Arc 2: dummies[dummies.length - 1] -> lower
             ocpn.layout.arcs[arc2Id] = {
@@ -88,6 +100,9 @@ function insertDummyVertices(ocpn) {
                 maxLayer: targetLayer,
                 type1: false,
                 original: false,
+                weight: arc.weight, 
+                variable: arc.variable, 
+                objectType: objectType
             };
         }
     }
