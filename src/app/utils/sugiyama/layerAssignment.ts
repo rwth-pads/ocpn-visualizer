@@ -1,13 +1,8 @@
 import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 import OCPNGraph from '../classes/OCPNGraph';
-import glpkModule from 'glpk.js';
+import glpkModule, { GLPK } from 'glpk.js';
 
-/**
- * Creates the objective function for the ILP formulation of the layer assignment problem.
- *
- * @param {*} arcs The OCPN.
- */
-function createILPObjective(arcs) {
+function createILPObjective(arcs: { source: string; target: string; reversed: boolean }[]) {
     const vars = [];
     for (const arc of arcs) {
         // Change coefficient if the arc is reversed.
@@ -17,14 +12,8 @@ function createILPObjective(arcs) {
     return combineCoefs(vars);
 }
 
-/**
- * Combines the coefficients of the ILP formulation variables. 
- *
- * @param {*} vars The ILP formulation variables.
- * @returns The ILP formulation variables with combined coefficients.
- */
-function combineCoefs(vars) {
-    const combCoefs = {};
+function combineCoefs(vars: { name: string; coef: number }[]) {
+    const combCoefs: { [key: string]: number } = {};
     for (const { name, coef } of vars) {
         if (combCoefs[name] !== undefined) {
             combCoefs[name] += coef;
@@ -35,14 +24,7 @@ function combineCoefs(vars) {
     return Object.entries(combCoefs).map(([name, coef]) => ({ name, coef }));
 }
 
-/**
- * Creates the constraint: layer(target) - layer(source) >= 1 for all (source,target) in E.
- *
- * @param {*} arcs
- * @param {*} glpk The glpk instance.
- * @returns The arc span constraints.
- */
-function createArcSpanConstraints(arcs, glpk) {
+function createArcSpanConstraints(arcs: { source: string; target: string; reversed: boolean }[], glpk: GLPK) {
     const edgeConstraints = [];
     for (const arc of arcs) {
         // Change coefficient if the arc is reversed.
@@ -59,14 +41,7 @@ function createArcSpanConstraints(arcs, glpk) {
     return edgeConstraints;
 }
 
-/**
- * Creates the constraint layer(u) >= 0 for all nodes of the OCPN.
- *
- * @param {*} ocpnGraph The graph of the OCPN to assign layers to.
- * @param {*} glpk The glpk instance.
- * @returns The positive layer constraints.
- */
-function createPositiveLayerConstraints(vertices, glpk) {
+function createPositiveLayerConstraints(vertices: string[], glpk: GLPK) {
     const positiveConstraints = [];
     for (const v of vertices) {
         positiveConstraints.push({
@@ -78,15 +53,7 @@ function createPositiveLayerConstraints(vertices, glpk) {
     return positiveConstraints;
 }
 
-/**
- * Solves the layer assignment problem for the given OCPN.
- * The returned solution is not necessarily a "proper" layering.
- * Thus, we add dummy vertices in a subsequent step to ensure that.
- *
- * @param {ObjectCentricPetriNet} ocpn 
- * @returns A layering of the nodes of the OCPN.
- */
-async function assignLayers(ocpn, config) {
+async function assignLayers(ocpn: ObjectCentricPetriNet) {
     const glpk = await glpkModule();
 
     const ocpnGraph = new OCPNGraph(ocpn);
@@ -121,7 +88,7 @@ async function assignLayers(ocpn, config) {
     // Get the layers of the nodes.
     const layers = result.result.vars;
     // TODO: use different method if the result is not feasible.
-    const layering = {};
+    const layering: { [key: number]: string[] } = {};
     // Iterate over the pairs of node and the node's layer.
     for (const [node, layer] of Object.entries(layers)) {
         if (layering[layer] === undefined) {
@@ -130,15 +97,19 @@ async function assignLayers(ocpn, config) {
         // Add the node to the layer.
         layering[layer].push(node);
         // Find the corresponding node in the OCPN.
-        ocpn.layout.vertices[node].layer = layer;
+        if (ocpn.layout) {
+            ocpn.layout.vertices[node].layer = layer;
+        }
     }
     // Convert the layering object to an array of arrays.
     var layeringArray = [];
     for (const layer of Object.keys(layering)) {
-        layeringArray.push(layering[layer]);
+        layeringArray.push(layering[Number(layer)]);
     }
     // Assign the layering to the OCPN layout.
-    ocpn.layout.layering = layeringArray;
+    if (ocpn.layout) {
+        ocpn.layout.layering = layeringArray;
+    }
     return layering;
 }
 
