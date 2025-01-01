@@ -4,7 +4,7 @@
  * @param {Array<Array<String>>} arr The array to clone.
  * @returns The cloned array.
  */
-function clone2DArray(arr) {
+function clone2DArray(arr: string[][]): string[][] {
     return arr.map(innerArr => innerArr.slice());
 }
 
@@ -15,7 +15,7 @@ function clone2DArray(arr) {
  * @param {Array<Array<String>>} arr2 - The second 2D array.
  * @returns {boolean} - True if the arrays are equal, false otherwise.
  */
-function arraysEqual(arr1, arr2) {
+function arraysEqual(arr1: string[][], arr2: string[][]): boolean {
     if (arr1.length !== arr2.length) return false;
     for (let i = 0; i < arr1.length; i++) {
         if (arr1[i].length !== arr2[i].length) return false;
