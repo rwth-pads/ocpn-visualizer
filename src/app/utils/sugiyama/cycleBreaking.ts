@@ -1,4 +1,5 @@
 import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
+import OCPNConfig from '../classes/OCPNConfig';
 import OCPNGraph from '../classes/OCPNGraph';
 
 /**
@@ -8,10 +9,13 @@ import OCPNGraph from '../classes/OCPNGraph';
  * @param {*} config The configuration object.
  * @returns 
  */
-function reverseCycles(ocpn, config) {
+function reverseCycles(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
+    if (!ocpn.layout) {
+        return;
+    }
     let reversedArcs = 0;
     // Construct the graph from the OCPN.
-    var net = new OCPNGraph(ocpn, config);
+    var net = new OCPNGraph(ocpn);
     // Compute solution to the modified FAS problem.
     var fas = modifiedGreedyFAS(net, config.sources, config.sinks);
     // console.log("FAS: ", fas);
@@ -20,7 +24,9 @@ function reverseCycles(ocpn, config) {
         let targetIndex = fas.indexOf(arc.target);
         // console.log(sourceIndex, targetIndex);
         // Reverse the arc if the source's index is greater than the target's index.
-        ocpn.layout.setArcDirection(arcId, sourceIndex > targetIndex);
+        if (ocpn.layout) {
+            ocpn.layout.setArcDirection(arcId, sourceIndex > targetIndex);
+        }
         reversedArcs += sourceIndex > targetIndex ? 1 : 0;
     });
     return reversedArcs;
@@ -35,7 +41,7 @@ function reverseCycles(ocpn, config) {
  * @param {String[]} sinks The ids of user selected sinks.
  * @returns The solution to the FAS problem.
  */
-function modifiedGreedyFAS(net, sources, sinks) {
+function modifiedGreedyFAS(net: OCPNGraph, sources: string[], sinks: string[]): string[] {
     var s1 = [...sources]; // The id's of places belonging to s1.
     var s2 = [...sinks]; // The id's of places belonging to s2.
 

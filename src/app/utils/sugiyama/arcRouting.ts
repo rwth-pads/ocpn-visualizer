@@ -3,10 +3,10 @@ import OCPNLayout from '../classes/OCPNLayout';
 
 
 function routeArcs(ocpn: ObjectCentricPetriNet) {
-    // Delete the non-original arcs and add the object type to the remaining arcs.
     if (!ocpn.layout) {
         return;
     }
+    // Delete the non-original arcs and add the object type to the remaining arcs.
     for (const arcId in ocpn.layout.arcs) {
         if (!ocpn.layout.arcs[arcId].original) {
             delete ocpn.layout.arcs[arcId];
