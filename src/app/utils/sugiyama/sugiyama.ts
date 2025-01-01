@@ -34,7 +34,7 @@ async function sugiyama(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
     reverseCycles(ocpn, config);
     // Layer Assignment.
     console.log("Assigning layers...");
-    await assignLayers(ocpn, config);
+    await assignLayers(ocpn);
     // Dummy Vertex Insertion.
     console.log("Inserting dummy vertices...");
     insertDummyVertices(ocpn);
