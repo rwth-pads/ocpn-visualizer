@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, use } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
 import OCPNConfig from '../utils/classes/OCPNConfig';
 import { select } from 'd3-selection';

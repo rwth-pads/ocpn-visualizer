@@ -25,12 +25,12 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode, current
         userConfig.sources = userConfig.sources.filter(source => {
             // Get the object type of the source.
             const sourceObjectType = currentOCPN.places.find(place => place.id === source)?.objectType;
-            return selectedObjectTypes.includes(sourceObjectType);
+            return sourceObjectType !== undefined && selectedObjectTypes.includes(sourceObjectType);
         });
         userConfig.sinks = userConfig.sinks.filter(sink => {
             // Get the object type of the sink.
             const sinkObjectType = currentOCPN.places.find(place => place.id === sink)?.objectType;
-            return selectedObjectTypes.includes(sinkObjectType);
+            return sinkObjectType !== undefined && selectedObjectTypes.includes(sinkObjectType);
         });
         // console.log('Included object types: ', userConfig.includedObjectTypes);
     }, [selectedObjectTypes]);
