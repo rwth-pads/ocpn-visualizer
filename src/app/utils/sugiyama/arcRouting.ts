@@ -1,9 +1,12 @@
-// import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
+import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 import OCPNLayout from '../classes/OCPNLayout';
 
 
-function routeArcs(ocpn) {
+function routeArcs(ocpn: ObjectCentricPetriNet) {
     // Delete the non-original arcs and add the object type to the remaining arcs.
+    if (!ocpn.layout) {
+        return;
+    }
     for (const arcId in ocpn.layout.arcs) {
         if (!ocpn.layout.arcs[arcId].original) {
             delete ocpn.layout.arcs[arcId];
