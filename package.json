@@ -9,7 +9,7 @@
         "start": "next start",
         "lint": "next lint",
         "predeploy": "npm run build",
-        "deploy": "gh-pages -d out"
+        "deploy": "gh-pages -d out && touch ./out/.nojekyll && gh-pages -d out -t true"
     },
     "dependencies": {
         "@emotion/react": "^11.13.3",

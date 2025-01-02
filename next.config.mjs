@@ -1,9 +1,13 @@
 /** @type {import('next').NextConfig} */
+
+const isProd = process.env.NODE_ENV === 'production';
+const repoName = 'ocpn-visualizer';
+
 const nextConfig = {
-    basePath: '/ocpn-visualizer',
-    assetPrefix: '/ocpn-visualizer/',
-    trailingSlash: true,
     output: 'export',
+    basePath: isProd ? `/${repoName}` : '',
+    assetPrefix: isProd ? `/${repoName}/` : '',
+    trailingSlash: true,
 };
 
 export default nextConfig;
