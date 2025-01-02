@@ -1,11 +1,16 @@
+import { ObjectEncodingOptions } from 'fs';
 import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
+import OCPNConfig from '../classes/OCPNConfig';
 import OCPNLayout from '../classes/OCPNLayout';
 import { clone2DArray, arraysEqual } from '../lib/arrays';
 
 /**
  * Orders the vertices within the layers of the OCPN according to the barycenter method.
  */
-function orderVertices(ocpn, config) {
+function orderVertices(ocpn: ObjectCentricPetriNet, config: OCPNConfig): void {
+    if (!ocpn.layout) {
+        return;
+    }
     // Adjust the initial order within the layering according to the users object centrality.
     if (config.objectCentrality !== undefined) {
         console.log("Adjusting Initial Relative Order of Vertices...", config.objectCentrality);
@@ -28,7 +33,10 @@ function orderVertices(ocpn, config) {
 /**
  * Adjusts the initial order of the vertices within the layering according to the user defined object centrality. 
  */
-function adjustLayeringOrderByObjectCentrality(ocpn, config) {
+function adjustLayeringOrderByObjectCentrality(ocpn: ObjectCentricPetriNet, config: OCPNConfig): void {
+    if (!ocpn.layout || !config.objectCentrality) {
+        return;
+    }
     // console.log("Adjusting layering order by object centrality...");
     const objectCentrality = config.objectCentrality;
     // Iterate over the layers of the OCPN.
@@ -52,13 +60,16 @@ function adjustLayeringOrderByObjectCentrality(ocpn, config) {
             // Sort the places according to the user defined object centrality.
             // Example: objectCentrality = { "A": 0, "B": 2, "C": 1 } -> [placeA, placeC, placeB]
             ocpn.layout.layering[i].sort((a, b) =>
-                (objectCentrality[ocpn.layout.vertices[a].objectType] ?? 0)
-                - (objectCentrality[ocpn.layout.vertices[b].objectType] ?? 0));
+                ((ocpn.layout && ocpn.layout.vertices[a].objectType !== undefined ? objectCentrality[ocpn.layout.vertices[a].objectType] : 0) ?? 0)
+                - ((ocpn.layout && ocpn.layout.vertices[b].objectType !== undefined ? objectCentrality[ocpn.layout.vertices[b].objectType] : 0) ?? 0));
         }
     }
 }
 
-function upDownBarycenterBilayerSweep(ocpn, config) {
+function upDownBarycenterBilayerSweep(ocpn: ObjectCentricPetriNet, config: OCPNConfig): void {
+    if (!ocpn.layout) {
+        return;
+    }
     // Computes the intitial score of the order.
     var bestScore = computeLayeringScore(ocpn, ocpn.layout.layering, config);
     // Initialize the iteration counter that counts the iterations where no improvement was made.
@@ -107,7 +118,7 @@ function upDownBarycenterBilayerSweep(ocpn, config) {
 /**
  * Performs a single up-down sweep of the layers within the layering.
  */
-function singleUpDownSweep(ocpn, layering, config) {
+function singleUpDownSweep(ocpn: ObjectCentricPetriNet, layering: string[][], config: OCPNConfig): string[][] {
     // Go down and up the layers and adjust the vertex order.
     for (let dir = 0; dir < 2; dir++) {
         let start = dir == 0 ? 1 : layering.length - 2;
@@ -123,18 +134,13 @@ function singleUpDownSweep(ocpn, layering, config) {
     return layering;
 }
 
-/**
- * 
- * @param {ObjectCentricPetriNet} ocpn 
- * @param {*} layering 
- * @returns 
- */
-function adjustEqualBarycenters(ocpn, layering) {
+function adjustEqualBarycenters(ocpn: ObjectCentricPetriNet, layering: string[][]): string[][] {
+    console.log(ocpn); // TODO: remove this.
     // Swaps vertices within layers that have the same barycenter values.
     return layering;
 }
 
-function modifiedBarycenterOrder(ocpn, layering, layer, down, config) {
+function modifiedBarycenterOrder(ocpn: ObjectCentricPetriNet, layering: string[][], layer: number, down: boolean, config: OCPNConfig): string[] {
     // Compute the barycenter values for the current layer.
     var barycenters = computeModifiedBarycenters(ocpn, layering, layer, down, config);
     var adjustedBarycenters = adjustNoNeighborsBarycenters(layering, layer, barycenters);
@@ -149,10 +155,10 @@ function modifiedBarycenterOrder(ocpn, layering, layer, down, config) {
     return orderedLayer;
 }
 
-function adjustNoNeighborsBarycenters(layering, layer, barycenters) {
+function adjustNoNeighborsBarycenters(layering: string[][], layer: number, barycenters: { [key: string]: number }): { [key: string]: number } {
     // Vertices with no neighbors have been assigned a barycenter value of -1.
     // Assign the barycenter value of its next left neighbor with a valid barycenter value or 0 if none.
-    var adjustedBarycenters = {};
+    var adjustedBarycenters: { [key: string]: number } = {};
     for (let i = 0; i < layering[layer].length; i++) {
         let v = layering[layer][i];
         if (barycenters[v] == -1) {
@@ -165,42 +171,42 @@ function adjustNoNeighborsBarycenters(layering, layer, barycenters) {
     return adjustedBarycenters;
 }
 
-function computeModifiedBarycenters(ocpn, layering, layer, down, config) {
-    var barycenters = {};
+function computeModifiedBarycenters(ocpn: ObjectCentricPetriNet, layering: string[][], layer: number, down: boolean, config: OCPNConfig): { [key: string]: number } {
+    var barycenters: { [key: string]: number } = {};
     var vertices = layering[layer];
     for (let i = 0; i < vertices.length; i++) {
         var v = vertices[i];
-        if (ocpn.layout.vertices[v].type === OCPNLayout.PLACE_TYPE) {
+        if (ocpn.layout && ocpn.layout.vertices[v].type === OCPNLayout.PLACE_TYPE) {
             barycenters[v] = placeBarycenter(ocpn, v, layering, layer, down, config);
-        } else if (ocpn.layout.vertices[v].type === OCPNLayout.TRANSITION_TYPE) {
+        } else if (ocpn.layout && ocpn.layout.vertices[v].type === OCPNLayout.TRANSITION_TYPE) {
             barycenters[v] = transitionBarycenter(ocpn, v, layering, layer, down);
-        } else if (ocpn.layout.vertices[v].type === OCPNLayout.DUMMY_TYPE) {
+        } else if (ocpn.layout && ocpn.layout.vertices[v].type === OCPNLayout.DUMMY_TYPE) {
             barycenters[v] = dummyBarycenter(ocpn, v, layering, layer, down);
         }
     }
     return barycenters;
 }
 
-function placeBarycenter(ocpn, place, layering, layer, down, config) {
+function placeBarycenter(ocpn: ObjectCentricPetriNet, place: string, layering: string[][], layer: number, down: boolean, config: OCPNConfig): number {
     var barycenter = 0;
     var objectBarycenter = 0;
     // Get the neighbors of the place in the upper (dir = down) or lower (dir = up) layer.
-    var neighbors = ocpn.layout.getAllArcsBetweenRanks(down ? layer - 1 : layer)
+    var neighbors = ocpn.layout ? (ocpn.layout.getAllArcsBetweenRanks(down ? layer - 1 : layer)
         .filter(arc => down ? arc.target === place : arc.source === place)
-        .map(arc => down ? arc.source : arc.target);
+        .map(arc => down ? arc.source : arc.target)) : [];
 
     // Compute the barycenter value.
     for (let i = 0; i < neighbors.length; i++) {
         barycenter += layering[down ? layer - 1 : layer + 1].indexOf(neighbors[i]) + 1;
     }
     // Get the average index of all places of the same object type in the layers above (down) or below (up).
-    var objectNeighbors = [];
+    var objectNeighbors: number[] = [];
     for (let i = config.objectAttractionRangeMin; i <= config.objectAttractionRangeMax; i++) {
         let layerIndex = down ? layer - 2 * i : layer + 2 * i;
         if (layerIndex < 0 || layerIndex >= layering.length) {
             break;
         } else {
-            let ons = layering[layerIndex].filter(v => ocpn.layout.vertices[v].objectType == ocpn.layout.vertices[place].objectType);
+            let ons = layering[layerIndex].filter(v => ocpn.layout && ocpn.layout.vertices[v].objectType == ocpn.layout.vertices[place].objectType);
             objectNeighbors = objectNeighbors.concat(ons.map(on => layering[layerIndex].indexOf(on) + 1));
         }
     }
@@ -221,22 +227,13 @@ function placeBarycenter(ocpn, place, layering, layer, down, config) {
     return (1 - config.objectAttraction) * barycenter + config.objectAttraction * objectBarycenter;
 }
 
-/**
- * Computes the (TODO: modified) barycenter value for the given transition. 
- *
- * @param {ObjectCentricPetriNet.Transition} transition The transition in question.
- * @param {*} layering 
- * @param {*} layer 
- * @param {*} down Determines the direction of the sweep.
- * @returns The computed barycenter value.
- */
-function transitionBarycenter(ocpn, transition, layering, layer, down) {
+function transitionBarycenter(ocpn: ObjectCentricPetriNet, transition: string, layering: string[][], layer: number, down: boolean): number {
     // For transitions we only need to regard adjacent vertices (places or dummies) in the fixed layer.
     var fixedLayer = down ? layer - 1 : layer + 1;
     // Only consider the neighbors that are in the fixed layer.
-    var neighbors = ocpn.layout.getAllArcsBetweenRanks(down ? layer - 1 : layer)
-        .filter(arc => down ? arc.target === transition : arc.source === transition)
-        .map(arc => down ? arc.source : arc.target);
+    var neighbors = ocpn.layout ? (ocpn.layout.getAllArcsBetweenRanks(down ? layer - 1 : layer)
+        .filter(arc => down ? arc.target === transition : arc.source === transition).map(arc => down ? arc.source : arc.target))
+        : [];
 
     // console.log(`Transition ${transition} neighbors: `, neighbors);
     // If there are no neighbors in the fixed layer, return the current index + 1.
@@ -254,34 +251,22 @@ function transitionBarycenter(ocpn, transition, layering, layer, down) {
     return barycenter / neighbors.length;
 }
 
-/**
- * 
- * @param {ObjectCentricPetriNet.Dummy} dummy 
- * @param {*} layering 
- * @param {*} layer 
- * @param {*} down 
- * @returns 
- */
-function dummyBarycenter(ocpn, dummy, layering, layer, down) {
+function dummyBarycenter(ocpn: ObjectCentricPetriNet, dummy: string, layering: string[][], layer: number, down: boolean): number {
+    if (!ocpn.layout) {
+        return -1;
+    }
     // For dummies we return the same value as the source or target's index.
     var d = ocpn.layout.vertices[dummy];
-    var neighbor = down ? d.upper : d.lower;
+    var neighbor = down ? (d.upper ?? '') : (d.lower ?? '');
     var index = layering[down ? layer - 1 : layer + 1].indexOf(neighbor) + 1;
     // if dummy is outer dummy, and direction is up, use previously computed barycenter as well.
-    if (!down && ocpn.layout.vertices[d.lower].type !== OCPNLayout.DUMMY_TYPE) {
-        index = (index + layering[layer - 1].indexOf(d.upper) + 1) / 2;
+    if (!down && ocpn.layout.vertices[(d.lower ?? '')].type !== OCPNLayout.DUMMY_TYPE) {
+        index = (index + layering[layer - 1].indexOf((d.upper ?? '')) + 1) / 2;
     }
     return index;
 }
 
-/**
- * For now just computes the crossing count.
- * TODO: implement a combination of the crossing count, the object attraction, and additional constraints. 
- * @param {*} ocpn The object centric petri net.
- * @param {*} layering The current layering of the OCPN.
- * @param  
- */
-function computeLayeringScore(ocpn, layering, config) {
+function computeLayeringScore(ocpn: ObjectCentricPetriNet, layering: string[][], config: OCPNConfig): number {
     // Compute the crossing count.
     var crossingCount = countCrossings(ocpn, layering);
     // Compute value that measures the quality of object attraction in the current layering.
@@ -291,21 +276,12 @@ function computeLayeringScore(ocpn, layering, config) {
     return crossingCount + objectAttractionCount;
 }
 
-/**
- * Computes the crossing count given the OCPN and the layering.
- * The crossing count is a value that measures the number of crossings between all layers.
- * 
- * The lower the value the "better" the layering.
- * @param {*} ocpn 
- * @param {*} layering 
- */
-function countCrossings(ocpn, layering) {
+function countCrossings(ocpn: ObjectCentricPetriNet, layering: string[][]): number {
     var crossings = 0;
     // Compute the crossings between all layers.
     for (let l = 0; l < layering.length - 1; l++) {
         // Get all arcs between the current and the next layer.
-        // TODO: next step here.
-        var arcs = ocpn.layout.getAllArcsBetweenRanks(l);
+        var arcs = ocpn.layout ? ocpn.layout.getAllArcsBetweenRanks(l) : [];
 
         var currLayer = layering[l];
         var nextLayer = layering[l + 1];
@@ -333,24 +309,17 @@ function countCrossings(ocpn, layering) {
     return crossings;
 }
 
-/**
- * Computes the object attraction count given the OCPN and the layering.
- * The object attraction count is a value that measures the how close
- * places of the same object type are together in the layering.
- * 
- * The lower the value the "better" the object attraction.
- * @param {*} ocpn 
- * @param {*} layering 
- * @param {*} config
- */
-function measureObjectAttractionCount(ocpn, layering, config) {
+function measureObjectAttractionCount(ocpn: ObjectCentricPetriNet, layering: string[][], config: OCPNConfig): number {
+    if (!ocpn.layout) {
+        return 0;
+    }
     // For each object type compute the average deviation from the average index.
     var objectDeviation = 0;
     ocpn.layout.objectTypes.forEach(objectType => {
-        var objectPlaces = [];
+        var objectPlaces: { name: string, index: number }[] = [];
         // Get the indices of the places of the current object type in each layer.
         for (let l = 0; l < layering.length; l++) {
-            let places = layering[l].filter(v => ocpn.layout.vertices[v].objectType == objectType);
+            let places = layering[l].filter(v => ocpn.layout && ocpn.layout.vertices[v].objectType == objectType);
             objectPlaces = objectPlaces.concat(places.map(place => ({ name: place, index: layering[l].indexOf(place) + 1 })));
         }
         // Compute the average index of the places of the current object type.
@@ -362,14 +331,7 @@ function measureObjectAttractionCount(ocpn, layering, config) {
     return objectDeviation * config.objectAttraction; // TODO: either introduce a new config parameter or rework the * 10.
 }
 
-/**
- * Checks if the current layering has already been computed.
- *
- * @param {*} currentLayering 
- * @param {*} computedLayerings 
- * @returns Returns true if the current layering has already been computed.
- */
-function reocurringLayering(currentLayering, computedLayerings) {
+function reocurringLayering(currentLayering: string[][], computedLayerings: string[][][]): boolean {
     // Check if the current layering has already been computed.
     for (let i = 0; i < computedLayerings.length; i++) {
         if (arraysEqual(currentLayering, computedLayerings[i])) {
