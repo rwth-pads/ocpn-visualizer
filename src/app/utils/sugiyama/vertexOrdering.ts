@@ -1,4 +1,3 @@
-import { ObjectEncodingOptions } from 'fs';
 import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 import OCPNConfig from '../classes/OCPNConfig';
 import OCPNLayout from '../classes/OCPNLayout';

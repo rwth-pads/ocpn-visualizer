@@ -422,4 +422,8 @@ function getLowerNeighbors(ocpn: ObjectCentricPetriNet, vertex: string) {
     return ocpn.layout ? ocpn.layout.getLowerNeighbors(vertex) : [];
 }
 
-export default { positionVertices, positionVerticesToAlignmentType };
+const positioning = {
+    positionVertices,
+    positionVerticesToAlignmentType
+};
+export default positioning;

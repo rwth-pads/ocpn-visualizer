@@ -239,7 +239,8 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             };
 
             adjustFontSize();
-        } else {
+        }
+        else { // Dummy vertices: just for debugging.
             g.append('circle')
                 .attr('cx', vertex.x ?? 0)
                 .attr('cy', vertex.y ?? 0)
@@ -256,7 +257,6 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('alignment-baseline', 'middle')
                 .attr('font-size', config.placeRadius)
                 .text(vertexId);
-
         }
     }
     console.timeEnd("Visualize OCPN");

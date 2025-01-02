@@ -2,12 +2,7 @@ import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 import OCPNLayout from '../classes/OCPNLayout';
 
 /**
- * For every arc that spans more than one layer, insert dummy vertices on
- * the intermediate layers.
- *
- * @param {ObjectCentricPetriNet} ocpn - The Object-Centric Petri Net.
- * @param {*} layering Layering of the OCPN.
- * @returns The number of inserted dummy vertices and the layering as array of arrays.
+ * For every arc that spans more than one layer, insert dummy vertices on the intermediate layers.
  */
 function insertDummyVertices(ocpn: ObjectCentricPetriNet) {
     if (!ocpn.layout) {
@@ -18,8 +13,8 @@ function insertDummyVertices(ocpn: ObjectCentricPetriNet) {
     for (const [arcId, arc] of Object.entries(ocpn.layout.arcs)) {
         let upper = arc.source;
         let lower = arc.target;
-        let objectType = ocpn.layout.vertices[upper].type === OCPNLayout.PLACE_TYPE 
-            ? ocpn.layout.vertices[upper].objectType 
+        let objectType = ocpn.layout.vertices[upper].type === OCPNLayout.PLACE_TYPE
+            ? ocpn.layout.vertices[upper].objectType
             : ocpn.layout.vertices[lower].objectType;
 
         let sourceLayer = ocpn.layout.vertices[upper].layer;
@@ -86,8 +81,8 @@ function insertDummyVertices(ocpn: ObjectCentricPetriNet) {
                 maxLayer: sourceLayer + 1,
                 type1: false,
                 original: false,
-                weight: arc.weight, 
-                variable: arc.variable, 
+                weight: arc.weight,
+                variable: arc.variable,
                 objectType: objectType
             };
             // Arc 2: dummies[dummies.length - 1] -> lower
@@ -100,8 +95,8 @@ function insertDummyVertices(ocpn: ObjectCentricPetriNet) {
                 maxLayer: targetLayer,
                 type1: false,
                 original: false,
-                weight: arc.weight, 
-                variable: arc.variable, 
+                weight: arc.weight,
+                variable: arc.variable,
                 objectType: objectType
             };
         }
