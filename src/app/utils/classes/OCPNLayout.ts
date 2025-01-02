@@ -198,11 +198,11 @@ class OCPNLayout {
         return arcs;
     }
 
-    getUpperNeighbors(vertexId: string) {
+    getUpperNeighbors(vertexId: string): string[] {
         const vertex = this.vertices[vertexId];
         const neighbors: string[] = [];
         if (vertex.type === OCPNLayout.DUMMY_TYPE) {
-            if (!vertex.belongsTo) return;
+            if (!vertex.belongsTo) return [];
 
             let arc = this.arcs[vertex.belongsTo];
             // arc.path.length > 0
@@ -230,11 +230,11 @@ class OCPNLayout {
         return neighbors;
     }
 
-    getLowerNeighbors(vertexId: string) {
+    getLowerNeighbors(vertexId: string): string[] {
         const vertex = this.vertices[vertexId];
         const neighbors: string[] = [];
         if (vertex.type === OCPNLayout.DUMMY_TYPE) {
-            if (!vertex.belongsTo) return;
+            if (!vertex.belongsTo) return [];
 
             let arc = this.arcs[vertex.belongsTo];
             // arc.path.length > 0

@@ -1,4 +1,5 @@
 import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
+import OCPNConfig from '../classes/OCPNConfig';
 import OCPNLayout from '../classes/OCPNLayout';
 import { clone2DArray } from '../lib/arrays';
 
@@ -6,18 +7,17 @@ import { clone2DArray } from '../lib/arrays';
  * Heuristic algorithm for the coordinate assignment of the vertices of the OCPN.
  * Guarantees vertical inner segments (dummy -> dummy), yields small edge lengths,
  * and a fair balance with respect to upper and lower neighbors.
- *
- * @param {*} ocpn The layered OCPN.
- * @param {*} layering The ordered layering of the OCPN, determining the relative position of the vertices.
- * @param {*} config User defined configurations for the vertex positioning.
  */
-function positionVertices(ocpn, config) {
+function positionVertices(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
+    if (!ocpn.layout) {
+        return;
+    }
     // Mark type 1 conflicts in the OCPN given the layering.
     markType1Conflicts(ocpn);
     const layouts = [];
     console.log("Computing the four alignments...");
-    for (const verticalDir in [0, 1]) { // 0: down, 1: up
-        for (const horizontalDir in [0, 1]) { // 0: left, 1: right
+    for (const verticalDir of [0, 1]) { // 0: down, 1: up
+        for (const horizontalDir of [0, 1]) { // 0: left, 1: right
             // console.log(`${verticalDir == 0 ? "Down" : "Up"} - ${horizontalDir == 0 ? "Leftmost" : "Rightmost"}`);
             // Reverse the outer and inner layers depending on the directions.
             let [currentLayering, pos] = transformLayering(clone2DArray(ocpn.layout.layering), verticalDir, horizontalDir);
@@ -30,8 +30,8 @@ function positionVertices(ocpn, config) {
 
             // If direction from right to left, flip coordinates back to original order.
             if (horizontalDir == 1) {
-                for (let v in coords) {
-                    coords[v] = maxCoord - coords[v];
+                for (let v of Object.keys(coords)) {
+                    coords[v] = maxCoord - (coords[v] ?? 0);
                 }
             }
             layouts.push(coords);
@@ -44,7 +44,10 @@ function positionVertices(ocpn, config) {
     setCoordinates(ocpn, ocpn.layout.layering, layouts, config);
 }
 
-function positionVerticesToAlignmentType(ocpn, config) {
+function positionVerticesToAlignmentType(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
+    if (!ocpn.layout) {
+        return;
+    }
     // Mark type 1 conflicts in the OCPN given the layering.
     markType1Conflicts(ocpn);
     const layouts = [];
@@ -92,7 +95,7 @@ function positionVerticesToAlignmentType(ocpn, config) {
             // If direction from right to left, flip coordinates back to original order.
             if (horizontalDir == 1) {
                 for (let v in coords) {
-                    coords[v] = maxCoord - coords[v];
+                    coords[v] = maxCoord - (coords[v] ?? 0);
                 }
             }
             layouts.push(coords);
@@ -108,20 +111,15 @@ function positionVerticesToAlignmentType(ocpn, config) {
 /**
  * Depending on the vertical and horizontal direction, the layering is transformed.
  * That is, the order of the layers and the order of the vertices within the layers are reversed.
- * 
- * @param {*} layering The original layering of the OCPN.
- * @param {*} verticalDir The vertical direction of the current alignment and compaction step.
- * @param {*} horizontalDir The horizontal direction of the current alignment and compaction step.
- * @returns The transformed layering.
  */
-function transformLayering(layering, verticalDir, horizontalDir) {
+function transformLayering(layering: string[][], verticalDir: number, horizontalDir: number): [string[][], { [key: string]: number }] {
     if (verticalDir == 1) {
         layering.reverse();
     }
     if (horizontalDir == 1) {
         layering.forEach(layer => layer.reverse());
     }
-    var pos = [];
+    var pos: { [key: string]: number } = {};
     for (let i = 0; i < layering.length; i++) {
         for (let j = 0; j < layering[i].length; j++) {
             pos[layering[i][j]] = j;
@@ -135,10 +133,11 @@ function transformLayering(layering, verticalDir, horizontalDir) {
  * A type 1 conflict occurs when a non-inner segment crosses an inner segment.
  * This step is necessary to keep long edges straight, leading to non-inner segments
  * crossing inner segments not being aligned in the following steps. 
- * 
- * @param {*} ocpn The OCPN.
  */
-function markType1Conflicts(ocpn) {
+function markType1Conflicts(ocpn: ObjectCentricPetriNet) {
+    if (!ocpn.layout) {
+        return;
+    }
     console.log("Marking type 1 conflicts...");
     // Between layer first and second (last - 1 and last) there cannot be any type 1 conflicts.
     for (let i = 1; i < ocpn.layout.layering.length - 2; i++) {
@@ -159,7 +158,7 @@ function markType1Conflicts(ocpn) {
                         let k = layer.indexOf(upperNeighbor);
                         if (k < k0 || k > k1) {
                             // Mark the arc from upperNeighbor to nextLayer[l] as type 1.
-                            let arcs = ocpn.layout.getArcsBetween(upperNeighbor, nextLayer[l]);
+                            let arcs = ocpn.layout ? ocpn.layout.getArcsBetween(upperNeighbor, nextLayer[l]) : [];
                             arcs.forEach(a => {
                                 if (!isIncidentToInnerSegment(ocpn, upperNeighbor) || !isIncidentToInnerSegment(ocpn, nextLayer[l])) {
                                     a.type1 = true;
@@ -180,15 +179,10 @@ function markType1Conflicts(ocpn) {
  * 
  * Since we transformed the layering according to the vertical and horizontal direction,
  * we can assume that the vertices are aligned from left to right and top to bottom.
- * @param {*} ocpn 
- * @param {*} layering 
- * @param {*} pos The current position of the vertices in their layer.
- * @param {*} down Boolean value indicating whether the alignment is from top to bottom.
- * @returns An array of the root and align values for each vertex.
  */
-function verticalAlignment(ocpn, layering, pos, down) {
-    var root = {}; // Each vertex has a reference to the root of its block.
-    var align = {}; // Each vertex has a reference to its lower aligned neighbor.
+function verticalAlignment(ocpn: ObjectCentricPetriNet, layering: string[][], pos: { [key: string]: number }, down: boolean) {
+    var root: { [key: string]: string } = {}; // Each vertex has a reference to the root of its block.
+    var align: { [key: string]: string } = {}; // Each vertex has a reference to its lower aligned neighbor.
 
     // Initialize root and align for each vertex.
     for (let i = 0; i < layering.length; i++) {
@@ -207,7 +201,7 @@ function verticalAlignment(ocpn, layering, pos, down) {
             var neighbors = down ? getUpperNeighbors(ocpn, v) : getLowerNeighbors(ocpn, v);
             neighbors.sort((a, b) => pos[a] - pos[b]);
             if (neighbors.length > 0) {
-                const lowerUpperMedians = [...new Set([Math.floor((neighbors.length - 1) / 2), Math.ceil((neighbors.length - 1) / 2)])];
+                const lowerUpperMedians = Array.from(new Set([Math.floor((neighbors.length - 1) / 2), Math.ceil((neighbors.length - 1) / 2)]));
                 for (let m of lowerUpperMedians) {
                     if (align[v] == v) {
                         if (!isMarked(ocpn, neighbors[m], v) && r < pos[neighbors[m]]) {
@@ -224,18 +218,25 @@ function verticalAlignment(ocpn, layering, pos, down) {
     return [root, align];
 }
 
-function isMarked(ocpn, u, v) {
-    let arc = ocpn.layout.getArcsBetween(u, v);
+function isMarked(ocpn: ObjectCentricPetriNet, u: string, v: string): boolean {
+    let arc = ocpn.layout ? ocpn.layout.getArcsBetween(u, v) : [];
     return arc.length > 0 && arc[0].type1;
 }
 
 /**
  * Coordinate assignment is determined subject to a vertical algignment. 
  */
-function horizontalCompaction(ocpn, layering, roots, aligns, pos, config) {
-    const x = {};
-    const sink = {};
-    const shift = {};
+function horizontalCompaction(
+    ocpn: ObjectCentricPetriNet,
+    layering: string[][],
+    roots: { [key: string]: string },
+    aligns: { [key: string]: string },
+    pos: { [key: string]: number },
+    config: OCPNConfig
+): [{ [key: string]: number | undefined }, number] {
+    const x: { [key: string]: number | undefined } = {};
+    const sink: { [key: string]: string } = {};
+    const shift: { [key: string]: number } = {};
 
     // Initialize sink and shift for each vertex.
     for (let i = 0; i < layering.length; i++) {
@@ -257,16 +258,16 @@ function horizontalCompaction(ocpn, layering, roots, aligns, pos, config) {
     }
 
     // Absolute coordinates.
-    let xMax = 0;
-    let absX = {};
+    let xMax: number = 0;
+    let absX: { [key: string]: number | undefined } = {};
     for (let i = 0; i < layering.length; i++) {
         for (let j = 0; j < layering[i].length; j++) {
             let v = layering[i][j];
             absX[v] = x[roots[v]];
-            if (shift[sink[roots[v]]] < Infinity) {
+            if (shift[sink[roots[v]]] < Infinity && absX[v]) {
                 absX[v] = absX[v] + shift[sink[roots[v]]];
             }
-            xMax = Math.max(xMax, absX[v]);
+            xMax = Math.max(xMax, (absX[v] ?? 0));
         }
     }
 
@@ -274,7 +275,18 @@ function horizontalCompaction(ocpn, layering, roots, aligns, pos, config) {
 }
 
 
-function placeBlock(ocpn, layering, v, x, pos, roots, sink, shift, aligns, config) {
+function placeBlock(
+    ocpn: ObjectCentricPetriNet,
+    layering: string[][],
+    v: string,
+    x: { [key: string]: number | undefined },
+    pos: { [key: string]: number },
+    roots: { [key: string]: string },
+    sink: { [key: string]: string },
+    shift: { [key: string]: number },
+    aligns: { [key: string]: string },
+    config: OCPNConfig
+) {
     if (x[v] == undefined) {
         x[v] = 0;
         var w = v;
@@ -296,11 +308,11 @@ function placeBlock(ocpn, layering, v, x, pos, roots, sink, shift, aligns, confi
                 if (sink[v] != sink[u]) {
                     // Compute the seperation based on vertexSep and the type of the vertex.
                     let delta = config.vertexSep + Math.max(config.direction == "TB" ? config.transitionWidth : config.transitionHeight, config.placeRadius * 2);
-                    shift[sink[u]] = Math.min(shift[sink[u]], x[v] - x[u] - delta); // TODO config
+                    shift[sink[u]] = Math.min(shift[sink[u]], x[v] - (x[u] ?? 0) - delta); // TODO config
                 } else {
                     let delta = config.vertexSep + Math.max(config.direction == "TB" ? config.transitionWidth : config.transitionHeight, config.placeRadius * 2);
                     // Maximum of own x and x of predecessor + minimum vertex separation.
-                    x[v] = Math.max(x[v], x[u] + delta); // TODO config
+                    x[v] = Math.max(x[v], (x[u] ?? 0) + delta); // TODO config
                 }
             }
             w = aligns[w];
@@ -308,24 +320,12 @@ function placeBlock(ocpn, layering, v, x, pos, roots, sink, shift, aligns, confi
     }
 }
 
-function arraysByCoordinates(layout) {
-    // For each x coordinate, get the vertices with that x coordinate.
-    let coords = {};
-    for (let v in layout) {
-        if (coords[layout[v]] == undefined) {
-            coords[layout[v]] = [];
-        }
-        coords[layout[v]].push(v);
-    }
-    // console.log(coords);
-}
-
-function alignAssignments(layouts) {
+function alignAssignments(layouts: { [key: string]: number | undefined }[]): void {
     console.log("Aligning the four layouts to the one with the smallest width (height)...");
     // console.log(layouts);
     // Determine minimum and maximum coordinates for each layout.
     const minMax = layouts.map(coords => {
-        const values = Object.values(coords);
+        const values = Object.values(coords).filter((v): v is number => v !== undefined);
         const min = Math.min(...values);
         const max = Math.max(...values);
         return { min, max, width: max - min };
@@ -343,12 +343,15 @@ function alignAssignments(layouts) {
             minMax[i].max - minMax[minWidthIndex].max; // rightmost
 
         for (let v in layout) {
-            layout[v] += shift;
+            if (layout[v] !== undefined) layout[v] += shift;
         }
     });
 }
 
-function setCoordinates(ocpn, layering, layouts, config) {
+function setCoordinates(ocpn: ObjectCentricPetriNet, layering: string[][], layouts: { [key: string]: number | undefined }[], config: OCPNConfig) {
+    if (!ocpn.layout) {
+        return;
+    }
     console.log("Setting coordinates...");
     const areaScaling = Math.max(layering.length / 10, 1);
     const layerHalfs = [];
@@ -371,52 +374,52 @@ function setCoordinates(ocpn, layering, layouts, config) {
         ocpn.layout.layerSizes.push({ layer: i, size: layerSize * 2 }); // TODO: to adjust the y coordinate of the lower dummy vertices to the bottom of the layer.
     }
 
-    var curSize = config.borderPadding; // TODO: check config.direciton influence.
+    var curSize = config.borderPadding;
     for (let i = 0; i < layering.length; i++) {
+        var layerHalf = layerHalfs.find(l => l.layer == i);
+        if (!layerHalf) layerHalf = { layer: i, size: 0 };
+
         for (let j = 0; j < layering[i].length; j++) {
             const v = layering[i][j];
             // Get the four candidate coordinates for the vertex in ascending order.
-            const candidateCoords = layouts.map(layout => layout[v]).sort((a, b) => a - b);
+            const candidateCoords = layouts.map(layout => layout[v]).filter((coord): coord is number => coord !== undefined).sort((a, b) => a - b);
             // Compute the average median of the four candidate coordinates.
             const medianCoord = (candidateCoords[1] + candidateCoords[2]) / 2;
             // Set the vertex coordinates.
             ocpn.layout.vertices[v].x = medianCoord + config.borderPadding;
-            ocpn.layout.vertices[v].y = curSize + layerHalfs.find(l => l.layer == i).size;
+            if (layerHalf) {
+                ocpn.layout.vertices[v].y = curSize + layerHalf.size;
+            }
         }
-        curSize = curSize + layerHalfs.find(l => l.layer == i).size * 2 + (config.layerSep * areaScaling);
+        curSize = curSize + layerHalf.size * 2 + (config.layerSep * areaScaling);
     }
 }
 
 /**
  * Checks whether the vertex is incident to an inner segment.
  * A vertex is incident to an inner segment if it is a dummy and its upper neighbor is a dummy.
- * @param {ObjectCentricPetriNet} ocpn 
- * @param {*} vertex 
- * @returns Boolean value indicating whether the vertex is incident to an inner segment.
  */
-function isIncidentToInnerSegment(ocpn, vertex) {
-    let v = ocpn.layout.vertices[vertex];
-    if (v.type === OCPNLayout.DUMMY_TYPE) {
-        let upper = ocpn.layout.vertices[v.upper];
-        if (upper.type === OCPNLayout.DUMMY_TYPE) {
-            return true;
+function isIncidentToInnerSegment(ocpn: ObjectCentricPetriNet, vertex: string) {
+    if (ocpn.layout) {
+        let v = ocpn.layout.vertices[vertex];
+        if (v.type === OCPNLayout.DUMMY_TYPE) {
+            if (v.upper) {
+                let upper = ocpn.layout.vertices[v.upper];
+                if (upper.type === OCPNLayout.DUMMY_TYPE) {
+                    return true;
+                }
+            }
         }
     }
     return false;
 }
 
-/**
- * Gets the upper neighbors of the vertex in the OCPN layering.
- * @param {ObjectCentricPetriNet} ocpn 
- * @param {*} vertex 
- * @returns An array of the names of the upper neighbors of the vertex.
- */
-function getUpperNeighbors(ocpn, vertex) {
-    return ocpn.layout.getUpperNeighbors(vertex);
+function getUpperNeighbors(ocpn: ObjectCentricPetriNet, vertex: string) {
+    return ocpn.layout ? ocpn.layout.getUpperNeighbors(vertex) : [];
 }
 
-function getLowerNeighbors(ocpn, vertex) {
-    return ocpn.layout.getLowerNeighbors(vertex);
+function getLowerNeighbors(ocpn: ObjectCentricPetriNet, vertex: string) {
+    return ocpn.layout ? ocpn.layout.getLowerNeighbors(vertex) : [];
 }
 
 export default { positionVertices, positionVerticesToAlignmentType };
