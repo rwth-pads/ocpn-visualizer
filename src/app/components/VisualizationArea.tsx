@@ -27,11 +27,13 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
     const containerRef = useRef<HTMLDivElement>(null);
 
     const handleRightClick = (event: React.MouseEvent<SVGElement, MouseEvent>) => {
+        if (!selectedOCPN?.layout) return;
+
         event.preventDefault();
         const target = event.target as HTMLElement;
         const elementId = target.id;
         console.log("Right click on element: ", elementId);
-        const vertex = selectedOCPN?.layout.vertices[elementId];
+        const vertex = selectedOCPN.layout.vertices[elementId];
         if (vertex && containerRef.current) {
             const containerRect = containerRef.current.getBoundingClientRect();
             let x = event.clientX - containerRect.left;
@@ -42,8 +44,8 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                 x,
                 y,
                 vertexId: elementId,
-                vertexName: vertex.type === OCPNLayout.PLACE_TYPE ? vertex.name : vertex.label,
-                objectType: vertex.type === OCPNLayout.PLACE_TYPE ? vertex.objectType : null,
+                vertexName: vertex.type === OCPNLayout.PLACE_TYPE ? (vertex.name ?? '') : (vertex.label ?? ''),
+                objectType: vertex.type === OCPNLayout.PLACE_TYPE ? (vertex.objectType ?? null) : null,
                 vertexType: vertex.type === OCPNLayout.PLACE_TYPE ? 'place' : 'transition',
                 isSource: userConfig.sources.includes(elementId),
                 isSink: userConfig.sinks.includes(elementId),
@@ -90,7 +92,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
     }, []);
 
     useEffect(() => {
-        if (svgRef.current && selectedOCPN) {
+        if (selectedOCPN?.layout && svgRef.current) {
             const svg = select(svgRef.current);
 
             svg.selectAll('.ocpntransition, .ocpnplace, .ocpnarc')
@@ -99,7 +101,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                     const target = event.target as HTMLElement;
                     const elementId = target.id;
                     // Differentiate between places, transitions, and arcs.
-                    const vertex = selectedOCPN.layout.vertices[elementId];
+                    const vertex = selectedOCPN.layout?.vertices[elementId];
                     if (vertex) {
                         // Place or transition.
                         if (vertex.type === OCPNLayout.PLACE_TYPE) {
@@ -110,7 +112,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                         }
                     } else {
                         // Arc.
-                        const arc = selectedOCPN.layout.arcs[elementId];
+                        const arc = selectedOCPN.layout?.arcs[elementId];
                         if (arc) {
                             setCurrentHover(`${arc.objectType}`);
                         }

@@ -27,8 +27,8 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
     for (const arcId in layout.arcs) {
         const arc = layout.arcs[arcId];
         var path = getArcPath(arcId, layout, config);
-        var ot = arc.objectType.replace(' ', '');
-        var color = config.typeColorMapping.get(ot) || config.arcDefaultColor;
+        var ot = arc.objectType ? arc.objectType.replace(' ', '') : '';
+        var color = config.typeColorMapping.get(ot) ?? config.arcDefaultColor;
         var strokeWidth = config.arcSize * (config.indicateArcWeight ? (arc.weight ?? 1) : 1);
 
         // // Define a combined mask for the arc that hides the parts of the arc that underlap with it's source and target.
@@ -134,20 +134,20 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
         if (vertex.type === OCPNLayout.PLACE_TYPE) {
             // TODO: if checkbox 'indicate sources and sinks' is checked, then add a source/sink indicator
             // otherwise, just draw a circle with fill color.
-            const fill = config.typeColorMapping.get(vertex.objectType) || config.defaultPlaceColor;
+            const fill = config.typeColorMapping.get(vertex.objectType ?? '') ?? config.defaultPlaceColor;
             const source = config.sources.includes(vertexId);
             const sink = config.sinks.includes(vertexId);
             g.append('circle')
-                .attr('cx', vertex.x)
-                .attr('cy', vertex.y)
+                .attr('cx', vertex.x ?? 0)
+                .attr('cy', vertex.y ?? 0)
                 .attr('r', config.placeRadius)
                 .attr('id', vertexId)
                 .attr('class', `ocpnplace ${ot}`)
                 .attr('fill', fill);
             if (source && config.indicateSourcesSinks) {
                 g.append('text')
-                    .attr('x', vertex.x)
-                    .attr('y', vertex.y)
+                    .attr('x', vertex.x ?? 0)
+                    .attr('y', vertex.y ?? 0)
                     .attr('text-anchor', 'middle')
                     .attr('alignment-baseline', 'middle')
                     .attr('font-size', config.placeRadius) // Adjust font size as needed
@@ -157,8 +157,8 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                     .text('⯈');
             } else if (sink && config.indicateSourcesSinks) {
                 g.append('text')
-                    .attr('x', vertex.x)
-                    .attr('y', vertex.y)
+                    .attr('x', vertex.x ?? 0)
+                    .attr('y', vertex.y ?? 0)
                     .attr('text-anchor', 'middle')
                     .attr('alignment-baseline', 'middle')
                     .attr('font-size', config.placeRadius) // Adjust font size as needed
@@ -168,8 +168,8 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                     .text('■');
             } else if (config.indicateSourcesSinks) {
                 g.append('circle')
-                    .attr('cx', vertex.x)
-                    .attr('cy', vertex.y)
+                    .attr('cx', vertex.x ?? 0)
+                    .attr('cy', vertex.y ?? 0)
                     .attr('r', config.placeRadius - 0.5) // config.placeBorderSize) // TODO: user defined radius
                     .attr('class', `ocpnplace ${ot}`)
                     .attr('id', vertexId)
@@ -177,8 +177,8 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             }
 
             g.append('text')
-                .attr('x', vertex.x)
-                .attr('y', vertex.y)
+                .attr('x', vertex.x ?? 0)
+                .attr('y', vertex.y ?? 0)
                 .attr('text-anchor', 'middle')
                 .attr('alignment-baseline', 'middle')
                 .attr('font-size', config.placeRadius) // Adjust font size as needed
@@ -192,10 +192,10 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
         } else if (vertex.type === OCPNLayout.TRANSITION_TYPE) {
             const label = vertex.silent ? '𝜏' : vertex.label;
             let width = vertex.silent ? config.silentTransitionWidth : config.transitionWidth;
-            let ots = Array.from(vertex.adjacentObjectTypes);
+            let ots = vertex.adjacentObjectTypes ? Array.from(vertex.adjacentObjectTypes) : [];
             g.append('rect')
-                .attr('x', vertex.x - width / 2)
-                .attr('y', vertex.y - config.transitionHeight / 2)
+                .attr('x', (vertex.x ?? 0) - width / 2)
+                .attr('y', (vertex.y ?? 0) - config.transitionHeight / 2)
                 .attr('width', width)
                 .attr('height', config.transitionHeight)
                 .attr('fill', config.transitionFillColor)
@@ -207,8 +207,8 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
 
             // Append the text element with an initial font size
             const textElement = g.append('text')
-                .attr('x', vertex.x)
-                .attr('y', vertex.y)
+                .attr('x', vertex.x ?? 0)
+                .attr('y', vertex.y ?? 0)
                 .attr('text-anchor', 'middle')
                 .attr('alignment-baseline', 'middle')
                 .attr('font-size', '20px') // Initial font size
@@ -241,8 +241,8 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             adjustFontSize();
         } else {
             g.append('circle')
-                .attr('cx', vertex.x)
-                .attr('cy', vertex.y)
+                .attr('cx', vertex.x ?? 0)
+                .attr('cy', vertex.y ?? 0)
                 .attr('r', config.placeRadius / 2)
                 .attr('fill', 'red')
                 .attr('id', vertexId)
@@ -250,8 +250,8 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('text-anchor', 'middle');
 
             g.append('text')
-                .attr('x', vertex.x)
-                .attr('y', vertex.y)
+                .attr('x', vertex.x ?? 0)
+                .attr('y', vertex.y ?? 0)
                 .attr('text-anchor', 'middle')
                 .attr('alignment-baseline', 'middle')
                 .attr('font-size', config.placeRadius)
@@ -275,68 +275,68 @@ function getArcPath(arcId: string, layout: OCPNLayout, config: OCPNConfig): stri
     if (source.type === OCPNLayout.PLACE_TYPE) {
         // Update the upper adjustment for the dummy.
         upperDummyAdjust = config.placeRadius;
-        let center = new Point2D(source.x, source.y);
-        let p1 = new Point2D(source.x, source.y);
-        let p2 = new Point2D(target.x, target.y);
+        let center = new Point2D(source.x ?? 0, source.y ?? 0);
+        let p1 = new Point2D(source.x ?? 0, source.y ?? 0);
+        let p2 = new Point2D(target.x ?? 0, target.y ?? 0);
         if (arc.path.length > 0) {
             let startDummy = layout.vertices[arc.path[0]];
-            p2 = new Point2D(startDummy.x, startDummy.y - upperDummyAdjust);
+            p2 = new Point2D(startDummy.x ?? 0, (startDummy.y ?? 0) - upperDummyAdjust);
         }
         // Construct the line.
-        sourcePoint = getPlaceIntersectionPoint(center, config.placeRadius * 0.8, p1, p2, source.x, source.y + config.placeRadius); // * 0.8 to not see white space between circle and line around the connection point.
+        sourcePoint = getPlaceIntersectionPoint(center, config.placeRadius * 0.8, p1, p2, source.x ?? 0, (source.y ?? 0) + config.placeRadius); // * 0.8 to not see white space between circle and line around the connection point.
     } else {
         // Update the upper adjustment for the dummy.
         upperDummyAdjust = config.transitionHeight / 2;
-        let p1 = new Point2D(source.x, source.y);
-        let p2 = new Point2D(target.x, target.y);
+        let p1 = new Point2D(source.x ?? 0, source.y ?? 0);
+        let p2 = new Point2D(target.x ?? 0, target.y ?? 0);
         if (arc.path.length > 0) {
             let startDummy = layout.vertices[arc.path[0]];
-            p2 = new Point2D(startDummy.x, startDummy.y - upperDummyAdjust);
+            p2 = new Point2D(startDummy.x ?? 0, (startDummy.y ?? 0) - upperDummyAdjust);
         }
         const halfWidth = (source.silent ? config.silentTransitionWidth : config.transitionWidth) / 2;
         const halfHeight = config.transitionHeight / 2;
-        const topLeft = new Point2D(source.x - halfWidth * 0.9, source.y - halfHeight * 0.9);
-        const bottomRight = new Point2D(source.x + halfWidth * 0.8, source.y + halfHeight * 0.8); // * 0.8 to not see white space between rectangle and line around the connection point.
+        const topLeft = new Point2D((source.x ?? 0) - halfWidth * 0.9, (source.y ?? 0) - halfHeight * 0.9);
+        const bottomRight = new Point2D((source.x ?? 0) + halfWidth * 0.8, (source.y ?? 0) + halfHeight * 0.8); // * 0.8 to not see white space between rectangle and line around the connection point.
         // Construct the rectangle.
-        sourcePoint = getTransitionIntersectionPoint(p1, p2, topLeft, bottomRight, source.x, source.y + halfHeight);
+        sourcePoint = getTransitionIntersectionPoint(p1, p2, topLeft, bottomRight, source.x ?? 0, (source.y ?? 0) + halfHeight);
     }
     path += `M ${sourcePoint.x} ${sourcePoint.y}`;
     var targetPoint = undefined;
     if (target.type === OCPNLayout.PLACE_TYPE) {
         // Update the lower adjustment for the dummy.
         lowerDummyAdjust = config.placeRadius;
-        let center = new Point2D(target.x, target.y);
-        let p1 = new Point2D(source.x, source.y);
+        let center = new Point2D(target.x ?? 0, target.y ?? 0);
+        let p1 = new Point2D(source.x ?? 0, source.y ?? 0);
         if (arc.path.length > 0) {
             let endDummy = layout.vertices[arc.path[arc.path.length - 1]];
-            p1 = new Point2D(endDummy.x, endDummy.y + lowerDummyAdjust);
+            p1 = new Point2D(endDummy.x ?? 0, (endDummy.y ?? 0) + lowerDummyAdjust);
         }
-        let p2 = new Point2D(target.x, target.y);
+        let p2 = new Point2D(target.x ?? 0, target.y ?? 0);
         // Construct the line.
-        targetPoint = getPlaceIntersectionPoint(center, config.placeRadius, p1, p2, target.x, target.y - config.placeRadius);
+        targetPoint = getPlaceIntersectionPoint(center, config.placeRadius, p1, p2, target.x ?? 0, (target.y ?? 0) - config.placeRadius);
     } else {
         // Update the lower adjustment for the dummy.
         lowerDummyAdjust = config.transitionHeight / 2;
-        let p1 = new Point2D(source.x, source.y);
+        let p1 = new Point2D(source.x ?? 0, source.y ?? 0);
         if (arc.path.length > 0) {
             let endDummy = layout.vertices[arc.path[arc.path.length - 1]];
-            p1 = new Point2D(endDummy.x, endDummy.y + lowerDummyAdjust);
+            p1 = new Point2D(endDummy.x ?? 0, (endDummy.y ?? 0) + lowerDummyAdjust);
         }
-        let p2 = new Point2D(target.x, target.y);
+        let p2 = new Point2D(target.x ?? 0, target.y ?? 0);
         const halfWidth = (target.silent ? config.silentTransitionWidth : config.transitionWidth) / 2;
         const halfHeight = config.transitionHeight / 2;
-        const topLeft = new Point2D(target.x - halfWidth, target.y - halfHeight);
-        const bottomRight = new Point2D(target.x + halfWidth, target.y + halfHeight);
+        const topLeft = new Point2D((target.x ?? 0) - halfWidth, (target.y ?? 0) - halfHeight);
+        const bottomRight = new Point2D((target.x ?? 0) + halfWidth, (target.y ?? 0) + halfHeight);
         // Construct the rectangle.
-        targetPoint = getTransitionIntersectionPoint(p1, p2, topLeft, bottomRight, target.x, target.y - halfHeight);
+        targetPoint = getTransitionIntersectionPoint(p1, p2, topLeft, bottomRight, target.x ?? 0, (target.y ?? 0) - halfHeight);
     }
     // If the arc has path points, add them to the path.
     for (let i = 0; i < arc.path.length; i++) {
         let dummy = layout.vertices[arc.path[i]];
-        if (i === 0) {
+        if (i === 0 && dummy.y) {
             dummy.y -= upperDummyAdjust;
         }
-        if (i === arc.path.length - 1) {
+        if (i === arc.path.length - 1 && dummy.y) {
             dummy.y += lowerDummyAdjust
         }
         path += ` L ${dummy.x}, ${dummy.y}`;
