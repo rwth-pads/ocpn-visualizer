@@ -176,7 +176,7 @@ function modifiedBarycenterOrder(ocpn: ObjectCentricPetriNet, layering: string[]
     // Equal barycenter values are sorted by the original order.
     let orderedLayer = layering[layer].sort((a, b) => {
         const diff = adjustedBarycenters[a] - adjustedBarycenters[b];
-        return diff !== 0 ? diff : a.localeCompare(b);
+        return diff !== 0 ? diff : layering[layer].indexOf(a) - layering[layer].indexOf(b);
     });
     // console.log(barycenters);
     return orderedLayer;
