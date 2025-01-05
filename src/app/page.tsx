@@ -20,6 +20,7 @@ import sugiyama from './utils/sugiyama/sugiyama';
 const COLORS_ARRAY = ['#99cefd', '#f5a800', '#002e57', 'green', 'purple', 'orange', 'yellow', 'pink', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'navy', 'olive', 'silver', 'aqua', 'fuchsia', 'gray', 'black'];
 
 const COLORS_ARRAY2: string[] = [
+    '#99cefd', '#f5a800', '#002e57',
     "#FF5733", // Vibrant Red-Orange
     "#4285F4", // Modern Blue (Google Blue)
     "#34A853", // Fresh Green
