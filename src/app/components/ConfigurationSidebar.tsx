@@ -199,7 +199,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
 
     const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const objectType = e.target.value;
-        const color = userConfig.typeColorMapping.get(objectType) || '#000000';
+        const color = userConfig.typeColorMapping.get(objectType.replace(' ', '')) || '#000000';
         setCurrentTypeKey(objectType);
         setCurrentTypeColor(color);
         console.log(`${objectType}: ${color}`);
@@ -272,7 +272,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                                 <input
                                     type='color'
                                     className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
-                                    value={currentTypeColor ?? userConfig.typeColorMapping.get(userConfig.includedObjectTypes[0])}
+                                    value={currentTypeColor ?? userConfig.typeColorMapping.get(userConfig.includedObjectTypes[0].replace(' ', ''))}
                                     onChange={handleColorMappingChange}
                                 />
                             </ConfigOption>

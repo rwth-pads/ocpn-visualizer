@@ -145,7 +145,7 @@ const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode, current
                                     key={index}
                                     className={`custom-option${mode} ${selectedObjectTypes.includes(option) ? 'active' : ''}`}
                                     onClick={() => handleOptionToggle(option)}
-                                    style={{ color: userConfig.typeColorMapping.get(option)}}
+                                    style={{ color: userConfig.typeColorMapping.get(option.replace(' ', ''))}}
                                 >
                                     <input
                                         type="checkbox"

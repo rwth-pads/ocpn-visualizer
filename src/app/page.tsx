@@ -19,6 +19,29 @@ import sugiyama from './utils/sugiyama/sugiyama';
 
 const COLORS_ARRAY = ['#99cefd', '#f5a800', '#002e57', 'green', 'purple', 'orange', 'yellow', 'pink', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'navy', 'olive', 'silver', 'aqua', 'fuchsia', 'gray', 'black'];
 
+const COLORS_ARRAY2: string[] = [
+    "#FF5733", // Vibrant Red-Orange
+    "#4285F4", // Modern Blue (Google Blue)
+    "#34A853", // Fresh Green
+    "#F4B400", // Warm Yellow
+    "#DB4437", // Strong Red
+    "#673AB7", // Deep Purple
+    "#00ACC1", // Cool Cyan
+    "#F06292", // Soft Pink
+    "#E64A19", // Earthy Orange
+    "#8BC34A", // Lime Green
+    "#9C27B0", // Rich Violet
+    "#FF9800", // Bright Orange
+    "#3F51B5", // Classic Indigo
+    "#00BCD4", // Bright Teal
+    "#C2185B", // Bold Magenta
+    "#FFD600", // Dazzling Yellow
+    "#4CAF50", // Standard Green
+    "#1976D2", // Deep Blue
+    "#D81B60", // Vibrant Pink
+    "#795548", // Modern Brown
+];
+
 const Home = () => {
     const [darkMode, setDarkMode] = useState(true);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -160,7 +183,8 @@ const Home = () => {
                             // Get the type to color mapping from the first imported OCPN.
                             currentConfig.typeColorMapping = new Map<string, string>();
                             currentConfig.includedObjectTypes.forEach((ot, index) => {
-                                currentConfig.typeColorMapping.set(ot, COLORS_ARRAY[index % COLORS_ARRAY.length]);
+                                let correctOT = ot.replace(' ', '');
+                                currentConfig.typeColorMapping.set(correctOT, COLORS_ARRAY2[index % COLORS_ARRAY2.length]);
                             });
                         }
                     } else {
@@ -221,7 +245,8 @@ const Home = () => {
         // type to color mapping
         currentConfig.typeColorMapping = new Map<string, string>();
         currentConfig.includedObjectTypes.forEach((ot, index) => {
-            currentConfig.typeColorMapping.set(ot, COLORS_ARRAY[index % COLORS_ARRAY.length]);
+            let correctOT = ot.replace(' ', '');
+            currentConfig.typeColorMapping.set(correctOT, COLORS_ARRAY2[index % COLORS_ARRAY2.length]);
         });
         setUserConfig(currentConfig);
     };

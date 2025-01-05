@@ -121,7 +121,7 @@ const DraggableListButton: React.FC<DraggableListButtonProps> = ({ buttonLabel, 
                     <li
                         key={index}
                         className={`draggable-list-item${mode}`}
-                        style={{ backgroundColor: userConfig.typeColorMapping.get(objectType) }}
+                        style={{ backgroundColor: userConfig.typeColorMapping.get(objectType.replace(' ', '')) }}
                         draggable>
                         {objectType}
                     </li>

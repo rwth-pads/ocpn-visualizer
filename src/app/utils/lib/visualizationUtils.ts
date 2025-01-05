@@ -130,11 +130,11 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
     // Draw the places and transitions.
     for (const vertexId in layout.vertices) {
         const vertex = layout.vertices[vertexId];
-        const ot = vertex.objectType ? vertex.objectType.replace(' ', '') : '';
         if (vertex.type === OCPNLayout.PLACE_TYPE) {
             // TODO: if checkbox 'indicate sources and sinks' is checked, then add a source/sink indicator
             // otherwise, just draw a circle with fill color.
-            const fill = config.typeColorMapping.get(vertex.objectType ?? '') ?? config.defaultPlaceColor;
+            const ot = vertex.objectType ? vertex.objectType.replace(' ', '') : '';
+            const fill = config.typeColorMapping.get(ot) ?? config.defaultPlaceColor;
             const source = config.sources.includes(vertexId);
             const sink = config.sinks.includes(vertexId);
             g.append('circle')

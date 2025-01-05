@@ -127,7 +127,7 @@ const LegendComponent: React.FC<LegendComponentProps> = ({ darkMode, userConfig,
                             key={objectType}
                             className={`legend-item${darkMode ? ' dark' : ' light'}${activeObjectTypes.has(objectType) ? ' active' : ''}`}
                             onClick={() => handleLegendItemClick(objectType)}
-                            style={{ color: userConfig.typeColorMapping.get(objectType) }}
+                            style={{ color: userConfig.typeColorMapping.get(objectType.replace(' ', '')) }}
                         >
                             {objectType}
                         </div>
