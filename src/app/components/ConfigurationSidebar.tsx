@@ -498,16 +498,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onBlur={handleColorBlur('svgBackgroundColor')}
                         />
                     </ConfigOption>
-
-                    <ConfigOption label="Default place color" darkMode={darkMode}>
-                        <input
-                            type='color'
-                            className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
-                            value={defaultPlaceColor}
-                            onChange={handleColorChange('defaultPlaceColor')}
-                            onBlur={handleColorBlur('defaultPlaceColor')}
-                        />
-                    </ConfigOption>
                     <ConfigOption label="Transition color" darkMode={darkMode}>
                         <input
                             type='color'
@@ -535,15 +525,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onBlur={handleColorBlur('transitionTextColor')}
                         />
                     </ConfigOption>
-                    <ConfigOption label="Arc default color" darkMode={darkMode}>
-                        <input
-                            type='color'
-                            className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
-                            value={arcDefaultColor}
-                            onChange={handleColorChange('arcDefaultColor')}
-                            onBlur={handleColorBlur('arcDefaultColor')}
-                        />
-                    </ConfigOption>
                     <ConfigOption label="Variable arc indicator color" darkMode={darkMode}>
                         <input
                             type='color'
@@ -551,6 +532,24 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             value={variableArcIndicatorColor}
                             onChange={handleColorChange('variableArcIndicatorColor')}
                             onBlur={handleColorBlur('variableArcIndicatorColor')}
+                        />
+                    </ConfigOption>
+                    <ConfigOption label="Default place color" darkMode={darkMode}>
+                        <input
+                            type='color'
+                            className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
+                            value={defaultPlaceColor}
+                            onChange={handleColorChange('defaultPlaceColor')}
+                            onBlur={handleColorBlur('defaultPlaceColor')}
+                        />
+                    </ConfigOption>
+                    <ConfigOption label="Arc default color" darkMode={darkMode}>
+                        <input
+                            type='color'
+                            className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
+                            value={arcDefaultColor}
+                            onChange={handleColorChange('arcDefaultColor')}
+                            onBlur={handleColorBlur('arcDefaultColor')}
                         />
                     </ConfigOption>
 
