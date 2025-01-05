@@ -59,11 +59,14 @@
     margin: 0;
 }
 
-.sidebar-category.open {} /* The open refers to the content beneath the title and toggle icon. */
+.sidebar-category.open {
+} /* The open refers to the content beneath the title and toggle icon. */
 
-.sidebar-category.dark {}
+.sidebar-category.dark {
+}
 
-.sidebar-category.light {}
+.sidebar-category.light {
+}
 
 .sidebar-category-title {
     display: grid;
@@ -107,9 +110,24 @@
     padding-bottom: 2%;
 }
 
-.sidebar-category-content.dark {}
+.sidebar-category-content.dark {
+}
 
-.sidebar-category-content.light {}
+.sidebar-category-content.light {
+}
+
+.sub-category-heading {
+    display: flex;
+    width: 100%;
+    margin-top: 20px;
+    padding: 6px 0;
+    font-size: 1.1em;
+    font-weight: bold;
+    justify-content: center;
+}
+.sub-category-heading.dark {
+    border: 2px solid #4a4a4a;
+}
 
 /* The following classes are used to style the configuration options. */
 .custom-configuration-select {
@@ -125,8 +143,10 @@
     color: rgb(34, 34, 110);
     background-color: aliceblue;
 }
-.custom-configuration-select.dark:hover {}
-.custom-configuration-select.light:hover {}
+.custom-configuration-select.dark:hover {
+}
+.custom-configuration-select.light:hover {
+}
 
 .custom-configuration-label {
     padding-right: 2%;
@@ -138,23 +158,92 @@
 
 /* Range styling */
 .custom-range-input {
-
+    width: 100%;
+    height: 15px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    border-radius: 8px;
 }
+
 .custom-range-input.dark {
-
+    background-color: rgb(20, 20, 20);
 }
-.custom-range-input.light {
 
+.custom-range-input.light {
+    background-color: rgb(204, 204, 204);
+}
+
+.custom-range-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    cursor: pointer;
 }
 .custom-range-input.dark::-webkit-slider-thumb {
-
+    background: #c57a25;
 }
 .custom-range-input.light::-webkit-slider-thumb {
-
+    background: #4e9b4e;
 }
-.custom-range-input.dark::-webkit-slider-runnable-track {
 
+.custom-configuration-button.dark {
+    border: 1px solid #4a4a4a;
+    margin: 10px 0;
+    padding: 6px 14px;
+    border-radius: 8px;
+    background-color: #1b1b1b;
 }
-.custom-range-input.light::-webkit-slider-runnable-track {
+.custom-configuration-button.dark:hover {
+    border: 1px solid #e5e7eb;
+}
+.custom-configuration-button.dark:active {
+    background-color: #2b2929;
+}
+.custom-configuration-button.light {
+    border: 1px solid #e5e7eb;
+    margin: 10px 0;
+    padding: 6px 14px;
+    border-radius: 8px;
+    background-color: #f3f3f3;
+}
+.custom-configuration-button.light:hover {
+    border: 1px solid #e5e7eb;
+}
+.custom-configuration-button.light:active {
+    background-color: #afafaf;
+}
 
+.custom-configuration-select {
+    padding: 10px 14px;
+    margin-right: 10px;
+}
+
+.custom-configuration-select.dark {
+    background-color: #212121;
+    border: solid 1px #4a4a4a;
+}
+.custom-configuration-select.dark:hover {
+    border: solid 1px #fff;
+}
+.custom-configuration-select.light {
+    background-color: #3e79aafd;
+    border: solid 1px darkgrey;
+}
+.custom-configuration-select.light:hover {
+    border: solid 1px #fff;
+}
+
+input[type="number"].custom-number-input.dark {
+    background-color: #1b1b1b;
+    border: 1px solid #4a4a4a;
+}
+input[type="number"].custom-number-input.light {
+    background-color: #f3f3f3;
+    border: 1px solid #e5e7eb;
+}
+input[type="number"].custom-number-input.dark:hover {
+    border: 1px solid #e5e7eb;
 }

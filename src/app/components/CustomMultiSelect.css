@@ -30,7 +30,10 @@
 .custom-select-box.dark {
     color: #fff;
     background-color: #1b1b1b;
-    border: 1px solid #ced4da;
+    border: 1px solid #4a4a4a;
+}
+.custom-select-box.dark:hover {
+    border: 1px solid #e5e7eb;
 }
 .custom-select-box.light {
     color: #000;
@@ -99,7 +102,7 @@
 .custom-select-options.dark {
     color: #fff;
     background-color: #1b1b1b;
-    border: 1px solid #ced4da;
+    border: 1px solid #4a4a4a;
 }
 .custom-select-options.light {
     color: #000;
@@ -113,7 +116,7 @@
 }
 .custom-option-search-tags.dark {
     background-color: #1a1919;
-    border: 1px solid #ced4da;
+    border: 1px solid #4a4a4a;
 }
 .custom-option-search-tags.light {
     background-color: #ffffff;

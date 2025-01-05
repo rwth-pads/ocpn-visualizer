@@ -340,14 +340,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleInputChange('maxBarycenterIterations', true)}
                         />
                     </ConfigOption>
-                    <ConfigOption label="Show alignment type" darkMode={darkMode}>
-                        <input
-                            type="checkbox"
-                            className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
-                            checked={seeAlignmentType}
-                            onChange={handleInputChange('seeAlignmentType', true)}
-                        />
-                    </ConfigOption>
                     <ConfigOption label="Alignment type" darkMode={darkMode}>
                         <select
                             className={`custom-configuration-select${darkMode ? ' dark' : ' light'}`}
@@ -360,19 +352,42 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             <option value="upLeft">Up Left</option>
                             <option value="upRight">Up Right</option>
                         </select>
+                        <input
+                            type="checkbox"
+                            className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
+                            checked={seeAlignmentType}
+                            onChange={handleInputChange('seeAlignmentType', true)}
+                        />
                     </ConfigOption>
                 </div>
             </ConfigurationCategory >
             <ConfigurationCategory title="Styling Configurations" darkMode={darkMode} categoryIndex={2}>
-                {/* Add subheadings: sizing, colors */}
                 <div style={{ paddingLeft: '4%' }}>
-                    <ConfigOption label="Background color" darkMode={darkMode}>
+
+                    <span className={`sub-category-heading${darkMode ? ' dark' : ' light'}`}>Sizes</span>
+
+                    <ConfigOption label="Layer separation" darkMode={darkMode}>
                         <input
-                            type='color'
-                            className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
-                            value={backgroundColor}
-                            onChange={handleColorChange('svgBackgroundColor')}
-                            onBlur={handleColorBlur('svgBackgroundColor')}
+                            type='range'
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
+                            min={3}
+                            max={40}
+                            value={layerSep}
+                            step={1}
+                            onChange={handleInputChange('layerSep')}
+                            onMouseUp={handleMouseUp('layerSep')}
+                        />
+                    </ConfigOption>
+                    <ConfigOption label="Vertex separation" darkMode={darkMode}>
+                        <input
+                            type='range'
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
+                            min={0}
+                            max={20}
+                            value={vertexSep}
+                            step={1}
+                            onChange={handleInputChange('vertexSep')}
+                            onMouseUp={handleMouseUp('vertexSep')}
                         />
                     </ConfigOption>
                     <ConfigOption label="Place radius" darkMode={darkMode}>
@@ -399,6 +414,30 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onMouseUp={handleMouseUp('transitionWidth')}
                         />
                     </ConfigOption>
+                    <ConfigOption label="Transition height" darkMode={darkMode}>
+                        <input
+                            type='range'
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
+                            min={5}
+                            max={20}
+                            value={transitionHeight}
+                            step={1}
+                            onChange={handleInputChange('transitionHeight')}
+                            onMouseUp={handleMouseUp('transitionHeight')}
+                        />
+                    </ConfigOption>
+                    <ConfigOption label="Transition border size" darkMode={darkMode}>
+                        <input
+                            type='range'
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
+                            min={0.1}
+                            max={2}
+                            value={transitionBorderSize}
+                            step={0.05}
+                            onChange={handleInputChange('transitionBorderSize')}
+                            onMouseUp={handleMouseUp('transitionBorderSize')}
+                        />
+                    </ConfigOption>
                     <ConfigOption label="Silent transition width" darkMode={darkMode}>
                         <input
                             type='range'
@@ -411,16 +450,28 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onMouseUp={handleMouseUp('silentTransitionWidth')}
                         />
                     </ConfigOption>
-                    <ConfigOption label="Transition height" darkMode={darkMode}>
+                    <ConfigOption label="Arc size" darkMode={darkMode}>
                         <input
                             type='range'
                             className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
-                            min={5}
-                            max={20}
-                            value={transitionHeight}
+                            min={0.1}
+                            max={5} // TODO: reset to 2
+                            step={0.05}
+                            value={arcSize}
+                            onChange={handleInputChange('arcSize')}
+                            onMouseUp={handleMouseUp('arcSize')}
+                        />
+                    </ConfigOption>
+                    <ConfigOption label="Variable arc indicator size" darkMode={darkMode}>
+                        <input
+                            type='range'
+                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
+                            min={1.1}
+                            max={10.1}
                             step={1}
-                            onChange={handleInputChange('transitionHeight')}
-                            onMouseUp={handleMouseUp('transitionHeight')}
+                            value={variableArcIndicatorSize}
+                            onChange={handleInputChange('variableArcIndicatorSize')}
+                            onMouseUp={handleMouseUp('variableArcIndicatorSize')}
                         />
                     </ConfigOption>
                     <ConfigOption label="Dummy size" darkMode={darkMode}>
@@ -435,30 +486,19 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onMouseUp={handleMouseUp('dummySize')}
                         />
                     </ConfigOption>
-                    <ConfigOption label="Layer separation" darkMode={darkMode}>
+
+                    <span className={`sub-category-heading${darkMode ? ' dark' : ' light'}`}>Colors</span>
+
+                    <ConfigOption label="Background color" darkMode={darkMode}>
                         <input
-                            type='range'
-                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
-                            min={3}
-                            max={40}
-                            value={layerSep}
-                            step={1}
-                            onChange={handleInputChange('layerSep')}
-                            onMouseUp={handleMouseUp('layerSep')}
+                            type='color'
+                            className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
+                            value={backgroundColor}
+                            onChange={handleColorChange('svgBackgroundColor')}
+                            onBlur={handleColorBlur('svgBackgroundColor')}
                         />
                     </ConfigOption>
-                    <ConfigOption label="Vertex separation" darkMode={darkMode}>
-                        <input
-                            type='range'
-                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
-                            min={0}
-                            max={20}
-                            value={vertexSep}
-                            step={1}
-                            onChange={handleInputChange('vertexSep')}
-                            onMouseUp={handleMouseUp('vertexSep')}
-                        />
-                    </ConfigOption>
+
                     <ConfigOption label="Default place color" darkMode={darkMode}>
                         <input
                             type='color'
@@ -495,18 +535,27 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onBlur={handleColorBlur('transitionTextColor')}
                         />
                     </ConfigOption>
-                    <ConfigOption label="Transition border size" darkMode={darkMode}>
+                    <ConfigOption label="Arc default color" darkMode={darkMode}>
                         <input
-                            type='range'
-                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
-                            min={0.1}
-                            max={2}
-                            value={transitionBorderSize}
-                            step={0.05}
-                            onChange={handleInputChange('transitionBorderSize')}
-                            onMouseUp={handleMouseUp('transitionBorderSize')}
+                            type='color'
+                            className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
+                            value={arcDefaultColor}
+                            onChange={handleColorChange('arcDefaultColor')}
+                            onBlur={handleColorBlur('arcDefaultColor')}
                         />
                     </ConfigOption>
+                    <ConfigOption label="Variable arc indicator color" darkMode={darkMode}>
+                        <input
+                            type='color'
+                            className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
+                            value={variableArcIndicatorColor}
+                            onChange={handleColorChange('variableArcIndicatorColor')}
+                            onBlur={handleColorBlur('variableArcIndicatorColor')}
+                        />
+                    </ConfigOption>
+
+                    <span className={`sub-category-heading${darkMode ? ' dark' : ' light'}`}>Other</span>
+
                     <ConfigOption label="Indicate arc weight" darkMode={darkMode}>
                         <input
                             type='checkbox'
@@ -521,27 +570,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
                             checked={indicateVariableArcs}
                             onChange={handleInputChange('indicateVariableArcs', true)}
-                        />
-                    </ConfigOption>
-                    <ConfigOption label="Arc size" darkMode={darkMode}>
-                        <input
-                            type='range'
-                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
-                            min={0.1}
-                            max={5} // TODO: reset to 2
-                            step={0.05}
-                            value={arcSize}
-                            onChange={handleInputChange('arcSize')}
-                            onMouseUp={handleMouseUp('arcSize')}
-                        />
-                    </ConfigOption>
-                    <ConfigOption label="Arc default color" darkMode={darkMode}>
-                        <input
-                            type='color'
-                            className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
-                            value={arcDefaultColor}
-                            onChange={handleColorChange('arcDefaultColor')}
-                            onBlur={handleColorBlur('arcDefaultColor')}
                         />
                     </ConfigOption>
                     <ConfigOption label="Hide labels at zoom factor" darkMode={darkMode}>
@@ -566,27 +594,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             value={highlightOpacity}
                             onChange={handleInputChange('highlightOpacity')}
                             onMouseUp={handleMouseUp('highlightOpacity')}
-                        />
-                    </ConfigOption>
-                    <ConfigOption label="Variable arc indicator color" darkMode={darkMode}>
-                        <input
-                            type='color'
-                            className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
-                            value={variableArcIndicatorColor}
-                            onChange={handleColorChange('variableArcIndicatorColor')}
-                            onBlur={handleColorBlur('variableArcIndicatorColor')}
-                        />
-                    </ConfigOption>
-                    <ConfigOption label="Variable arc indicator size" darkMode={darkMode}>
-                        <input
-                            type='range'
-                            className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
-                            min={1.1}
-                            max={10.1}
-                            step={1}
-                            value={variableArcIndicatorSize}
-                            onChange={handleInputChange('variableArcIndicatorSize')}
-                            onMouseUp={handleMouseUp('variableArcIndicatorSize')}
                         />
                     </ConfigOption>
                 </div>
