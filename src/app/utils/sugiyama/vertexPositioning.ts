@@ -215,6 +215,7 @@ function verticalAlignment(ocpn: ObjectCentricPetriNet, layering: string[][], po
             }
         }
     }
+
     return [root, align];
 }
 
@@ -264,13 +265,12 @@ function horizontalCompaction(
         for (let j = 0; j < layering[i].length; j++) {
             let v = layering[i][j];
             absX[v] = x[roots[v]];
-            if (shift[sink[roots[v]]] < Infinity && absX[v]) {
+            if (shift[sink[roots[v]]] < Infinity && absX[v] != undefined) {
                 absX[v] = absX[v] + shift[sink[roots[v]]];
             }
             xMax = Math.max(xMax, (absX[v] ?? 0));
         }
     }
-
     return [absX, xMax];
 }
 
@@ -353,7 +353,7 @@ function setCoordinates(ocpn: ObjectCentricPetriNet, layering: string[][], layou
         return;
     }
     console.log("Setting coordinates...");
-    const areaScaling = Math.max(layering.length / 10, 1);
+    // const areaScaling = Math.max(layering.length / 10, 1);
     const layerHalfs = [];
     for (let i = 0; i < layering.length; i++) {
         let layerSize = 0;
@@ -387,11 +387,9 @@ function setCoordinates(ocpn: ObjectCentricPetriNet, layering: string[][], layou
             const medianCoord = (candidateCoords[1] + candidateCoords[2]) / 2;
             // Set the vertex coordinates.
             ocpn.layout.vertices[v].x = medianCoord + config.borderPadding;
-            if (layerHalf) {
-                ocpn.layout.vertices[v].y = curSize + layerHalf.size;
-            }
+            ocpn.layout.vertices[v].y = curSize + layerHalf.size;
         }
-        curSize = curSize + layerHalf.size * 2 + (config.layerSep * areaScaling);
+        curSize = curSize + layerHalf.size * 2 + (config.layerSep); // * areaScaling);
     }
 }
 
