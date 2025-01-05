@@ -176,16 +176,16 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                     .attr('fill', 'white');
             }
 
-            g.append('text')
-                .attr('x', vertex.x ?? 0)
-                .attr('y', vertex.y ?? 0)
-                .attr('text-anchor', 'middle')
-                .attr('alignment-baseline', 'middle')
-                .attr('font-size', config.placeRadius) // Adjust font size as needed
-                .attr('fill', config.transitionTextColor)
-                .attr('id', vertexId)
-                .attr('class', `ocpnplace ${ot} label`)
-                .text(vertexId);
+            // g.append('text')
+            //     .attr('x', vertex.x ?? 0)
+            //     .attr('y', vertex.y ?? 0)
+            //     .attr('text-anchor', 'middle')
+            //     .attr('alignment-baseline', 'middle')
+            //     .attr('font-size', config.placeRadius) // Adjust font size as needed
+            //     .attr('fill', config.transitionTextColor)
+            //     .attr('id', vertexId)
+            //     .attr('class', `ocpnplace ${ot} label`)
+            //     .text(vertexId);
 
 
 
@@ -213,7 +213,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('alignment-baseline', 'middle')
                 .attr('font-size', '20px') // Initial font size
                 .attr('fill', config.transitionTextColor)
-                .text(vertexId) // TODO: reset to label
+                .text(label)
                 .attr('user-select', 'none')
                 .attr('class', 'ocpntransition label')
                 .attr('adjacentObjectTypes', ots.join(' '))
@@ -240,24 +240,24 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
 
             adjustFontSize();
         }
-        else { // Dummy vertices: just for debugging.
-            g.append('circle')
-                .attr('cx', vertex.x ?? 0)
-                .attr('cy', vertex.y ?? 0)
-                .attr('r', config.placeRadius / 2)
-                .attr('fill', 'red')
-                .attr('id', vertexId)
-                .attr('class', 'ocpnvertex')
-                .attr('text-anchor', 'middle');
+        // else { // Dummy vertices: just for debugging.
+        //     g.append('circle')
+        //         .attr('cx', vertex.x ?? 0)
+        //         .attr('cy', vertex.y ?? 0)
+        //         .attr('r', config.placeRadius / 2)
+        //         .attr('fill', 'red')
+        //         .attr('id', vertexId)
+        //         .attr('class', 'ocpnvertex')
+        //         .attr('text-anchor', 'middle');
 
-            g.append('text')
-                .attr('x', vertex.x ?? 0)
-                .attr('y', vertex.y ?? 0)
-                .attr('text-anchor', 'middle')
-                .attr('alignment-baseline', 'middle')
-                .attr('font-size', config.placeRadius)
-                .text(vertexId);
-        }
+        //     g.append('text')
+        //         .attr('x', vertex.x ?? 0)
+        //         .attr('y', vertex.y ?? 0)
+        //         .attr('text-anchor', 'middle')
+        //         .attr('alignment-baseline', 'middle')
+        //         .attr('font-size', config.placeRadius)
+        //         .text(vertexId);
+        // }
     }
     console.timeEnd("Visualize OCPN");
     return svg;
