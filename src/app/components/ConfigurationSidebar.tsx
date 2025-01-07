@@ -232,33 +232,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                                 currentOCPN={currentOCPN}
                                 userConfig={userConfig}
                             />
-                            {/* one select for object types + transition, one select which vertex -> highlict hovered vertex */}
-                            <ConfigOption label="Adjust initial order" darkMode={darkMode}>
-                                <DraggableListButton
-                                    buttonLabel="Drag and drop to reorder"
-                                    darkMode={darkMode}
-                                    userConfig={userConfig}
-                                />
-                            </ConfigOption>
-                            <ConfigOption label="Sources and sinks" darkMode={darkMode}>
-                                Right-click places to add / remove sources and sinks. {/* See ...\Components\D3\index.html as example. */}
-                                <br />
-                                <button
-                                    onClick={() => { console.log("TODO: Reset sources and sinks"); }}
-                                    className={`custom-configuration-button${darkMode ? ' dark' : ' light'}`}
-                                >
-                                    Reset
-                                </button>
-                            </ConfigOption>
-                            <ConfigOption label="Indicate sources and sinks" darkMode={darkMode}>
-                                <input
-                                    type='checkbox'
-                                    className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
-                                    checked={indicateSourcesSinks}
-                                    onChange={handleInputChange('indicateSourcesSinks', true)}
-                                />
-                            </ConfigOption>
-                            {/* TODO: update based on included object type selection */}
                             <ConfigOption label="Type to color mapping" darkMode={darkMode}>
                                 <select
                                     className={`custom-configuration-select${darkMode ? ' dark' : ' light'}`}
@@ -275,6 +248,23 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                                     value={currentTypeColor ?? userConfig.typeColorMapping.get(userConfig.includedObjectTypes[0].replace(' ', ''))}
                                     onChange={handleColorMappingChange}
                                 />
+                            </ConfigOption>
+                            <ConfigOption label="Adjust initial order" darkMode={darkMode}>
+                                <DraggableListButton
+                                    buttonLabel="Drag and drop to reorder"
+                                    darkMode={darkMode}
+                                    userConfig={userConfig}
+                                />
+                            </ConfigOption>
+                            <ConfigOption label="Sources and sinks" darkMode={darkMode}>
+                                Right-click places to add / remove sources and sinks. {/* See ...\Components\D3\index.html as example. */}
+                                <br />
+                                <button
+                                    onClick={() => { console.log("TODO: Reset sources and sinks"); }}
+                                    className={`custom-configuration-button${darkMode ? ' dark' : ' light'}`}
+                                >
+                                    Reset
+                                </button>
                             </ConfigOption>
                         </>
                     ) : (
@@ -555,6 +545,14 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
 
                     <span className={`sub-category-heading${darkMode ? ' dark' : ' light'}`}>Other</span>
 
+                    <ConfigOption label="Indicate sources and sinks" darkMode={darkMode}>
+                        <input
+                            type='checkbox'
+                            className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
+                            checked={indicateSourcesSinks}
+                            onChange={handleInputChange('indicateSourcesSinks', true)}
+                        />
+                    </ConfigOption>
                     <ConfigOption label="Indicate arc weight" darkMode={darkMode}>
                         <input
                             type='checkbox'
