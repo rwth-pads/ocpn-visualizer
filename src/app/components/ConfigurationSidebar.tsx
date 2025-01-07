@@ -61,24 +61,24 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         setCurrentHistoryIndex(0);
     }
 
-    const addHistoryEntry = (attribute: keyof OCPNConfig) => {
-        const description = `Changed ${attribute} to ${userConfig[attribute]}`;
-        const newHistory = [...configHistory.slice(0, currentHistoryIndex + 1), { config: { ...userConfig }, description }];
-        setConfigHistory(newHistory);
-        setCurrentHistoryIndex(newHistory.length - 1);
-    }
+    // const addHistoryEntry = (attribute: keyof OCPNConfig) => {
+    //     const description = `Changed ${attribute} to ${userConfig[attribute]}`;
+    //     const newHistory = [...configHistory.slice(0, currentHistoryIndex + 1), { config: { ...userConfig }, description }];
+    //     setConfigHistory(newHistory);
+    //     setCurrentHistoryIndex(newHistory.length - 1);
+    // }
 
     const setUserConfig: SetUserConfig = (value, attribute) => {
         userConfig[attribute] = value;
-        addHistoryEntry(attribute);
+        // addHistoryEntry(attribute);
     }
 
-    const restoreConfig = (config: OCPNConfig, index: number) => {
-        Object.keys(config).forEach((key) => {
-            handleConfigChange(key as keyof OCPNConfig, config[key as keyof OCPNConfig], false);
-        });
-        setCurrentHistoryIndex(index);
-    }
+    // const restoreConfig = (config: OCPNConfig, index: number) => {
+    //     Object.keys(config).forEach((key) => {
+    //         handleConfigChange(key as keyof OCPNConfig, config[key as keyof OCPNConfig], false);
+    //     });
+    //     setCurrentHistoryIndex(index);
+    // }
 
     const handleConfigChange = (attribute: keyof OCPNConfig, value: any, change = true) => {
         switch (attribute) {
@@ -211,7 +211,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         userConfig.typeColorMapping.set(currentTypeKey, color);
         console.log(`${currentTypeKey}: ${color}`);
     }
-    // console.log("Sidebar Init, ", userConfig);
+
     const [currentTypeKey, setCurrentTypeKey] = useState(userConfig.includedObjectTypes[0]);
     const [currentTypeColor, setCurrentTypeColor] = useState(userConfig.typeColorMapping.get(currentTypeKey));
 
@@ -597,10 +597,9 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     </ConfigOption>
                 </div>
             </ConfigurationCategory>
-            <ConfigurationCategory title="History" darkMode={darkMode} categoryIndex={3}>
+            {/* <ConfigurationCategory title="History" darkMode={darkMode} categoryIndex={3}>
                 <div style={{ paddingLeft: '4%' }}>
                     <div>
-                        {/* TODO style this. */}
                         <button onClick={clearHistory}>Clear History</button>
                         {configHistory.map((logEntry, index) => (
                             <div key={index} style={{ color: index === currentHistoryIndex ? 'red' : 'inherit' }}>
@@ -609,7 +608,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                         ))}
                     </div>
                 </div>
-            </ConfigurationCategory>
+            </ConfigurationCategory> */}
         </div >
     );
 }
