@@ -18,7 +18,6 @@ function positionVertices(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
     console.log("Computing the four alignments...");
     for (const verticalDir of [0, 1]) { // 0: down, 1: up
         for (const horizontalDir of [0, 1]) { // 0: left, 1: right
-            // console.log(`${verticalDir == 0 ? "Down" : "Up"} - ${horizontalDir == 0 ? "Leftmost" : "Rightmost"}`);
             // Reverse the outer and inner layers depending on the directions.
             let [currentLayering, pos] = transformLayering(clone2DArray(ocpn.layout.layering), verticalDir, horizontalDir);
 
@@ -307,12 +306,14 @@ function placeBlock(
                 }
                 if (sink[v] != sink[u]) {
                     // Compute the seperation based on vertexSep and the type of the vertex.
-                    let delta = config.vertexSep + Math.max(config.direction == "TB" ? config.transitionWidth : config.transitionHeight, config.placeRadius * 2);
-                    shift[sink[u]] = Math.min(shift[sink[u]], x[v] - (x[u] ?? 0) - delta); // TODO config
+                    let transitionWidthMax = config.transitionWidth < config.silentTransitionWidth ? config.silentTransitionWidth : config.transitionWidth;
+                    let delta = config.vertexSep + Math.max(config.direction == "TB" ? transitionWidthMax : config.transitionHeight, config.placeRadius * 2);
+                    shift[sink[u]] = Math.min(shift[sink[u]], x[v] - (x[u] ?? 0) - delta);
                 } else {
-                    let delta = config.vertexSep + Math.max(config.direction == "TB" ? config.transitionWidth : config.transitionHeight, config.placeRadius * 2);
+                    let transitionWidthMax = config.transitionWidth < config.silentTransitionWidth ? config.silentTransitionWidth : config.transitionWidth;
+                    let delta = config.vertexSep + Math.max(config.direction == "TB" ? transitionWidthMax : config.transitionHeight, config.placeRadius * 2);
                     // Maximum of own x and x of predecessor + minimum vertex separation.
-                    x[v] = Math.max(x[v], (x[u] ?? 0) + delta); // TODO config
+                    x[v] = Math.max(x[v], (x[u] ?? 0) + delta);
                 }
             }
             w = aligns[w];
@@ -353,7 +354,6 @@ function setCoordinates(ocpn: ObjectCentricPetriNet, layering: string[][], layou
         return;
     }
     console.log("Setting coordinates...");
-    // const areaScaling = Math.max(layering.length / 10, 1);
     const layerHalfs = [];
     for (let i = 0; i < layering.length; i++) {
         let layerSize = 0;
@@ -366,12 +366,14 @@ function setCoordinates(ocpn: ObjectCentricPetriNet, layering: string[][], layou
                 break; // Layer either contains only places or only transitions (+ dummies for both).
             } else if (type == OCPNLayout.TRANSITION_TYPE) {
                 // TODO implement custom widths based on label length.
-                let curSize = config.direction == "TB" ? config.transitionHeight / 2 : config.transitionWidth / 2;
+                let transitionWidthMax = config.transitionWidth < config.silentTransitionWidth ? config.silentTransitionWidth : config.transitionWidth;
+
+                let curSize = config.direction == "TB" ? transitionWidthMax / 2 : config.transitionWidth / 2;
                 layerSize = Math.max(layerSize, curSize);
             }
         }
         layerHalfs.push({ layer: i, size: layerSize });
-        ocpn.layout.layerSizes.push({ layer: i, size: layerSize * 2 }); // TODO: to adjust the y coordinate of the lower dummy vertices to the bottom of the layer.
+        ocpn.layout.layerSizes.push({ layer: i, size: layerSize * 2 });
     }
 
     var curSize = config.borderPadding;
@@ -385,9 +387,12 @@ function setCoordinates(ocpn: ObjectCentricPetriNet, layering: string[][], layou
             const candidateCoords = layouts.map(layout => layout[v]).filter((coord): coord is number => coord !== undefined).sort((a, b) => a - b);
             // Compute the average median of the four candidate coordinates.
             const medianCoord = (candidateCoords[1] + candidateCoords[2]) / 2;
+            // Differentiate between top-bottom and left-right direction.
+            let thisX = config.direction == "TB" ? medianCoord + config.borderPadding : curSize + layerHalf.size;
+            let thisY = config.direction == "TB" ? curSize + layerHalf.size : medianCoord + config.borderPadding;
             // Set the vertex coordinates.
-            ocpn.layout.vertices[v].x = medianCoord + config.borderPadding;
-            ocpn.layout.vertices[v].y = curSize + layerHalf.size;
+            ocpn.layout.vertices[v].x = thisX;
+            ocpn.layout.vertices[v].y = thisY;
         }
         curSize = curSize + layerHalf.size * 2 + (config.layerSep); // * areaScaling);
     }

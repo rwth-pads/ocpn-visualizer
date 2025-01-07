@@ -27,6 +27,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
     for (const arcId in layout.arcs) {
         const arc = layout.arcs[arcId];
         var path = getArcPath(arcId, layout, config);
+        console.log(path);
         var ot = arc.objectType ? arc.objectType.replace(' ', '') : '';
         var color = config.typeColorMapping.get(ot) ?? config.arcDefaultColor;
         var strokeWidth = config.arcSize * (config.indicateArcWeight ? (arc.weight ?? 1) : 1);
@@ -268,30 +269,24 @@ function getArcPath(arcId: string, layout: OCPNLayout, config: OCPNConfig): stri
     var arc = layout.arcs[arcId];
     var source = layout.vertices[arc.source];
     var target = layout.vertices[arc.target];
-    let upperDummyAdjust = 0;
-    let lowerDummyAdjust = 0;
 
     var sourcePoint = undefined;
     if (source.type === OCPNLayout.PLACE_TYPE) {
-        // Update the upper adjustment for the dummy.
-        upperDummyAdjust = config.placeRadius;
         let center = new Point2D(source.x ?? 0, source.y ?? 0);
         let p1 = new Point2D(source.x ?? 0, source.y ?? 0);
         let p2 = new Point2D(target.x ?? 0, target.y ?? 0);
         if (arc.path.length > 0) {
             let startDummy = layout.vertices[arc.path[0]];
-            p2 = new Point2D(startDummy.x ?? 0, (startDummy.y ?? 0) - upperDummyAdjust);
+            p2 = new Point2D(startDummy.x ?? 0, (startDummy.y ?? 0));
         }
         // Construct the line.
         sourcePoint = getPlaceIntersectionPoint(center, config.placeRadius * 0.8, p1, p2, source.x ?? 0, (source.y ?? 0) + config.placeRadius); // * 0.8 to not see white space between circle and line around the connection point.
     } else {
-        // Update the upper adjustment for the dummy.
-        upperDummyAdjust = config.transitionHeight / 2;
         let p1 = new Point2D(source.x ?? 0, source.y ?? 0);
         let p2 = new Point2D(target.x ?? 0, target.y ?? 0);
         if (arc.path.length > 0) {
             let startDummy = layout.vertices[arc.path[0]];
-            p2 = new Point2D(startDummy.x ?? 0, (startDummy.y ?? 0) - upperDummyAdjust);
+            p2 = new Point2D(startDummy.x ?? 0, (startDummy.y ?? 0));
         }
         const halfWidth = (source.silent ? config.silentTransitionWidth : config.transitionWidth) / 2;
         const halfHeight = config.transitionHeight / 2;
@@ -303,24 +298,21 @@ function getArcPath(arcId: string, layout: OCPNLayout, config: OCPNConfig): stri
     path += `M ${sourcePoint.x} ${sourcePoint.y}`;
     var targetPoint = undefined;
     if (target.type === OCPNLayout.PLACE_TYPE) {
-        // Update the lower adjustment for the dummy.
-        lowerDummyAdjust = config.placeRadius;
         let center = new Point2D(target.x ?? 0, target.y ?? 0);
         let p1 = new Point2D(source.x ?? 0, source.y ?? 0);
         if (arc.path.length > 0) {
             let endDummy = layout.vertices[arc.path[arc.path.length - 1]];
-            p1 = new Point2D(endDummy.x ?? 0, (endDummy.y ?? 0) + lowerDummyAdjust);
+            p1 = new Point2D(endDummy.x ?? 0, (endDummy.y ?? 0));
         }
         let p2 = new Point2D(target.x ?? 0, target.y ?? 0);
         // Construct the line.
         targetPoint = getPlaceIntersectionPoint(center, config.placeRadius, p1, p2, target.x ?? 0, (target.y ?? 0) - config.placeRadius);
     } else {
         // Update the lower adjustment for the dummy.
-        lowerDummyAdjust = config.transitionHeight / 2;
         let p1 = new Point2D(source.x ?? 0, source.y ?? 0);
         if (arc.path.length > 0) {
             let endDummy = layout.vertices[arc.path[arc.path.length - 1]];
-            p1 = new Point2D(endDummy.x ?? 0, (endDummy.y ?? 0) + lowerDummyAdjust);
+            p1 = new Point2D(endDummy.x ?? 0, (endDummy.y ?? 0));
         }
         let p2 = new Point2D(target.x ?? 0, target.y ?? 0);
         const halfWidth = (target.silent ? config.silentTransitionWidth : config.transitionWidth) / 2;
@@ -333,12 +325,6 @@ function getArcPath(arcId: string, layout: OCPNLayout, config: OCPNConfig): stri
     // If the arc has path points, add them to the path.
     for (let i = 0; i < arc.path.length; i++) {
         let dummy = layout.vertices[arc.path[i]];
-        if (i === 0 && dummy.y) {
-            dummy.y -= upperDummyAdjust;
-        }
-        if (i === arc.path.length - 1 && dummy.y) {
-            dummy.y += lowerDummyAdjust
-        }
         path += ` L ${dummy.x}, ${dummy.y}`;
     }
     path += ` L ${targetPoint.x} ${targetPoint.y}`;

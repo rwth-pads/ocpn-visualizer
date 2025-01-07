@@ -31,7 +31,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
     const [transitionWidth, setTransitionWidth] = useState(userConfig.transitionWidth ?? 20);
     const [silentTransitionWidth, setSilentTransitionWidth] = useState(userConfig.silentTransitionWidth ?? 10);
     const [transitionHeight, setTransitionHeight] = useState(userConfig.transitionHeight ?? 10);
-    const [dummySize, setDummySize] = useState(userConfig.dummySize ?? 5);
+    // const [dummySize, setDummySize] = useState(userConfig.dummySize ?? 5);
     const [layerSep, setLayerSep] = useState(userConfig.layerSep ?? 10);
     const [vertexSep, setVertexSep] = useState(userConfig.vertexSep ?? 10);
     const [defaultPlaceColor, setDefaultPlaceColor] = useState(userConfig.defaultPlaceColor ?? '#000000');
@@ -115,9 +115,9 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
             case 'transitionHeight':
                 setTransitionHeight(value);
                 break;
-            case 'dummySize':
-                setDummySize(value);
-                break;
+            // case 'dummySize':
+            //     setDummySize(value);
+            //     break;
             case 'layerSep':
                 setLayerSep(value);
                 break;
@@ -370,7 +370,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                         <input
                             type='range'
                             className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
-                            min={3}
+                            min={0}
                             max={40}
                             value={layerSep}
                             step={1}
@@ -383,7 +383,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='range'
                             className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={0}
-                            max={20}
+                            max={40}
                             value={vertexSep}
                             step={1}
                             onChange={handleInputChange('vertexSep')}
@@ -397,7 +397,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             min={3}
                             max={20}
                             value={placeRadius}
-                            step={1}
+                            step={0.2}
                             onChange={handleInputChange('placeRadius')}
                             onMouseUp={handleMouseUp('placeRadius')}
                         />
@@ -474,7 +474,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onMouseUp={handleMouseUp('variableArcIndicatorSize')}
                         />
                     </ConfigOption>
-                    <ConfigOption label="Dummy size" darkMode={darkMode}>
+                    {/* <ConfigOption label="Dummy size" darkMode={darkMode}>
                         <input
                             type='range'
                             className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
@@ -485,7 +485,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleInputChange('dummySize')}
                             onMouseUp={handleMouseUp('dummySize')}
                         />
-                    </ConfigOption>
+                    </ConfigOption> */}
 
                     <span className={`sub-category-heading${darkMode ? ' dark' : ' light'}`}>Colors</span>
 

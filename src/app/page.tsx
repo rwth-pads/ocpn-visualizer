@@ -130,7 +130,7 @@ const Home = () => {
                 // Set the min and max zoom scale values.
                 let max = Math.max(ocpnLayout.layering.length, Math.max(...ocpnLayout.layering.map((layer: any[]) => layer.length)));
                 setMinScaleValue(initialScale - 0.5);
-                setMaxScaleValue(initialScale * max);
+                setMaxScaleValue(initialScale * max * 2);
 
                 // Apply the transformations directly to the g element
                 g.attr('transform', `translate(${translateX}, ${translateY}) scale(${initialScale})`);
