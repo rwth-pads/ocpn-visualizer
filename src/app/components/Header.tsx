@@ -86,7 +86,7 @@ const Header: React.FC<HeaderProps> = ({
                         Export
                     </div>
                 </div>
-                <div className={'header-item item6'}>
+                {/* <div className={'header-item item6'}>
                     <div
                         className={`header-darkmode-container${darkMode ? ' dark' : ' light'}`}
                         onClick={onToggleDarkMode}>
@@ -94,7 +94,7 @@ const Header: React.FC<HeaderProps> = ({
                             &#128976;
                         </span>
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     );

@@ -32,12 +32,12 @@
         height: fit-content;
         display: grid;
         gap: 8px;
-        grid-template-columns: 1fr 2.5fr 2.5fr 1fr;
+        grid-template-columns: 1fr 2.5fr 2.5fr;
         grid-template-rows: auto auto auto;
         grid-template-areas:
-            "item2 item2 item2 item2"
-            "item3 item3 item3 item3"
-            "item1 item4 item5 item6";
+            "item2 item2 item2"
+            "item3 item3 item3"
+            "item1 item4 item5";
     }
     .item1 {
         grid-area: item1;
@@ -54,9 +54,6 @@
     }
     .item5 {
         grid-area: item5;
-    }
-    .item6 {
-        grid-area: item6;
     }
 }
 .sidebar-toggle-container {
