@@ -16,7 +16,7 @@
     height: 7vh;
     min-height: fit-content;
     display: grid;
-    grid-template-columns: 1fr 4fr 10fr 2fr 2fr 1fr;
+    grid-template-columns: 1fr 4fr 10fr 2fr 3fr;
 }
 .header-item {
     display: flex;
