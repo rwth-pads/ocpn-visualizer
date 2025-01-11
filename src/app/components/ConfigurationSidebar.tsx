@@ -330,7 +330,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleInputChange('maxBarycenterIterations', true)}
                         />
                     </ConfigOption>
-                    <ConfigOption label="Alignment type" darkMode={darkMode}>
+                    {/* <ConfigOption label="Alignment type" darkMode={darkMode}>
                         <select
                             className={`custom-configuration-select${darkMode ? ' dark' : ' light'}`}
                             value={alignmentType}
@@ -348,7 +348,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             checked={seeAlignmentType}
                             onChange={handleInputChange('seeAlignmentType', true)}
                         />
-                    </ConfigOption>
+                    </ConfigOption> */}
                 </div>
             </ConfigurationCategory >
             <ConfigurationCategory title="Styling Configurations" darkMode={darkMode} categoryIndex={2}>

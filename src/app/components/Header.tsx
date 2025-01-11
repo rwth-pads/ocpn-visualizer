@@ -58,7 +58,7 @@ const Header: React.FC<HeaderProps> = ({
                         >
                             {importedObjects.length === 0 && (
                                 <option value="default" disabled>
-                                    Import an OCPN
+                                    OCPN files
                                 </option>
                             )}
                             {importedObjects.map((obj, index) => (

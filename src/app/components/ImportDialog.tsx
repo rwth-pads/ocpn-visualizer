@@ -42,7 +42,7 @@ const ImportDialog: React.FC<ImportDialogProps> = ({ darkMode, importDialogOpen,
             </div>
             <hr />
             <div className={`import-dialog-content-text${darkMode ? ' dark' : ' light'}`}>
-                Please select a .json or .pnml file to import an Object-Centric Petri Net:
+                Please select a .json or .pnml file to import an object-centric Petri net:
             </div>
             <div
                 onDrop={onDrop}
