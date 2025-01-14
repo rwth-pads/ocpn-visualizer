@@ -1,0 +1,162 @@
+{
+    "name": "Sugiyama Example",
+    "places": [
+        {
+            "name": "a",
+            "objectType": "sug",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "b",
+            "objectType": "sug",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "c",
+            "objectType": "sug",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "g",
+            "objectType": "sug",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "h",
+            "objectType": "sug",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "i",
+            "objectType": "sug",
+            "initial": false,
+            "final": false
+        }
+    ],
+    "transitions": [
+        {
+            "name": "d",
+            "label": "d",
+            "properties": {
+                "cost": 5
+            },
+            "silent": false
+        },
+        {
+            "name": "e",
+            "label": "e",
+            "silent": false
+        },
+        {
+            "name": "f",
+            "label": "f",
+            "silent": false
+        },
+        {
+            "name": "j",
+            "label": "j",
+            "properties": {
+                "cost": 5
+            },
+            "silent": false
+        },
+        {
+            "name": "k",
+            "label": "k",
+            "silent": false
+        },
+        {
+            "name": "l",
+            "label": "l",
+            "silent": false
+        }
+    ],
+    "arcs": [
+        {
+            "source": "a",
+            "target": "e",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "b",
+            "target": "d",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "c",
+            "target": "d",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "d",
+            "target": "g",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "e",
+            "target": "g",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "e",
+            "target": "h",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "e",
+            "target": "i",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "f",
+            "target": "h",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "g",
+            "target": "l",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "h",
+            "target": "j",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "h",
+            "target": "k",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        }
+    ],
+    "properties": {
+        "creator": "Tobias Br.",
+        "version": "1.0"
+    }
+}

@@ -27,7 +27,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
     for (const arcId in layout.arcs) {
         const arc = layout.arcs[arcId];
         var path = getArcPath(arcId, layout, config);
-        console.log(path);
+        // console.log(path);
         var ot = arc.objectType ? arc.objectType.replace(' ', '') : '';
         var color = config.typeColorMapping.get(ot) ?? config.arcDefaultColor;
         var strokeWidth = config.arcSize * (config.indicateArcWeight ? (arc.weight ?? 1) : 1);
