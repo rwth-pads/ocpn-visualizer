@@ -321,7 +321,7 @@ function computeLayeringScore(ocpn: ObjectCentricPetriNet, layering: string[][],
     var crossingCount = countCrossings(ocpn, layering);
     // Compute value that measures the quality of object attraction in the current layering.
     var objectAttractionCount = measureObjectAttractionCount(ocpn, layering, config);
-    // Return combined score.  oa is always 0 currently -> only the crossing count is considered.
+    // Return combined score.
     console.log(`Crossing Count: ${crossingCount}, Object Attraction Count: ${objectAttractionCount}`);
     return crossingCount + objectAttractionCount;
 }
