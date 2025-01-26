@@ -235,17 +235,17 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             <ConfigOption label="Type to color mapping" darkMode={darkMode}>
                                 <select
                                     className={`custom-configuration-select${darkMode ? ' dark' : ' light'}`}
-                                    value={currentTypeKey ?? userConfig.includedObjectTypes[0]}
+                                    value={currentTypeKey ?? currentOCPN.objectTypes[0]}
                                     onChange={handleTypeChange}
                                 >
-                                    {userConfig.includedObjectTypes.map((objectType: string) => (
+                                    {currentOCPN.objectTypes.map((objectType: string) => (
                                         <option key={objectType} value={objectType}>{objectType}</option>
                                     ))}
                                 </select>
                                 <input
                                     type='color'
                                     className={`custom-configuration-color-picker${darkMode ? ' dark' : ' light'}`}
-                                    value={currentTypeColor ?? userConfig.typeColorMapping.get(userConfig.includedObjectTypes[0].replace(' ', ''))}
+                                    value={currentTypeColor ?? userConfig.typeColorMapping.get(currentOCPN.objectTypes[0])}
                                     onChange={handleColorMappingChange}
                                 />
                             </ConfigOption>
