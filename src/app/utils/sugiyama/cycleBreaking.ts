@@ -18,11 +18,10 @@ function reverseCycles(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
     var net = new OCPNGraph(ocpn);
     // Compute solution to the modified FAS problem.
     var fas = modifiedGreedyFAS(net, config.sources, config.sinks);
-    // console.log("FAS: ", fas);
+
     Object.entries(ocpn.layout.arcs).forEach(([arcId, arc]) => {
         let sourceIndex = fas.indexOf(arc.source);
         let targetIndex = fas.indexOf(arc.target);
-        // console.log(sourceIndex, targetIndex);
         // Reverse the arc if the source's index is greater than the target's index.
         if (ocpn.layout) {
             ocpn.layout.setArcDirection(arcId, sourceIndex > targetIndex);

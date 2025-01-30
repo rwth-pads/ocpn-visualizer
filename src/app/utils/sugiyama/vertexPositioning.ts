@@ -15,7 +15,6 @@ function positionVertices(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
     // Mark type 1 conflicts in the OCPN given the layering.
     markType1Conflicts(ocpn);
     const layouts = [];
-    console.log("Computing the four alignments...");
     for (const verticalDir of [0, 1]) { // 0: down, 1: up
         for (const horizontalDir of [0, 1]) { // 0: left, 1: right
             // Reverse the outer and inner layers depending on the directions.
@@ -36,7 +35,6 @@ function positionVertices(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
             layouts.push(coords);
         }
     }
-    // console.log(ocpn.layout.layering);
     // Align to assignment of smallest width (height).
     alignAssignments(layouts);
     // Set the actual coordinates to average median of aligned candidates.
@@ -137,7 +135,6 @@ function markType1Conflicts(ocpn: ObjectCentricPetriNet) {
     if (!ocpn.layout) {
         return;
     }
-    console.log("Marking type 1 conflicts...");
     // Between layer first and second (last - 1 and last) there cannot be any type 1 conflicts.
     for (let i = 1; i < ocpn.layout.layering.length - 2; i++) {
         const layer = ocpn.layout.layering[i];
@@ -322,8 +319,6 @@ function placeBlock(
 }
 
 function alignAssignments(layouts: { [key: string]: number | undefined }[]): void {
-    console.log("Aligning the four layouts to the one with the smallest width (height)...");
-    // console.log(layouts);
     // Determine minimum and maximum coordinates for each layout.
     const minMax = layouts.map(coords => {
         const values = Object.values(coords).filter((v): v is number => v !== undefined);
@@ -353,7 +348,6 @@ function setCoordinates(ocpn: ObjectCentricPetriNet, layering: string[][], layou
     if (!ocpn.layout) {
         return;
     }
-    console.log("Setting coordinates...");
     const layerHalfs = [];
     for (let i = 0; i < layering.length; i++) {
         let layerSize = 0;

@@ -16,7 +16,7 @@ import OCPNConfig from '../classes/OCPNConfig';
  */
 async function sugiyama(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
     console.time("Sugiyama");
-    // console.log("sugiyama ocpn: ", ocpn);
+
     if (!(ocpn instanceof ObjectCentricPetriNet)) {
         console.log("The input is not an Object Centric Petri Net.");
         return undefined;
@@ -26,35 +26,35 @@ async function sugiyama(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
         console.log("The input is not an OCPNConfig.");
         return undefined;
     }
-    // console.log("Check included object types: ", config.includedObjectTypes);
+
+    // Generate the initial layout.
     ocpn.layout = new OCPNLayout(ocpn, config);
-    // console.log("Sugiyama input: ", ocpn);
+
     // Cycle Breaking.
-    console.log("Reversing cycles...");
     reverseCycles(ocpn, config);
+
     // Layer Assignment.
-    console.log("Assigning layers...");
     await assignLayers(ocpn);
+
     // Dummy Vertex Insertion.
-    console.log("Inserting dummy vertices...");
     insertDummyVertices(ocpn);
+
     // Vertex Ordering.
-    console.log("Ordering vertices...");
-    console.log("Initial Layering: ", ocpn.layout.layering);
     orderVertices(ocpn, config);
+
     // Vertex Positioning.
-    console.log("Positioning vertices...");
     if (config.seeAlignmentType) {
+        // Only for debugging purposes.
         positioning.positionVerticesToAlignmentType(ocpn, config);
     } else {
         positioning.positionVertices(ocpn, config);
     }
+
     // Route edges.
-    console.log("Routing arcs...");
     routeArcs(ocpn);
-    // Return the OCPN Layout.
-    // console.log("In sugiyama.js", ocpn.layout);
+
     console.timeEnd("Sugiyama");
+    // Return the OCPN Layout.
     return ocpn.layout;
 }
 

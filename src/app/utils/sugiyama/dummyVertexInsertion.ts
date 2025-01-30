@@ -9,7 +9,6 @@ function insertDummyVertices(ocpn: ObjectCentricPetriNet) {
         return;
     }
     var dummyCount = 0;
-    // console.log("Dummy Insertion: ", ocpn);
     for (const [arcId, arc] of Object.entries(ocpn.layout.arcs)) {
         let upper = arc.source;
         let lower = arc.target;

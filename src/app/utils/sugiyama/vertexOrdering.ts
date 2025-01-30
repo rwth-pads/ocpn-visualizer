@@ -19,16 +19,15 @@ function orderVertices(ocpn: ObjectCentricPetriNet, config: OCPNConfig): void {
     if (config.objectCentrality !== undefined) {
         adjustLayeringOrderByObjectCentrality(ocpn, config);
     }
-    console.log("Initial Layering: ", ocpn.layout.layering);
+
     // Implementation of the barycenter method for vertex ordering.
     upDownBarycenterBilayerSweep(ocpn, config);
-    // console.log("Best Layering: ", ocpn.layout.layering);
+
     // Set the positions of the vertices in the layering according to the computed order.
     for (let i = 0; i < ocpn.layout.layering.length; i++) {
         for (let j = 0; j < ocpn.layout.layering[i].length; j++) {
             let v = ocpn.layout.layering[i][j];
             ocpn.layout.vertices[v].pos = j;
-            // console.log(`${v} at pos ${ocpn.layout.vertices[v].pos}`);
         }
     }
 }
@@ -40,7 +39,7 @@ function adjustLayeringOrderByObjectCentrality(ocpn: ObjectCentricPetriNet, conf
     if (!ocpn.layout || !config.objectCentrality) {
         return;
     }
-    // console.log("Adjusting layering order by object centrality...");
+
     const objectCentrality = config.objectCentrality;
     // Iterate over the layers of the OCPN.
     for (let i = 0; i < ocpn.layout.layering.length; i++) {
@@ -84,19 +83,13 @@ function upDownBarycenterBilayerSweep(ocpn: ObjectCentricPetriNet, config: OCPNC
     computedLayerings.push(clone2DArray(layering));
     // Perform the barycenter method going up and down the layers.
     var sweepCounter = 1;
-    // console.log("Initial layering: ", layering);
-    // console.log("Initial score: ", bestScore);
     while (true) {
-        layering = singleUpDownSweep(ocpn, layering, config); // Phase 1
-        layering = adjustEqualBarycenters(ocpn, layering) // Phase 2
+        layering = singleUpDownSweep(ocpn, layering, config);
         var currentScore = computeLayeringScore(ocpn, layering, config);
-        console.log(`Sweep ${sweepCounter} score: ${currentScore}\nLayering:`);
-        console.log(layering);
         // Check if the vertex order has improved.
         if (currentScore < bestScore) {
             bestScore = currentScore;
             best = clone2DArray(layering);
-            console.log(`Improved score to ${bestScore}!`);
             noImprovementCounter = 0;
         } else {
             // Increment the counter if no improvement was made.
@@ -130,13 +123,10 @@ function singleUpDownSweep(ocpn: ObjectCentricPetriNet, layering: string[][], co
             dir == 0 ? layer < layering.length : layer >= 0;
             dir == 0 ? layer++ : layer--) {
             // Adjusts only the layering[layer] while keeping the other layers fixed.
-
             layering[layer] = modifiedBarycenterOrder(ocpn, layering, layer, dir == 0, doubleBary, config);
-            // console.log(`Layer ${layer} after ${dir == 0 ? "down" : "up"} sweep: `, layering[layer]);
         }
     }
-    // console.log("Double Barys: ", doubleBary);
-    // console.log("Layering before combining barycenters: ", layering);
+
     // // Combine the barycenter values of the down and up sweep to filter out bias.
     // layering = combineUpDownBarycenters(layering, doubleBary);
     // console.log("Layering after combining barycenters: ", layering);
@@ -159,18 +149,11 @@ function combineUpDownBarycenters(layering: string[][], doubleBary: Map<string, 
     return layering;
 }
 
-function adjustEqualBarycenters(ocpn: ObjectCentricPetriNet, layering: string[][]): string[][] {
-    console.log(ocpn.name); // TODO: remove this.
-    // Swaps vertices within layers that have the same barycenter values.
-    return layering;
-}
-
 function modifiedBarycenterOrder(ocpn: ObjectCentricPetriNet, layering: string[][], layer: number, down: boolean, doubleBary: Map<string, DoubleBarycenter>, config: OCPNConfig): string[] {
     // Compute the barycenter values for the current layer.
     var barycenters = computeModifiedBarycenters(ocpn, layering, layer, down, config);
     var adjustedBarycenters = adjustNoNeighborsBarycenters(layering, layer, barycenters);
     setDirectionBarycenters(layering, layer, down, adjustedBarycenters, doubleBary);
-    console.log(`Layer ${layer} barycenters: `, adjustedBarycenters);
     // Sort the vertices in the layer according to the barycenter values.
     // The greater the barycenter value the more to the right the vertex is placed.
     // Equal barycenter values are sorted by the original order.
@@ -178,7 +161,6 @@ function modifiedBarycenterOrder(ocpn: ObjectCentricPetriNet, layering: string[]
         const diff = adjustedBarycenters[a] - adjustedBarycenters[b];
         return diff !== 0 ? diff : layering[layer].indexOf(a) - layering[layer].indexOf(b);
     });
-    // console.log(barycenters);
     return orderedLayer;
 }
 
@@ -285,7 +267,6 @@ function transitionBarycenter(ocpn: ObjectCentricPetriNet, transition: string, l
         .filter(arc => down ? arc.target === transition : arc.source === transition).map(arc => down ? arc.source : arc.target))
         : [];
 
-    // console.log(`Transition ${transition} neighbors: `, neighbors);
     // If there are no neighbors in the fixed layer, return the current index + 1.
     if (neighbors.length == 0) {
         return -1;
@@ -322,7 +303,6 @@ function computeLayeringScore(ocpn: ObjectCentricPetriNet, layering: string[][],
     // Compute value that measures the quality of object attraction in the current layering.
     var objectAttractionCount = measureObjectAttractionCount(ocpn, layering, config);
     // Return combined score.
-    console.log(`Crossing Count: ${crossingCount}, Object Attraction Count: ${objectAttractionCount}`);
     return crossingCount + objectAttractionCount;
 }
 
@@ -350,7 +330,6 @@ function countCrossings(ocpn: ObjectCentricPetriNet, layering: string[][]): numb
                 // Check if the arcs cross.
                 if (upper1Index > upper2Index && lower1Index < lower2Index ||
                     upper1Index < upper2Index && lower1Index > lower2Index) {
-                    // console.log(`Crossing arcs (${arc1.source.name}, ${arc1.target.name}) and (${arc2.source.name}, ${arc2.target.name})...`);
                     crossings++;
                 }
             }
