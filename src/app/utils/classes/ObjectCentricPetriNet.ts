@@ -143,6 +143,35 @@ class ObjectCentricPetriNet {
         return as;
     }
 
+    getPlaceCount(): number {
+        return this.places.length;
+    }
+
+    getTransitionCount(): number {
+        return this.transitions.length;
+    }
+
+    getArcCount(): number {
+        return this.arcs.length;
+    }
+
+    getVariableArcCount(): number {
+        return this.arcs.filter(arc => arc.variable).length;
+    }
+
+    getObjectTypeCount(): number {
+        return this.objectTypes.length;
+    }
+
+    getOCPNInfo(): string {
+        const placeCount = this.getPlaceCount();
+        const transitionCount = this.getTransitionCount();
+        const arcCount = this.getArcCount();
+        const varArcCount = this.getVariableArcCount();
+        const objectTypeCount = this.getObjectTypeCount();
+        return `|P|: ${placeCount}, |T|: ${transitionCount}, |F|: ${arcCount}, |F_var|: ${varArcCount}, |OT|: ${objectTypeCount}`;
+    }
+
     static fromJSON(json: ObjectCentricPetriNetJSON): ObjectCentricPetriNet {
         const places = json.places.map(place => new ObjectCentricPetriNet.Place(
             place.name,

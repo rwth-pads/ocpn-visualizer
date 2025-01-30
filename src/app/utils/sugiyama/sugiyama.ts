@@ -54,6 +54,7 @@ async function sugiyama(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
     routeArcs(ocpn);
 
     console.timeEnd("Sugiyama");
+    console.log(ocpn.getOCPNInfo());
     // Return the OCPN Layout.
     return ocpn.layout;
 }
