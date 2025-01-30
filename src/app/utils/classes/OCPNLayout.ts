@@ -272,6 +272,16 @@ class OCPNLayout {
         });
         return arcs;
     }
+
+    getDummyCount(): number {
+        let count = 0;
+        Object.values(this.vertices).forEach(vertex => {
+            if (vertex.type === OCPNLayout.DUMMY_TYPE) {
+                count++;
+            }
+        });
+        return count;
+    }
 }
 
 export default OCPNLayout;
