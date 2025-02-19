@@ -18,20 +18,19 @@ interface ConfigurationSidebarProps {
 const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, currentOCPN, userConfig, darkMode }) => {
     const mode = darkMode ? 'dark' : 'light';
     const sidebarClass = isOpen ? "sidebar open " + mode : "sidebar " + mode;
-    // TODO: use effect on config options that depend on the current OCPN.
+
     const [indicateSourcesSinks, setIndicateSourcesSinks] = useState(userConfig.indicateSourcesSinks ?? false);
     const [flowDirection, setFlowDirection] = useState(userConfig.direction ?? 'TB');
     const [objectAttraction, setObjectAttraction] = useState(userConfig.objectAttraction ?? 0.1);
     const [objectAttractionRangeMin, setObjectAttractionRangeMin] = useState(userConfig.objectAttractionRangeMin ?? 1);
     const [objectAttractionRangeMax, setObjectAttractionRangeMax] = useState(userConfig.objectAttractionRangeMax ?? 2);
-    const maxLayers = 4; // TODO: get length of layering.
+    const maxLayers = 4; // The maximal amount of layers used for the object attraction range.
     const [maxBarycenterIterations, setMaxBarycenterIterations] = useState(userConfig.maxBarycenterIterations ?? 4);
     const [backgroundColor, setBackgroundColor] = useState(userConfig.svgBackgroundColor ?? '#ffffff');
     const [placeRadius, setPlaceRadius] = useState(userConfig.placeRadius ?? 5);
     const [transitionWidth, setTransitionWidth] = useState(userConfig.transitionWidth ?? 20);
     const [silentTransitionWidth, setSilentTransitionWidth] = useState(userConfig.silentTransitionWidth ?? 10);
     const [transitionHeight, setTransitionHeight] = useState(userConfig.transitionHeight ?? 10);
-    // const [dummySize, setDummySize] = useState(userConfig.dummySize ?? 5);
     const [layerSep, setLayerSep] = useState(userConfig.layerSep ?? 10);
     const [vertexSep, setVertexSep] = useState(userConfig.vertexSep ?? 10);
     const [defaultPlaceColor, setDefaultPlaceColor] = useState(userConfig.defaultPlaceColor ?? '#000000');
@@ -61,24 +60,10 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         setCurrentHistoryIndex(0);
     }
 
-    // const addHistoryEntry = (attribute: keyof OCPNConfig) => {
-    //     const description = `Changed ${attribute} to ${userConfig[attribute]}`;
-    //     const newHistory = [...configHistory.slice(0, currentHistoryIndex + 1), { config: { ...userConfig }, description }];
-    //     setConfigHistory(newHistory);
-    //     setCurrentHistoryIndex(newHistory.length - 1);
-    // }
-
     const setUserConfig: SetUserConfig = (value, attribute) => {
         userConfig[attribute] = value;
         // addHistoryEntry(attribute);
     }
-
-    // const restoreConfig = (config: OCPNConfig, index: number) => {
-    //     Object.keys(config).forEach((key) => {
-    //         handleConfigChange(key as keyof OCPNConfig, config[key as keyof OCPNConfig], false);
-    //     });
-    //     setCurrentHistoryIndex(index);
-    // }
 
     const handleConfigChange = (attribute: keyof OCPNConfig, value: any, change = true) => {
         switch (attribute) {
@@ -595,7 +580,14 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     </ConfigOption>
                 </div>
             </ConfigurationCategory>
-            {/* <ConfigurationCategory title="History" darkMode={darkMode} categoryIndex={3}>
+            <ConfigurationCategory title="Highlighting" darkMode={darkMode} categoryIndex={3}>
+                <div style={{ paddingLeft: '4%' }}>
+                    <button>Variable Arcs</button>
+                    <span className={`sub-category-heading${darkMode ? ' dark' : ' light'}`}>Object Types</span>
+
+                </div>
+            </ConfigurationCategory>
+            {/* <ConfigurationCategory title="History" darkMode={darkMode} categoryIndex={4}>
                 <div style={{ paddingLeft: '4%' }}>
                     <div>
                         <button onClick={clearHistory}>Clear History</button>

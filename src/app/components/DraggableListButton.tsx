@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { DragHandleDots2Icon } from "@radix-ui/react-icons";
+
 import OCPNConfig from '../utils/classes/OCPNConfig';
 
 import './DraggableListButton.css';
@@ -16,6 +18,7 @@ const DraggableListButton: React.FC<DraggableListButtonProps> = ({ buttonLabel, 
     const [draggedItem, setDraggedItem] = useState<HTMLElement | null>(null);
     const fromLabel = userConfig.direction == 'TB' ? 'Left' : 'Top';
     const toLabel = userConfig.direction == 'TB' ? 'Right' : 'Bottom';
+
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -123,7 +126,7 @@ const DraggableListButton: React.FC<DraggableListButtonProps> = ({ buttonLabel, 
                         className={`draggable-list-item${mode}`}
                         style={{ backgroundColor: userConfig.typeColorMapping.get(objectType.replace(' ', '')) }}
                         draggable>
-                        {objectType}
+                        <span className={"left"}><DragHandleDots2Icon /></span>{objectType}
                     </li>
                 ))}
                 <li className={`list-item-right${mode}`} draggable={false}>{toLabel}</li>

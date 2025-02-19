@@ -123,7 +123,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({ selectedOCPN, use
                 });
 
             const zoomBehavior: ZoomBehavior<SVGSVGElement, unknown> = d3Zoom<SVGSVGElement, unknown>()
-                .scaleExtent([minScaleValue, maxScaleValue])
+                // .scaleExtent([minScaleValue, maxScaleValue]) // User study concluded that the zoom restriction was unnecessary.
                 .on('zoom', (event) => {
                     const g = svg.select('g');
                     g.attr('transform', event.transform);

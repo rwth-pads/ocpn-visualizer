@@ -42,6 +42,9 @@
 .draggable-list.light {}
 
 .draggable-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 10px;
     width: 100%;
     background-color: #f0f0f0;
@@ -49,6 +52,11 @@
     text-align: center;
     text-transform: capitalize; /* Capitalize the first letter of the object type. */
     color: #fff; /* always white, because background color is the object color */
+}
+
+.draggable-list-item .left > svg {
+    margin-right: 10px;
+    transform: scale(1.5);
 }
 .draggable-list-item.dark {
     background-color: #2b2a2a;

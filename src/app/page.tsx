@@ -17,9 +17,8 @@ import { select, zoom, zoomIdentity } from 'd3';
 import './components/ConfigurationSidebar.css';
 import sugiyama from './utils/sugiyama/sugiyama';
 
-const COLORS_ARRAY = ['#99cefd', '#f5a800', '#002e57', 'green', 'purple', 'orange', 'yellow', 'pink', 'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'navy', 'olive', 'silver', 'aqua', 'fuchsia', 'gray', 'black'];
 
-const COLORS_ARRAY2: string[] = [
+const COLORS_ARRAY: string[] = [
     '#99cefd', '#f5a800', '#002e57',
     "#FF5733", // Vibrant Red-Orange
     "#4285F4", // Modern Blue (Google Blue)
@@ -130,7 +129,7 @@ const Home = () => {
                 // Set the min and max zoom scale values.
                 let max = Math.max(ocpnLayout.layering.length, Math.max(...ocpnLayout.layering.map((layer: any[]) => layer.length)));
                 setMinScaleValue(initialScale - 0.5);
-                setMaxScaleValue(initialScale * max * 2);
+                setMaxScaleValue(initialScale * max * 100);
 
                 // Apply the transformations directly to the g element
                 g.attr('transform', `translate(${translateX}, ${translateY}) scale(${initialScale})`);
@@ -185,7 +184,7 @@ const Home = () => {
                             currentConfig.typeColorMapping = new Map<string, string>();
                             currentConfig.includedObjectTypes.forEach((ot, index) => {
                                 let correctOT = ot.replace(' ', '');
-                                currentConfig.typeColorMapping.set(correctOT, COLORS_ARRAY2[index % COLORS_ARRAY2.length]);
+                                currentConfig.typeColorMapping.set(correctOT, COLORS_ARRAY[index % COLORS_ARRAY.length]);
                             });
                         }
                     } else {
@@ -247,7 +246,7 @@ const Home = () => {
         currentConfig.typeColorMapping = new Map<string, string>();
         currentConfig.includedObjectTypes.forEach((ot, index) => {
             let correctOT = ot.replace(' ', '');
-            currentConfig.typeColorMapping.set(correctOT, COLORS_ARRAY2[index % COLORS_ARRAY2.length]);
+            currentConfig.typeColorMapping.set(correctOT, COLORS_ARRAY[index % COLORS_ARRAY.length]);
         });
         setUserConfig(currentConfig);
     };
