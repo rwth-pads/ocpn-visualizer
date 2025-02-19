@@ -3,6 +3,7 @@ import ConfigurationCategory from './ConfigurationCategory';
 import CustomMultiSelect from './CustomMultiSelect';
 import ConfigOption from './ConfigOption';
 import DraggableListButton from './DraggableListButton';
+import { select } from 'd3-selection';
 import './ConfigurationSidebar.css';
 
 import ObjectCentricPetriNet from '../utils/classes/ObjectCentricPetriNet';
@@ -13,9 +14,11 @@ interface ConfigurationSidebarProps {
     currentOCPN: ObjectCentricPetriNet | null;
     userConfig: OCPNConfig;
     darkMode: boolean;
+    sugiyamaAppliedSwitch: boolean;
+    svgRef: React.RefObject<SVGSVGElement>;
 }
 
-const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, currentOCPN, userConfig, darkMode }) => {
+const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, currentOCPN, userConfig, darkMode, sugiyamaAppliedSwitch, svgRef }) => {
     const mode = darkMode ? 'dark' : 'light';
     const sidebarClass = isOpen ? "sidebar open " + mode : "sidebar " + mode;
 
@@ -47,8 +50,10 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
     const [variableArcIndicatorColor, setVariableArcIndicatorColor] = useState(userConfig.variableArcIndicatorColor ?? '#ff0000');
     const [variableArcIndicatorSize, setVariableArcIndicatorSize] = useState(userConfig.variableArcIndicatorSize ?? 3);
 
+    // Debugging settings
     const [seeAlignmentType, setSeeAlignmentType] = useState(userConfig.seeAlignmentType ?? false);
     const [alignmentType, setAlignmentType] = useState(userConfig.alignmentType ?? 'downLeft');
+
     interface SetUserConfig {
         <K extends keyof OCPNConfig>(value: OCPNConfig[K], attribute: K): void;
     }
@@ -204,6 +209,65 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         setCurrentTypeKey(userConfig.includedObjectTypes[0]);
         setCurrentTypeColor(userConfig.typeColorMapping.get(userConfig.includedObjectTypes[0]));
     }, [userConfig.includedObjectTypes]);
+
+
+    // Highlighting
+    const [selectedObjectTypes, setSelectedObjectTypes] = useState(userConfig.includedObjectTypes);
+    const [activeObjectTypes, setActiveObjectTypes] = useState(new Set(userConfig.includedObjectTypes));
+    const [allSelected, setAllSelected] = useState(true);
+    const [variableArcsHighlighted, setVariableArcsHighlighted] = useState(false);
+
+    useEffect(() => {
+        setAllSelected(true);
+        setSelectedObjectTypes(userConfig.includedObjectTypes);
+        setActiveObjectTypes(new Set(userConfig.includedObjectTypes));
+    }, [userConfig.includedObjectTypes, sugiyamaAppliedSwitch]);
+
+    useEffect(() => {
+        const svg = select(svgRef.current);
+        svg.selectAll('.ocpnarc, .ocpnplace, .ocpntransition').style('opacity', userConfig.highlightOpacity);
+        activeObjectTypes.forEach(objectType => {
+            const ot = objectType.replace(' ', '');
+            svg.selectAll(`.${ot}`).style('opacity', 1);
+            svg.selectAll('.ocpntransition')
+                .filter(function () {
+                    const adjacentObjectTypes = select(this).attr('adjacentObjectTypes');
+                    return adjacentObjectTypes ? adjacentObjectTypes.split(' ').includes(objectType) : false;
+                })
+                .style('opacity', 1);
+        });
+    }, [activeObjectTypes]);
+
+    useEffect(() => {
+        const svg = select(svgRef.current);
+        svg.selectAll('.ocpnarc.variable.indicator')
+            .style('display', variableArcsHighlighted ? 'block' : 'none');
+    }, [variableArcsHighlighted]);
+
+    const handleHighlightItemClick = (objectType: string) => {
+        const newActiveObjectTypes = new Set(activeObjectTypes);
+        if (newActiveObjectTypes.has(objectType)) {
+            newActiveObjectTypes.delete(objectType);
+        } else {
+            newActiveObjectTypes.add(objectType);
+        }
+        setActiveObjectTypes(newActiveObjectTypes);
+    };
+
+
+    const toggleAllObjectTypes = () => {
+        if (allSelected) {
+            setActiveObjectTypes(new Set());
+        } else {
+            setActiveObjectTypes(new Set(selectedObjectTypes));
+        }
+
+        setAllSelected(!allSelected);
+    }
+
+    const toggleVariableArcs = () => {
+        setVariableArcsHighlighted(!variableArcsHighlighted);
+    }
 
     return (
         <div className={sidebarClass}>
@@ -546,7 +610,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             onChange={handleInputChange('indicateArcWeight', true)}
                         />
                     </ConfigOption>
-                    <ConfigOption label="Indicate variable arcs" darkMode={darkMode}>
+                    <ConfigOption label="Double-line variable arcs" darkMode={darkMode}>
                         <input
                             type='checkbox'
                             className={`custom-configuration-checkbox${darkMode ? ' dark' : ' light'}`}
@@ -582,9 +646,38 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
             </ConfigurationCategory>
             <ConfigurationCategory title="Highlighting" darkMode={darkMode} categoryIndex={3}>
                 <div style={{ paddingLeft: '4%' }}>
-                    <button>Variable Arcs</button>
-                    <span className={`sub-category-heading${darkMode ? ' dark' : ' light'}`}>Object Types</span>
-
+                    {(currentOCPN !== null) ? (
+                        <>
+                            <div
+                                onClick={toggleVariableArcs} // toggleVariableArcs
+                                className={`highlight-item${darkMode ? ' dark' : ' light'}${variableArcsHighlighted ? ' active' : ''}`}
+                            >
+                                Highlight Variable Arcs
+                            </div>
+                            <span
+                                className={`sub-category-heading${darkMode ? ' dark' : ' light'}`}
+                                style={{ cursor: 'pointer' }}
+                                onClick={toggleAllObjectTypes}>
+                                Toggle All Object Types
+                            </span>
+                            {selectedObjectTypes.map((objectType: string) => (
+                                <div
+                                    key={objectType}
+                                    className={`highlight-item${darkMode ? ' dark' : ' light'}${activeObjectTypes.has(objectType) ? ' active' : ''}`}
+                                    onClick={() => handleHighlightItemClick(objectType)}
+                                    style={{ color: userConfig.typeColorMapping.get(objectType.replace(' ', '')) }}
+                                >
+                                    {objectType}
+                                </div>
+                            ))}
+                        </>
+                    ) : (
+                        <div style={{ padding: '3%' }}>
+                            <div>
+                                Highlighting will be available once you import an OCPN.
+                            </div>
+                        </div>
+                    )}
                 </div>
             </ConfigurationCategory>
             {/* <ConfigurationCategory title="History" darkMode={darkMode} categoryIndex={4}>

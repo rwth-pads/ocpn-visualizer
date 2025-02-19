@@ -6,7 +6,6 @@ import VisualizationArea from './components/VisualizationArea';
 import ImportDialog from './components/ImportDialog';
 import ExportDialog from './components/ExportDialog';
 import ConfigurationSidebar from './components/ConfigurationSidebar';
-import LegendComponent from './components/LegendComponent';
 import ObjectCentricPetriNet from './utils/classes/ObjectCentricPetriNet';
 import OCPNConfig from './utils/classes/OCPNConfig';
 import ApplySugiyamaButton from './components/ApplySugiyamaButton';
@@ -55,7 +54,6 @@ const Home = () => {
     const [isImporting, setIsImporting] = useState(false);
     const [minScaleValue, setMinScaleValue] = useState(0.5);
     const [maxScaleValue, setMaxScaleValue] = useState(10);
-    const [legendOpen, setLegendOpen] = useState(false);
     const [currentHover, setCurrentHover] = useState<string>('');
     const [sugiyamaAppliedSwitch, setSugiyamaAppliedSwitch] = useState(false);
 
@@ -270,7 +268,9 @@ const Home = () => {
                         isOpen={menuOpen}
                         currentOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
                         userConfig={userConfig}
-                        darkMode={darkMode} />
+                        darkMode={darkMode}
+                        sugiyamaAppliedSwitch={sugiyamaAppliedSwitch}
+                        svgRef={svgRef} />
                     <ApplySugiyamaButton
                         darkMode={darkMode}
                         menuOpen={menuOpen}
@@ -287,14 +287,6 @@ const Home = () => {
                         maxScaleValue={maxScaleValue}
                         setCurrentHover={setCurrentHover}
                     />
-                    <LegendComponent
-                        darkMode={darkMode}
-                        userConfig={userConfig}
-                        ocpn={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
-                        legendOpen={legendOpen}
-                        setLegendOpen={setLegendOpen}
-                        sugiyamaAppliedSwitch={sugiyamaAppliedSwitch}
-                        svgRef={svgRef} />
                 </div>
             </div>
             <ImportDialog
