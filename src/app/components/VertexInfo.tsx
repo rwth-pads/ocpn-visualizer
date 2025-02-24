@@ -16,8 +16,8 @@ interface VertexInfoProps {
 
 const VertexInfo: React.FC<VertexInfoProps> = ({ vertexId, vertexName, vertexType, objectType, darkMode, isSource, isSink, toggleSource, toggleSink }) => {
     const mode = darkMode ? ' dark' : ' light';
-    const sourceButtonLabel = isSource ? 'Source' : 'No source';
-    const sinkButtonLabel = isSink ? 'Sink' : 'No sink';
+    const sourceButtonLabel = isSource ? 'First' : 'Not in firsts';
+    const sinkButtonLabel = isSink ? 'Last' : 'Not in lasts';
 
     return (
         <div className={`vertex-info-container${mode}`}>

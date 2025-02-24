@@ -58,12 +58,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         <K extends keyof OCPNConfig>(value: OCPNConfig[K], attribute: K): void;
     }
 
-    const [configHistory, setConfigHistory] = useState([{ config: { ...userConfig }, description: 'Initial configuration' }]);
-    const [currentHistoryIndex, setCurrentHistoryIndex] = useState(0);
-    const clearHistory = () => {
-        setConfigHistory([{ config: { ...userConfig }, description: 'Initial configuration' }]);
-        setCurrentHistoryIndex(0);
-    }
 
     const setUserConfig: SetUserConfig = (value, attribute) => {
         userConfig[attribute] = value;
@@ -202,6 +196,18 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         console.log(`${currentTypeKey}: ${color}`);
     }
 
+    /**
+     * Resets the two sets firsts and lasts to initial settins for the current ocpn.
+     */
+    const resetFirstLasts = () => {
+        if (currentOCPN) {
+            userConfig.sources = currentOCPN.places.filter(place => place.initial).map(place => place.id);
+            userConfig.sinks = currentOCPN.places.filter(place => place.final).map(place => place.id);
+        }
+        console.log(userConfig.sources);
+        console.log(userConfig.sinks);
+    }
+
     const [currentTypeKey, setCurrentTypeKey] = useState(userConfig.includedObjectTypes[0]);
     const [currentTypeColor, setCurrentTypeColor] = useState(userConfig.typeColorMapping.get(currentTypeKey));
 
@@ -305,11 +311,11 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                                     userConfig={userConfig}
                                 />
                             </ConfigOption>
-                            <ConfigOption label="Sources and sinks" darkMode={darkMode}>
-                                Right-click places to add / remove sources and sinks. {/* See ...\Components\D3\index.html as example. */}
+                            <ConfigOption label="Firsts and lasts" darkMode={darkMode}>
+                                Right-click vertices to add / remove firsts and lasts.
                                 <br />
                                 <button
-                                    onClick={() => { console.log("TODO: Reset sources and sinks"); }}
+                                    onClick={resetFirstLasts}
                                     className={`custom-configuration-button${darkMode ? ' dark' : ' light'}`}
                                 >
                                     Reset
