@@ -2,6 +2,16 @@ import ObjectCentricPetriNet from '../classes/ObjectCentricPetriNet';
 import OCPNGraph from '../classes/OCPNGraph';
 import glpkModule, { GLPK } from 'glpk.js';
 
+// Singleton pattern for GLPK instance.
+let glpkInstance: GLPK | null = null;
+
+async function getGLPKInstance() {
+    if (!glpkInstance) {
+        glpkInstance = await glpkModule();
+    }
+    return glpkInstance;
+}
+
 function createILPObjective(arcs: { source: string; target: string; reversed: boolean }[]) {
     const vars = [];
     for (const arc of arcs) {
@@ -54,7 +64,7 @@ function createPositiveLayerConstraints(vertices: string[], glpk: GLPK) {
 }
 
 async function assignLayers(ocpn: ObjectCentricPetriNet) {
-    const glpk = await glpkModule();
+    const glpk = await getGLPKInstance();
 
     const ocpnGraph = new OCPNGraph(ocpn);
     // Initialize the OCPN graph, the ILP objective and constraints.

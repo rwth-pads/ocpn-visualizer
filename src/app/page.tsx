@@ -72,9 +72,6 @@ const Home = () => {
             console.log("User config changed")
             applyConfigChanges();
         }
-        return () => {
-            // Delete old userConfig references
-        }
     }, [userConfig]);
 
     const handleToggleDarkMode = () => {
@@ -99,8 +96,8 @@ const Home = () => {
         setFailedFiles([]);
     };
 
-    const applyConfigChanges = async () => {
-        await handleVisualizationUpdate(null);
+    const applyConfigChanges = () => {
+        handleVisualizationUpdate(null);
         setSugiyamaAppliedSwitch(!sugiyamaAppliedSwitch);
     }
 
