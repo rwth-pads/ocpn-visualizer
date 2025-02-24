@@ -15,7 +15,7 @@ import OCPNConfig from '../classes/OCPNConfig';
  * @returns OCPNLayout The layout of the Object Centric Petri Net.
  */
 async function sugiyama(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
-    console.time("Sugiyama");
+    // console.time("Sugiyama");
 
     if (!(ocpn instanceof ObjectCentricPetriNet)) {
         console.log("The input is not an Object Centric Petri Net.");
@@ -53,7 +53,7 @@ async function sugiyama(ocpn: ObjectCentricPetriNet, config: OCPNConfig) {
     // Route edges.
     routeArcs(ocpn);
 
-    console.timeEnd("Sugiyama");
+    // console.timeEnd("Sugiyama");
     // Return the OCPN Layout.
     return ocpn.layout;
 }

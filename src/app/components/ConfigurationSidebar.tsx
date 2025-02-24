@@ -56,13 +56,14 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
     const [alignmentType, setAlignmentType] = useState(userConfig.alignmentType ?? 'downLeft');
 
     interface SetUserConfig {
-        <K extends keyof OCPNConfig>(value: OCPNConfig[K], attribute: K): void;
+        <K extends keyof OCPNConfig>(value: OCPNConfig[K], attribute: K): OCPNConfig;
     }
-
 
     const setUserConfig: SetUserConfig = (value, attribute) => {
-        userConfig[attribute] = value;
-    }
+        const newConfig = new OCPNConfig();
+        Object.assign(newConfig, userConfig, { [attribute]: value });
+        return newConfig;
+    };
 
     const handleConfigChange = (attribute: keyof OCPNConfig, value: any, change = true) => {
         switch (attribute) {
@@ -157,7 +158,9 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                 break;
         }
         if (change) {
-            setUserConfig(value, attribute);
+            const newConfig = setUserConfig(value, attribute);
+            console.log("Handle Config change: ", attribute, value);
+            setConfig(newConfig);
         }
     };
 
@@ -186,14 +189,12 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         const color = userConfig.typeColorMapping.get(objectType.replace(' ', '')) || '#000000';
         setCurrentTypeKey(objectType);
         setCurrentTypeColor(color);
-        console.log(`${objectType}: ${color}`);
     }
 
     const handleColorMappingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const color = e.target.value;
         setCurrentTypeColor(color);
         userConfig.typeColorMapping.set(currentTypeKey, color);
-        console.log(`${currentTypeKey}: ${color}`);
     }
 
     /**
@@ -278,7 +279,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         // Preserve non-changeable values
         defaultConfig.includedObjectTypes = userConfig.includedObjectTypes;
         defaultConfig.typeColorMapping = userConfig.typeColorMapping;
-    
+
         // Update state with default configuration
         setIndicateSourcesSinks(defaultConfig.indicateSourcesSinks);
         setFlowDirection(defaultConfig.direction);
@@ -308,7 +309,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         setVariableArcIndicatorSize(defaultConfig.variableArcIndicatorSize);
         setSeeAlignmentType(defaultConfig.seeAlignmentType);
         setAlignmentType(defaultConfig.alignmentType);
-    
+
         // Set the new configuration as the userConfig
         setConfig(defaultConfig);
         resetFirstLasts();
@@ -316,6 +317,16 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
 
     return (
         <div className={sidebarClass}>
+            <div 
+                className='reset-container'
+                style={{ paddingLeft: '4%', paddingBottom: '4%' }}>
+                <span
+                    className={`sub-category-heading${darkMode ? ' dark' : ' light'} reset-button`}
+                    style={{ cursor: 'pointer', width: '90%' }}
+                    onClick={resetConfigurations}>
+                    Reset to default
+                </span>
+            </div>
             <ConfigurationCategory title="Object Configurations" darkMode={darkMode} categoryIndex={0}>
                 <div style={{ paddingLeft: '4%' }}>
                     {(currentOCPN !== null) ? (
@@ -387,7 +398,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='range'
                             className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={0}
-                            max={0.5}
+                            max={1}
                             value={objectAttraction}
                             step={0.05}
                             onChange={handleInputChange('objectAttraction')}
@@ -455,7 +466,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='range'
                             className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={0}
-                            max={40}
+                            max={100}
                             value={layerSep}
                             step={1}
                             onChange={handleInputChange('layerSep')}
@@ -467,7 +478,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='range'
                             className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={0}
-                            max={40}
+                            max={100}
                             value={vertexSep}
                             step={1}
                             onChange={handleInputChange('vertexSep')}
@@ -479,7 +490,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='range'
                             className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={3}
-                            max={20}
+                            max={50}
                             value={placeRadius}
                             step={0.2}
                             onChange={handleInputChange('placeRadius')}
@@ -491,7 +502,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='range'
                             className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={20}
-                            max={50}
+                            max={100}
                             value={transitionWidth}
                             step={1}
                             onChange={handleInputChange('transitionWidth')}
@@ -503,7 +514,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='range'
                             className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={5}
-                            max={20}
+                            max={100}
                             value={transitionHeight}
                             step={1}
                             onChange={handleInputChange('transitionHeight')}
@@ -515,7 +526,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='range'
                             className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={0.1}
-                            max={2}
+                            max={5}
                             value={transitionBorderSize}
                             step={0.05}
                             onChange={handleInputChange('transitionBorderSize')}
@@ -527,7 +538,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='range'
                             className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={3}
-                            max={30}
+                            max={100}
                             value={silentTransitionWidth}
                             step={1}
                             onChange={handleInputChange('silentTransitionWidth')}
@@ -725,14 +736,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     )}
                 </div>
             </ConfigurationCategory>
-            <div style={{ paddingLeft: '4%', paddingBottom: '4%' }}>
-                <span
-                    className={`sub-category-heading${darkMode ? ' dark' : ' light'}`}
-                    style={{ cursor: 'pointer', width: '90%' }}
-                    onClick={resetConfigurations}>
-                    Reset to default
-                </span>
-            </div>
         </div >
     );
 }

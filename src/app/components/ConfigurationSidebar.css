@@ -266,3 +266,19 @@ input[type="number"].custom-number-input.dark:hover {
 .highlight-item.dark.active {
     background-color: rgba(117, 117, 117, 0.3);
 }
+
+
+.reset-button {
+    transition: background-color 0.3s;
+}
+
+.reset-button.dark:hover {
+    background-color: #333333;
+}
+.reset-button.dark:active {
+    background-color: #2b2929;
+}
+
+.reset-container {
+    border-bottom: 2px solid #4a4a4a;
+}

@@ -359,15 +359,20 @@ function setCoordinates(ocpn: ObjectCentricPetriNet, layering: string[][], layou
                 layerSize = config.placeRadius;
                 break; // Layer either contains only places or only transitions (+ dummies for both).
             } else if (type == OCPNLayout.TRANSITION_TYPE) {
-                // TODO implement custom widths based on label length.
-                let transitionWidthMax = config.transitionWidth < config.silentTransitionWidth ? config.silentTransitionWidth : config.transitionWidth;
-
-                let curSize = config.direction == "TB" ? transitionWidthMax / 2 : config.transitionWidth / 2;
-                layerSize = Math.max(layerSize, curSize);
+                // Compute the layer size based on the transition width or height.
+                if (config.direction == "TB") {
+                    // Depends on the transition height.
+                    layerSize = Math.max(layerSize, config.transitionHeight);
+                } else {
+                    // Depends on the (silent) transition widths.
+                    let transitionMax = config.transitionWidth < config.silentTransitionWidth ? config.silentTransitionWidth : config.transitionWidth;
+                    layerSize = Math.max(layerSize, transitionMax);
+                    break;
+                }
             }
         }
-        layerHalfs.push({ layer: i, size: layerSize });
-        ocpn.layout.layerSizes.push({ layer: i, size: layerSize * 2 });
+        layerHalfs.push({ layer: i, size: layerSize});
+        ocpn.layout.layerSizes.push({ layer: i, size: layerSize * 2});
     }
 
     var curSize = config.borderPadding;

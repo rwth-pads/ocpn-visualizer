@@ -280,7 +280,7 @@ function getArcPath(arcId: string, layout: OCPNLayout, config: OCPNConfig): stri
             p2 = new Point2D(startDummy.x ?? 0, (startDummy.y ?? 0));
         }
         // Construct the line.
-        sourcePoint = getPlaceIntersectionPoint(center, config.placeRadius * 0.8, p1, p2, source.x ?? 0, (source.y ?? 0) + config.placeRadius); // * 0.8 to not see white space between circle and line around the connection point.
+        sourcePoint = getPlaceIntersectionPoint(center, config.placeRadius, p1, p2, source.x ?? 0, (source.y ?? 0) + config.placeRadius);
     } else {
         let p1 = new Point2D(source.x ?? 0, source.y ?? 0);
         let p2 = new Point2D(target.x ?? 0, target.y ?? 0);
@@ -290,8 +290,8 @@ function getArcPath(arcId: string, layout: OCPNLayout, config: OCPNConfig): stri
         }
         const halfWidth = (source.silent ? config.silentTransitionWidth : config.transitionWidth) / 2;
         const halfHeight = config.transitionHeight / 2;
-        const topLeft = new Point2D((source.x ?? 0) - halfWidth * 0.9, (source.y ?? 0) - halfHeight * 0.9);
-        const bottomRight = new Point2D((source.x ?? 0) + halfWidth * 0.8, (source.y ?? 0) + halfHeight * 0.8); // * 0.8 to not see white space between rectangle and line around the connection point.
+        const topLeft = new Point2D((source.x ?? 0) - halfWidth, (source.y ?? 0) - halfHeight);
+        const bottomRight = new Point2D((source.x ?? 0) + halfWidth, (source.y ?? 0) + halfHeight);
         // Construct the rectangle.
         sourcePoint = getTransitionIntersectionPoint(p1, p2, topLeft, bottomRight, source.x ?? 0, (source.y ?? 0) + halfHeight);
     }

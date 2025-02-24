@@ -62,9 +62,20 @@ const Home = () => {
 
     useEffect(() => {
         if (selectedOCPN !== null) {
+            console.log("Selected OCPN changed")
             applyConfigChanges();
         }
     }, [selectedOCPN]);
+
+    useEffect(() => {
+        if (selectedOCPN !== null) {
+            console.log("User config changed")
+            applyConfigChanges();
+        }
+        return () => {
+            // Delete old userConfig references
+        }
+    }, [userConfig]);
 
     const handleToggleDarkMode = () => {
         setDarkMode(!darkMode);
@@ -88,8 +99,8 @@ const Home = () => {
         setFailedFiles([]);
     };
 
-    const applyConfigChanges = () => {
-        handleVisualizationUpdate(null);
+    const applyConfigChanges = async () => {
+        await handleVisualizationUpdate(null);
         setSugiyamaAppliedSwitch(!sugiyamaAppliedSwitch);
     }
 
