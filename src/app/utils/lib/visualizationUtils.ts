@@ -9,7 +9,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
     const g = svg.append('g');
 
     // Define custom markers.
-    const defineMarker = (color: string, id: string) => {
+    const defineMarker = (color: string, id: string, objectType: string) => {
         svg.append('defs').append('marker')
             .attr('id', id)
             .attr('viewBox', '0 0 10 10')
@@ -18,6 +18,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             .attr('markerWidth', 3)
             .attr('markerHeight', 3)
             .attr('orient', 'auto-start-reverse')
+            .attr('class', objectType)
             .append('path')
             .attr('d', 'M 0 0 L 10 5 L 0 10 Z')
             .attr('fill', color);
@@ -79,7 +80,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
         //         .attr('fill', 'black');
         // }
 
-        defineMarker(color, `arrowhead-${arcId}`);
+        defineMarker(color, `arrowhead-${arcId}`, ot);
 
         if (arc.variable) {
             g.append('path')

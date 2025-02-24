@@ -12,7 +12,7 @@ interface CustomMultiSelectProps {
 const CustomMultiSelect: React.FC<CustomMultiSelectProps> = ({ darkMode, currentOCPN, userConfig }) => {
     const mode = darkMode ? ' dark' : ' light';
     const VISIBLEOBJECTTYPES = 2;
-    const MIN_FOR_SEARCH = 2;
+    const MIN_FOR_SEARCH = 10;
     const searchNeeded = currentOCPN.objectTypes.length > MIN_FOR_SEARCH;
 
     const [selectedObjectTypes, setObjectTypes] = useState(userConfig.includedObjectTypes);

@@ -195,6 +195,14 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
         const color = e.target.value;
         setCurrentTypeColor(color);
         userConfig.typeColorMapping.set(currentTypeKey, color);
+        // Update the svg with the new color of the object type.
+        const svg = select(svgRef.current);
+        // Update the place fill color.
+        svg.selectAll(`.ocpnplace.${currentTypeKey.replace(' ', '')}`).style('fill', color);
+        // Update the arc stroke color.
+        svg.selectAll(`.ocpnarc.${currentTypeKey.replace(' ', '')}`).style('stroke', color);
+        // Update the corresponding defined marker colors.
+        svg.selectAll(`marker.${currentTypeKey.replace(' ', '')} path`).style('fill', color);
     }
 
     /**
