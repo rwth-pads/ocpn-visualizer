@@ -13,12 +13,13 @@ interface ConfigurationSidebarProps {
     isOpen: boolean;
     currentOCPN: ObjectCentricPetriNet | null;
     userConfig: OCPNConfig;
+    setConfig: (config: OCPNConfig) => void;
     darkMode: boolean;
     sugiyamaAppliedSwitch: boolean;
     svgRef: React.RefObject<SVGSVGElement>;
 }
 
-const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, currentOCPN, userConfig, darkMode, sugiyamaAppliedSwitch, svgRef }) => {
+const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, currentOCPN, userConfig, setConfig, darkMode, sugiyamaAppliedSwitch, svgRef }) => {
     const mode = darkMode ? 'dark' : 'light';
     const sidebarClass = isOpen ? "sidebar open " + mode : "sidebar " + mode;
 
@@ -61,7 +62,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
 
     const setUserConfig: SetUserConfig = (value, attribute) => {
         userConfig[attribute] = value;
-        // addHistoryEntry(attribute);
     }
 
     const handleConfigChange = (attribute: keyof OCPNConfig, value: any, change = true) => {
@@ -204,8 +204,6 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
             userConfig.sources = currentOCPN.places.filter(place => place.initial).map(place => place.id);
             userConfig.sinks = currentOCPN.places.filter(place => place.final).map(place => place.id);
         }
-        console.log(userConfig.sources);
-        console.log(userConfig.sinks);
     }
 
     const [currentTypeKey, setCurrentTypeKey] = useState(userConfig.includedObjectTypes[0]);
@@ -274,6 +272,47 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
     const toggleVariableArcs = () => {
         setVariableArcsHighlighted(!variableArcsHighlighted);
     }
+
+    const resetConfigurations = () => {
+        const defaultConfig = new OCPNConfig();
+        // Preserve non-changeable values
+        defaultConfig.includedObjectTypes = userConfig.includedObjectTypes;
+        defaultConfig.typeColorMapping = userConfig.typeColorMapping;
+    
+        // Update state with default configuration
+        setIndicateSourcesSinks(defaultConfig.indicateSourcesSinks);
+        setFlowDirection(defaultConfig.direction);
+        setObjectAttraction(defaultConfig.objectAttraction);
+        setObjectAttractionRangeMin(defaultConfig.objectAttractionRangeMin);
+        setObjectAttractionRangeMax(defaultConfig.objectAttractionRangeMax);
+        setMaxBarycenterIterations(defaultConfig.maxBarycenterIterations);
+        setBackgroundColor(defaultConfig.svgBackgroundColor);
+        setPlaceRadius(defaultConfig.placeRadius);
+        setTransitionWidth(defaultConfig.transitionWidth);
+        setSilentTransitionWidth(defaultConfig.silentTransitionWidth);
+        setTransitionHeight(defaultConfig.transitionHeight);
+        setLayerSep(defaultConfig.layerSep);
+        setVertexSep(defaultConfig.vertexSep);
+        setDefaultPlaceColor(defaultConfig.defaultPlaceColor);
+        setTransitionColor(defaultConfig.transitionColor);
+        setTransitionFillColor(defaultConfig.transitionFillColor);
+        setTransitionTextColor(defaultConfig.transitionTextColor);
+        setTransitionBorderSize(defaultConfig.transitionBorderSize);
+        setIndicateArcWeight(defaultConfig.indicateArcWeight);
+        setIndicateVariableArcs(defaultConfig.indicateVariableArcs);
+        setArcSize(defaultConfig.arcSize);
+        setArcDefaultColor(defaultConfig.arcDefaultColor);
+        setZoomVisibilityThreshhold(defaultConfig.zoomVisibilityThreshhold);
+        setHighlightOpacity(defaultConfig.highlightOpacity);
+        setVariableArcIndicatorColor(defaultConfig.variableArcIndicatorColor);
+        setVariableArcIndicatorSize(defaultConfig.variableArcIndicatorSize);
+        setSeeAlignmentType(defaultConfig.seeAlignmentType);
+        setAlignmentType(defaultConfig.alignmentType);
+    
+        // Set the new configuration as the userConfig
+        setConfig(defaultConfig);
+        resetFirstLasts();
+    };
 
     return (
         <div className={sidebarClass}>
@@ -686,18 +725,14 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                     )}
                 </div>
             </ConfigurationCategory>
-            {/* <ConfigurationCategory title="History" darkMode={darkMode} categoryIndex={4}>
-                <div style={{ paddingLeft: '4%' }}>
-                    <div>
-                        <button onClick={clearHistory}>Clear History</button>
-                        {configHistory.map((logEntry, index) => (
-                            <div key={index} style={{ color: index === currentHistoryIndex ? 'red' : 'inherit' }}>
-                                <button onClick={() => restoreConfig(logEntry.config, index)}>{index}. {logEntry.description}</button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </ConfigurationCategory> */}
+            <div style={{ paddingLeft: '4%', paddingBottom: '4%' }}>
+                <span
+                    className={`sub-category-heading${darkMode ? ' dark' : ' light'}`}
+                    style={{ cursor: 'pointer', width: '90%' }}
+                    onClick={resetConfigurations}>
+                    Reset to default
+                </span>
+            </div>
         </div >
     );
 }

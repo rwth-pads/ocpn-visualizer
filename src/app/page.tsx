@@ -268,6 +268,7 @@ const Home = () => {
                         isOpen={menuOpen}
                         currentOCPN={selectedOCPN !== null ? importedObjects[selectedOCPN] : null}
                         userConfig={userConfig}
+                        setConfig={setUserConfig}
                         darkMode={darkMode}
                         sugiyamaAppliedSwitch={sugiyamaAppliedSwitch}
                         svgRef={svgRef} />
