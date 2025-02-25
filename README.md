@@ -124,4 +124,4 @@ By following this format, you can create a JSON file that represents an Object-C
 ### Example
 An exemplary OCPN input file is provided in the [`public/sample_ocpns/json`](https://github.com/CodenameTobi/ocpn-visualizer/blob/master/public/sample_ocpns/json/ocpa_p2p-normal.json) directory of this project. You can use this file as a template to create your own OCPN input files.
 
-[`public/images/example_visualization.png`]()
+![Example Visualization of an OCPN](https://github.com/rwth-pads/ocpn-visualizer/blob/algorithm/public/images/example_visualization.png)
