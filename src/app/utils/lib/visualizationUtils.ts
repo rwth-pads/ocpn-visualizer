@@ -173,7 +173,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                     .attr('r', config.placeRadius - 0.5)
                     .attr('class', `ocpnplace ${ot}`)
                     .attr('id', vertexId)
-                    .attr('fill', 'white');
+                    .attr('fill', config.svgBackgroundColor);
             }
 
             // g.append('text')
