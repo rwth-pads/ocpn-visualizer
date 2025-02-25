@@ -95,3 +95,7 @@ An exemplary OCPN input file is provided in the [`public/sample_ocpns/json`](htt
 
 
 ![Example Visualization of an OCPN](https://github.com/rwth-pads/ocpn-visualizer/blob/algorithm/public/images/example_visualization.png)
+
+
+## License
+This project was developed as part of a bachelor's thesis at RWTH Aachen University within the PADS group.
