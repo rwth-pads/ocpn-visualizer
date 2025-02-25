@@ -91,12 +91,11 @@ async function assignLayers(ocpn: ObjectCentricPetriNet) {
 
     // Check for both optimal and feasible solutions.
     if (result.result.status !== glpk.GLP_OPT && result.result.status !== glpk.GLP_FEAS) {
-        return null; // TODO: switch to other layer assignment algorithm.
+        return null;
     }
 
     // Get the layers of the nodes.
     const layers = result.result.vars;
-    // TODO: use different method if the result is not feasible.
     const layering: { [key: number]: string[] } = {};
     // Iterate over the pairs of node and the node's layer.
     for (const [node, layer] of Object.entries(layers)) {

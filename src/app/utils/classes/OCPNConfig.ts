@@ -52,7 +52,7 @@ class OCPNConfig {
         transitionHeight = 5,
         dummySize = 2,
         layerSep = 15,
-        vertexSep = 5, // For now bigger than any other size declaration to avoid overlapping. TODO
+        vertexSep = 5,
         borderPadding = 10,
         typeColorMapping = new Map(),
         defaultPlaceColor = "#000000",
@@ -84,7 +84,7 @@ class OCPNConfig {
         this.objectAttractionRangeMin = objectAttractionRangeMin; // [1, layer.length]
         this.objectAttractionRangeMax = objectAttractionRangeMax; // [min, layer.length]
         // Vertex Positioning
-        this.direction = direction; // TODO: add LR
+        this.direction = direction;
         this.placeRadius = placeRadius;
         this.transitionWidth = transitionWidth;
         this.silentTransitionWidth = silentTransitionWidth;

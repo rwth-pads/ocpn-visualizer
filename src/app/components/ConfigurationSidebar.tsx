@@ -428,7 +428,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='number'
                             className={`custom-number-input${darkMode ? ' dark' : ' light'}`}
                             min={objectAttractionRangeMin}
-                            max={maxLayers} // TODO check correctness
+                            max={maxLayers}
                             value={objectAttractionRangeMax}
                             onChange={handleInputChange('objectAttractionRangeMax', true)}
                         />
@@ -438,7 +438,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='number'
                             className={`custom-number-input${darkMode ? ' dark' : ' light'}`}
                             min={4}
-                            max={100} // TODO: check what fits
+                            max={100}
                             value={maxBarycenterIterations}
                             onChange={handleInputChange('maxBarycenterIterations', true)}
                         />
@@ -558,7 +558,7 @@ const ConfigurationSidebar: React.FC<ConfigurationSidebarProps> = ({ isOpen, cur
                             type='range'
                             className={`custom-range-input${darkMode ? ' dark' : ' light'}`}
                             min={0.1}
-                            max={5} // TODO: reset to 2
+                            max={3}
                             step={0.05}
                             value={arcSize}
                             onChange={handleInputChange('arcSize')}

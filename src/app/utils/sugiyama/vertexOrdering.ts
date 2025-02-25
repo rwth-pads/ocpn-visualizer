@@ -357,7 +357,7 @@ function measureObjectAttractionCount(ocpn: ObjectCentricPetriNet, layering: str
             objectDeviation += Math.abs(objectPlaces[i].index - avgIndex);
         }
     });
-    return objectDeviation * config.objectAttraction; // TODO: either introduce a new config parameter or rework the * 10.
+    return objectDeviation * config.objectAttraction;
 }
 
 function reocurringLayering(currentLayering: string[][], computedLayerings: string[][][]): boolean {

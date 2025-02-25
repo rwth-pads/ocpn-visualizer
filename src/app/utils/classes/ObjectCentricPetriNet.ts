@@ -233,7 +233,7 @@ class ObjectCentricPetriNet {
             transitions, // The set of transitions in the Petri net.
             [], // Dummy nodes will be added within the Sugiyama layout algorithm.
             arcs, // The set of arcs in the Petri net.
-            objectTypes, // TODO: instead of passing the object types, we return a list of simple Petri Nets based on their object type.
+            objectTypes, // The set of object types in the Petri net.
             json.properties !== undefined ? json.properties : {} // Additional properties of the Petri net.
         );
     }
@@ -257,7 +257,7 @@ class ObjectCentricPetriNet {
             const id = transition.$.id;
             const label = transition.name[0].text[0];
             const silent = transition.toolspecific[0].silent[0] === 'true';
-            const properties: Record<string, any> = {}; // TODO
+            const properties: Record<string, any> = {};
             return new ObjectCentricPetriNet.Transition(id, label, [], [], properties, silent);
         });
 
@@ -268,7 +268,7 @@ class ObjectCentricPetriNet {
                 transitions.find((transition: any) => transition.name === arc.$.target);
             const weight = arc.inscription ? parseInt(arc.inscription[0].text[0], 10) : 1;
             const variable = arc.toolspecific[0].variableArc[0] === 'true';
-            const properties: Record<string, any> = {}; // TODO
+            const properties: Record<string, any> = {};
             return new ObjectCentricPetriNet.Arc(source!, target!, false, variable, weight, properties);
         });
 

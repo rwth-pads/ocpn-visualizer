@@ -133,8 +133,6 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
     for (const vertexId in layout.vertices) {
         const vertex = layout.vertices[vertexId];
         if (vertex.type === OCPNLayout.PLACE_TYPE) {
-            // TODO: if checkbox 'indicate sources and sinks' is checked, then add a source/sink indicator
-            // otherwise, just draw a circle with fill color.
             const ot = vertex.objectType ? vertex.objectType.replace(' ', '') : '';
             const fill = config.typeColorMapping.get(ot) ?? config.defaultPlaceColor;
             const source = config.sources.includes(vertexId);
@@ -152,7 +150,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                     .attr('y', vertex.y ?? 0)
                     .attr('text-anchor', 'middle')
                     .attr('alignment-baseline', 'middle')
-                    .attr('font-size', config.placeRadius) // Adjust font size as needed
+                    .attr('font-size', config.placeRadius)
                     .attr('fill', config.transitionTextColor)
                     .attr('id', vertexId)
                     .attr('class', `ocpnplace ${ot} label`)
@@ -163,7 +161,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                     .attr('y', vertex.y ?? 0)
                     .attr('text-anchor', 'middle')
                     .attr('alignment-baseline', 'middle')
-                    .attr('font-size', config.placeRadius) // Adjust font size as needed
+                    .attr('font-size', config.placeRadius)
                     .attr('fill', config.transitionTextColor)
                     .attr('id', vertexId)
                     .attr('class', `ocpnplace ${ot} label`)
@@ -172,7 +170,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 g.append('circle')
                     .attr('cx', vertex.x ?? 0)
                     .attr('cy', vertex.y ?? 0)
-                    .attr('r', config.placeRadius - 0.5) // config.placeBorderSize) // TODO: user defined radius
+                    .attr('r', config.placeRadius - 0.5)
                     .attr('class', `ocpnplace ${ot}`)
                     .attr('id', vertexId)
                     .attr('fill', 'white');
@@ -183,7 +181,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
             //     .attr('y', vertex.y ?? 0)
             //     .attr('text-anchor', 'middle')
             //     .attr('alignment-baseline', 'middle')
-            //     .attr('font-size', config.placeRadius) // Adjust font size as needed
+            //     .attr('font-size', config.placeRadius)
             //     .attr('fill', config.transitionTextColor)
             //     .attr('id', vertexId)
             //     .attr('class', `ocpnplace ${ot} label`)
@@ -204,7 +202,7 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 .attr('stroke', config.transitionColor)
                 .attr('stroke-width', config.transitionBorderSize)
                 .attr('class', 'ocpntransition')
-                .attr('adjacentObjectTypes', ots.join(' ')) // TODO: add adjacent object types
+                .attr('adjacentObjectTypes', ots.join(' '))
                 .attr('id', vertexId);
 
             // Append the text element with an initial font size
@@ -226,8 +224,8 @@ export async function visualizeOCPN(layout: OCPNLayout, config: OCPNConfig, svgR
                 const node = textElement.node();
                 if (!node) return;
                 let bbox = node.getBBox();
-                const maxWidth = config.transitionWidth * 0.99; // Adjust as needed
-                const maxHeight = config.transitionHeight * 1; // Adjust as needed
+                const maxWidth = config.transitionWidth * 0.99;
+                const maxHeight = config.transitionHeight * 1;
                 let fontSize = parseFloat(textElement.attr('font-size'));
 
                 while ((bbox.width > maxWidth || bbox.height > maxHeight) && fontSize > 1) {

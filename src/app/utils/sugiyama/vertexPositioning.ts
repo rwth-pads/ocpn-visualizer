@@ -296,7 +296,7 @@ function placeBlock(
                 // Get the root of the predecessor.
                 const u = roots[predecessor];
                 // Determine the coordinates of the predecessor's root. (Terminates once the vertex most to the left is reached.)
-                placeBlock(ocpn, layering, u, x, pos, roots, sink, shift, aligns, config); // TODO config
+                placeBlock(ocpn, layering, u, x, pos, roots, sink, shift, aligns, config);
                 // The sink is the root vertex with the smallest x coordinate.
                 if (sink[v] == v) {
                     sink[v] = sink[u];
