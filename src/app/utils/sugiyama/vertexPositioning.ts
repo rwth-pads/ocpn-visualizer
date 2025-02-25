@@ -343,43 +343,54 @@ function alignAssignments(layouts: { [key: string]: number | undefined }[]): voi
         }
     });
 }
-
+/**
+ * Sets the actual coordinates of the vertices based on the average median of the aligned candidates.
+ */
 function setCoordinates(ocpn: ObjectCentricPetriNet, layering: string[][], layouts: { [key: string]: number | undefined }[], config: OCPNConfig) {
     if (!ocpn.layout) {
         return;
     }
+    // 
     const layerHalfs = [];
     for (let i = 0; i < layering.length; i++) {
-        let layerSize = 0;
+        let halfLayerSize = 0;
         for (let j = 0; j < layering[i].length; j++) {
             const v = layering[i][j];
             let type = ocpn.layout.vertices[v].type;
             if (type == OCPNLayout.PLACE_TYPE) {
                 // All nodes have the same radius.
-                layerSize = config.placeRadius;
+                halfLayerSize = config.placeRadius;
                 break; // Layer either contains only places or only transitions (+ dummies for both).
             } else if (type == OCPNLayout.TRANSITION_TYPE) {
                 // Compute the layer size based on the transition width or height.
                 if (config.direction == "TB") {
                     // Depends on the transition height.
-                    layerSize = Math.max(layerSize, config.transitionHeight);
+                    halfLayerSize = Math.max(halfLayerSize, config.transitionHeight);
                 } else {
-                    // Depends on the (silent) transition widths.
-                    let transitionMax = config.transitionWidth < config.silentTransitionWidth ? config.silentTransitionWidth : config.transitionWidth;
-                    layerSize = Math.max(layerSize, transitionMax);
-                    break;
+                    let thisVertexHalfSize = 0;
+                    if (config.direction == "TB") {
+                        thisVertexHalfSize = config.transitionHeight / 2;
+                    } else {
+                        // Check whether the transition is silent, because silent transitions can have a different width.
+                        let silent = ocpn.layout.vertices[v].silent;
+                        thisVertexHalfSize = silent ? config.silentTransitionWidth / 2 : config.transitionWidth / 2;
+                    }
+                    halfLayerSize = Math.max(halfLayerSize, thisVertexHalfSize);
                 }
             }
         }
-        layerHalfs.push({ layer: i, size: layerSize});
-        ocpn.layout.layerSizes.push({ layer: i, size: layerSize * 2});
+        layerHalfs.push({ layer: i, size: halfLayerSize });
+        ocpn.layout.layerSizes.push({ layer: i, size: halfLayerSize * 2 });
     }
 
     var curSize = config.borderPadding;
+    // Iterate over the all layers.
     for (let i = 0; i < layering.length; i++) {
+        // Get the size of half the current layer.
         var layerHalf = layerHalfs.find(l => l.layer == i);
         if (!layerHalf) layerHalf = { layer: i, size: 0 };
-
+        // Set the coordinates for each vertex in the current layer to the same x (left-right) or y (top-bottom) coordinates.
+        // Set the previously computed individual y (left-right) or x (top-bottom) coordinates.
         for (let j = 0; j < layering[i].length; j++) {
             const v = layering[i][j];
             // Get the four candidate coordinates for the vertex in ascending order.
@@ -389,11 +400,32 @@ function setCoordinates(ocpn: ObjectCentricPetriNet, layering: string[][], layou
             // Differentiate between top-bottom and left-right direction.
             let thisX = config.direction == "TB" ? medianCoord + config.borderPadding : curSize + layerHalf.size;
             let thisY = config.direction == "TB" ? curSize + layerHalf.size : medianCoord + config.borderPadding;
+            // Adjust the outer dummy vertices to the side of their respective layers.
+            if (ocpn.layout.vertices[v].type == OCPNLayout.DUMMY_TYPE) {
+                // Check whether the vertex is an outer dummy.
+                let upperNeighbor = ocpn.layout.vertices[v].upper;
+                let lowerNeighbor = ocpn.layout.vertices[v].lower;
+                if (upperNeighbor && ocpn.layout.vertices[upperNeighbor].type != OCPNLayout.DUMMY_TYPE) {
+                    // Dummy is an outer dummy and must be adjusted to the top (left) of their layer.
+                    if (config.direction == "TB") {
+                        thisY = thisY - layerHalf.size;
+                    } else {
+                        thisX = thisX - layerHalf.size;
+                    }
+                } else if (lowerNeighbor && ocpn.layout.vertices[lowerNeighbor].type != OCPNLayout.DUMMY_TYPE) {
+                    // Dummy is an outer dummy and must be adjusted to the bottom (right) of their layer.
+                    if (config.direction == "TB") {
+                        thisY = thisY + layerHalf.size;
+                    } else {
+                        thisX = thisX + layerHalf.size;
+                    }
+                }
+            }
             // Set the vertex coordinates.
             ocpn.layout.vertices[v].x = thisX;
             ocpn.layout.vertices[v].y = thisY;
         }
-        curSize = curSize + layerHalf.size * 2 + (config.layerSep); // * areaScaling);
+        curSize = curSize + layerHalf.size * 2 + (config.layerSep);
     }
 }
 
@@ -428,4 +460,5 @@ const positioning = {
     positionVertices,
     positionVerticesToAlignmentType
 };
+
 export default positioning;

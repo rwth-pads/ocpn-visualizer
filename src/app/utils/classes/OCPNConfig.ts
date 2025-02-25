@@ -51,7 +51,7 @@ class OCPNConfig {
         silentTransitionWidth = 10,
         transitionHeight = 5,
         dummySize = 2,
-        layerSep = 10,
+        layerSep = 15,
         vertexSep = 5, // For now bigger than any other size declaration to avoid overlapping. TODO
         borderPadding = 10,
         typeColorMapping = new Map(),
