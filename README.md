@@ -121,10 +121,7 @@ Where:
 
 By following this format, you can create a JSON file that represents an Object-Centric Petri Net and is used as the input for the **OCPN Visualizer**.
 
-## OCPN Input Format (PNML)
-<!-- TODO: Add PNML format description. -->
-
 ### Example
 An exemplary OCPN input file is provided in the [`public/sample_ocpns/json`](https://github.com/CodenameTobi/ocpn-visualizer/blob/master/public/sample_ocpns/json/ocpa_p2p-normal.json) directory of this project. You can use this file as a template to create your own OCPN input files.
 
-<!-- TODO: Add an image of the visualized example here. -->
+[`public/images/example_visualization.png`]()
