@@ -91,16 +91,8 @@ Where:
 
 By following this format, you can create a JSON file that represents an Object-Centric Petri Net and is used as the input for the **OCPN Visualizer**.
 
-## How to transform OCPA to the OCPN Visualizer JSON format
-The OCPN Visualizer JSON format is a subset of the OCPA JSON format. To transform an OCPA JSON file to the OCPN Visualizer JSON format, you can adapt the following code snippet:
-
-```python
-
-
-```
-
 ## How to transform PM4Py jsonocel to the OCPN Visualizer JSON format
-You can use the following code snippet to transform a PM4Py jsonocel file to the OCPN Visualizer JSON format:
+You can use the following code snippet to transform a .jsonocel file to the OCPN Visualizer JSON format using the PM4Py library.
 
 ```python
 import pm4py
@@ -218,7 +210,114 @@ with open(fileOutPath, "w") as f:
     json.dump(ocpn_json, f, indent=4)
 
 ```
+Works with the following PM4Py version: pm4py-2.7.14.4
 
+## How to transform OCPA to the OCPN Visualizer JSON format
+The OCPN Visualizer JSON format is a subset of the OCPA JSON format. To transform an OCPA JSON file to the OCPN Visualizer JSON format, you can adapt the following code snippet:
+
+```python
+import json
+import os
+
+def place_to_json(place):
+    """
+    Convert a place object to a JSON object.
+    """
+    return {
+        "name": place.name,
+        "objectType": place.object_type,
+        "initial": place.initial,
+        "final": place.final
+    }
+
+
+def transition_to_json(transition):
+    """
+    Convert a transition object to a JSON object.
+    """
+    return {
+        "name": transition.name,
+        "label": transition.label,
+        "properties": transition.properties,
+        "silent": transition.silent
+    }
+
+
+def arc_to_json(arc):
+    """
+    Convert an arc object to a JSON object.
+    """
+    return {
+        "source": arc.source.name,
+        "target": arc.target.name,
+        "weight": arc.weight,
+        "variable": arc.variable,
+        "properties": arc.properties
+    }
+
+
+def ocpn_to_json(ocpn, name, properties):
+    if not name:
+        name = "OCPN"
+
+    if not properties:
+        properties = {}
+
+    places = [place_to_json(place) for place in ocpn.places]
+    transitions = [transition_to_json(transition)
+                   for transition in ocpn.transitions]
+    arcs = [arc_to_json(arc) for arc in ocpn.arcs]
+
+    return {
+        "name": name,
+        "places": places,
+        "transitions": transitions,
+        "arcs": arcs,
+        "properties": properties
+    }
+
+
+def save_ocpn_to_json(ocpn, filename, ocpnname = '', properties = {}):
+    """
+    Save an OCPN object to a JSON file.
+    """
+
+    # Ensure the directory exists.
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+
+    # Write the OCPN to the file.
+    with open(filename, 'w') as f:
+        json.dump(ocpn_to_json(ocpn, ocpnname, properties), f, indent=4)
+
+
+# New file.
+import os
+from ocpa.objects.log.importer.ocel import factory as ocel_import_factory
+from ocpa.algo.discovery.ocpn import algorithm as ocpn_discovery_factory
+from ocpa_to_ocpn_visualizer import save_ocpn_to_json
+
+# From folder containing the jsonocel files.
+from_folder = "event_logs/"
+to_folder = "ocpn_visualizer/"
+
+# Ensure the output directory exists
+os.makedirs(to_folder, exist_ok=True)
+
+# Process each file in the from_folder
+for file in os.listdir(from_folder):
+    if file.endswith(".jsonocel"):
+        print(f"Start processing {file}")
+        filename = os.path.join(from_folder, file)
+        save_to = os.path.join(to_folder, file.replace(".jsonocel", ".json"))
+
+        ocel = ocel_import_factory.apply(file_path=filename)
+        ocpn = ocpn_discovery_factory.apply(ocel, parameters={"debug": False})
+
+        save_ocpn_to_json(ocpn, save_to, ocpnname=file.replace(
+            ".jsonocel", ""), properties={"description": "Event log from ocpa repository."})
+        print(f"Processed {file} and saved to {save_to}")
+```
+Requires ocpa-1.3.3 pm4py-2.2.32.
 
 ### Example
 An exemplary OCPN input file is provided in the [`public/sample_ocpns/json`](https://github.com/rwth-pads/ocpn-visualizer/blob/master/public/sample_ocpns/json/ocpa_p2p-normal.json) directory of this project. You can use this file as a template to create your own OCPN input files.
