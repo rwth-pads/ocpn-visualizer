@@ -210,7 +210,8 @@ with open(fileOutPath, "w") as f:
     json.dump(ocpn_json, f, indent=4)
 
 ```
-Works with the following PM4Py version: pm4py-2.7.14.4
+Works with the following PM4Py version:
+- pm4py-2.7.14.4
 
 ## How to transform OCPA to the OCPN Visualizer JSON format
 The OCPN Visualizer JSON format is a subset of the OCPA JSON format. To transform an OCPA JSON file to the OCPN Visualizer JSON format, you can adapt the following code snippet:
@@ -317,7 +318,9 @@ for file in os.listdir(from_folder):
             ".jsonocel", ""), properties={"description": "Event log from ocpa repository."})
         print(f"Processed {file} and saved to {save_to}")
 ```
-Requires ocpa-1.3.3 pm4py-2.2.32.
+Requires:
+- ocpa-1.3.3
+- pm4py-2.2.32.
 
 ### Example
 An exemplary OCPN input file is provided in the [`public/sample_ocpns/json`](https://github.com/rwth-pads/ocpn-visualizer/blob/master/public/sample_ocpns/json/ocpa_p2p-normal.json) directory of this project. You can use this file as a template to create your own OCPN input files.
