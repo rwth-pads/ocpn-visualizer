@@ -1,0 +1,124 @@
+{
+    "name": "Kolloquium Example",
+    "places": [
+        {
+            "name": "1",
+            "objectType": "turq",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "4",
+            "objectType": "turq",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "2",
+            "objectType": "turq",
+            "initial": false,
+            "final": false
+        },
+        {
+            "name": "3",
+            "objectType": "yel",
+            "initial": true,
+            "final": false
+        },
+        {
+            "name": "5",
+            "objectType": "yel",
+            "initial": false,
+            "final": true
+        },
+        {
+            "name": "6",
+            "objectType": "turq",
+            "initial": false,
+            "final": false
+        }
+    ],
+    "transitions": [
+        {
+            "name": "t1",
+            "label": "t1",
+            "silent": false
+        },
+        {
+            "name": "t2",
+            "label": "t2",
+            "silent": false
+        },
+        {
+            "name": "t3",
+            "label": "t3",
+            "silent": false
+        }
+    ],
+    "arcs": [
+        {
+            "source": "1",
+            "target": "t1",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t1",
+            "target": "4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "4",
+            "target": "t2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t2",
+            "target": "2",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "2",
+            "target": "t3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t3",
+            "target": "4",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "3",
+            "target": "t3",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t3",
+            "target": "5",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        },
+        {
+            "source": "t3",
+            "target": "6",
+            "weight": 1,
+            "variable": false,
+            "properties": {}
+        }
+    ],
+    "properties": {}
+}
